@@ -1,38 +1,74 @@
 .data_start
 
     .export inWater
+    .export hookBite
     .export myCubeRenderer
+    .export timerMin
+    .export timerMax
+    .export testFish
+    .export fishSpawned
 
     __refl_const_intnl_udonTypeID: %SystemInt64, null
     __refl_const_intnl_udonTypeName: %SystemString, null
+    fishSpawned: %SystemBoolean, null
+    hookBite: %SystemBoolean, null
     inWater: %SystemBoolean, null
+    testFish: %UnityEngineGameObject, null
+    timerMax: %SystemInt32, null
+    timerMin: %SystemInt32, null
     myCubeRenderer: %UnityEngineRenderer, null
     onCollisionEnterOther: %UnityEngineCollision, null
     onCollisionExitOther: %UnityEngineCollision, null
+    playerStrength: %SystemInt32, null
+    resistance: %SystemInt32, null
+    timer: %SystemInt32, null
+    timerBig: %SystemInt32, null
+    __0_this_intnl_UnityEngineGameObject: %UnityEngineGameObject, this
     __0_this_intnl_UnityEngineTransform: %UnityEngineTransform, this
     __0_other_Collision: %UnityEngineCollision, null
     __1_other_Collision: %UnityEngineCollision, null
+    __0_myNewSmoke_GameObject: %UnityEngineGameObject, null
+    __0_chosenNumber_Int32: %SystemInt32, null
     __0_const_intnl_SystemBoolean: %SystemBoolean, null
     __1_const_intnl_SystemBoolean: %SystemBoolean, null
+    __0_const_intnl_SystemInt32: %SystemInt32, null
+    __1_const_intnl_SystemInt32: %SystemInt32, null
+    __2_const_intnl_SystemInt32: %SystemInt32, null
     __0_const_intnl_SystemSingle: %SystemSingle, null
     __0_const_intnl_SystemString: %SystemString, null
     __1_const_intnl_SystemString: %SystemString, null
     __2_const_intnl_SystemString: %SystemString, null
     __3_const_intnl_SystemString: %SystemString, null
+    __4_const_intnl_SystemString: %SystemString, null
+    __5_const_intnl_SystemString: %SystemString, null
     __0_const_intnl_SystemUInt32: %SystemUInt32, null
     __0_intnl_SystemBoolean: %SystemBoolean, null
     __1_intnl_SystemBoolean: %SystemBoolean, null
     __2_intnl_SystemBoolean: %SystemBoolean, null
+    __3_intnl_SystemBoolean: %SystemBoolean, null
+    __4_intnl_SystemBoolean: %SystemBoolean, null
+    __5_intnl_SystemBoolean: %SystemBoolean, null
+    __6_intnl_SystemBoolean: %SystemBoolean, null
+    __7_intnl_SystemBoolean: %SystemBoolean, null
+    __8_intnl_SystemBoolean: %SystemBoolean, null
+    __9_intnl_SystemBoolean: %SystemBoolean, null
     __0_intnl_UnityEngineColor: %UnityEngineColor, null
     __0_intnl_UnityEngineGameObject: %UnityEngineGameObject, null
     __1_intnl_UnityEngineGameObject: %UnityEngineGameObject, null
+    __0_intnl_SystemInt32: %SystemInt32, null
+    __1_intnl_SystemInt32: %SystemInt32, null
     __0_intnl_UnityEngineMaterial: %UnityEngineMaterial, null
     __0_intnl_SystemSingle: %SystemSingle, null
     __1_intnl_SystemSingle: %SystemSingle, null
     __0_intnl_SystemString: %SystemString, null
     __1_intnl_SystemString: %SystemString, null
+    __0_intnl_UnityEngineTransform: %UnityEngineTransform, null
+    __1_intnl_UnityEngineTransform: %UnityEngineTransform, null
+    __2_intnl_UnityEngineTransform: %UnityEngineTransform, null
+    __3_intnl_UnityEngineTransform: %UnityEngineTransform, null
     __0_intnl_returnTarget_UInt32: %SystemUInt32, null
     __0_intnl_UnityEngineVector3: %UnityEngineVector3, null
+    __1_intnl_UnityEngineVector3: %UnityEngineVector3, null
 
 .data_end
 
@@ -50,7 +86,25 @@
         
          # public bool inWater = false;
         
+         # public bool hookBite = false;
+        
          # public Renderer myCubeRenderer;
+        
+         # private int timer = 0;
+        
+         # private int timerBig = 0;
+        
+         # public int timerMin = 4;
+        
+         # public int timerMax = 10;
+        
+         # public GameObject testFish;
+        
+         # public bool fishSpawned = false;
+        
+         # private int resistance = 0;
+        
+         # private int playerStrength = 100;
         
          # void Start()
     .export _start
@@ -94,7 +148,61 @@
         PUSH, __0_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
         PUSH, __0_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000000FC
+        JUMP_IF_FALSE, 0x0000020C
+        
+         # {
+        
+         # var chosenNumber = Random.Range(timerMin, timerMax);
+        PUSH, timerMin
+        PUSH, timerMax
+        PUSH, __0_intnl_SystemInt32
+        EXTERN, "UnityEngineRandom.__Range__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, __0_intnl_SystemInt32
+        PUSH, __0_chosenNumber_Int32
+        COPY
+        
+         # if (timerBig >= chosenNumber)
+        PUSH, timerBig
+        PUSH, __0_chosenNumber_Int32
+        PUSH, __1_intnl_SystemBoolean
+        EXTERN, "SystemInt32.__op_GreaterThanOrEqual__SystemInt32_SystemInt32__SystemBoolean"
+        PUSH, __1_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x0000012C
+        
+         # {
+        
+         # hookBite = true;
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, hookBite
+        COPY
+        
+         # if (hookBite == true)
+        PUSH, hookBite
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, __2_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __2_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x000001BC
+        
+         # {
+        
+         # Debug.Log("Fish Caught the Hook");
+        PUSH, __0_const_intnl_SystemString
+        EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
+        
+         # myCubeRenderer.material.SetColor("_Color", Color.green);
+        PUSH, myCubeRenderer
+        PUSH, __0_intnl_UnityEngineMaterial
+        EXTERN, "UnityEngineRenderer.__get_material__UnityEngineMaterial"
+        PUSH, __0_intnl_UnityEngineColor
+        EXTERN, "UnityEngineColor.__get_green__UnityEngineColor"
+        PUSH, __0_intnl_UnityEngineMaterial
+        PUSH, __1_const_intnl_SystemString
+        PUSH, __0_intnl_UnityEngineColor
+        EXTERN, "UnityEngineMaterial.__SetColor__SystemString_UnityEngineColor__SystemVoid"
+        JUMP, 0x00000204
+        
+         # else
         
          # {
         
@@ -105,9 +213,210 @@
         PUSH, __0_intnl_UnityEngineColor
         EXTERN, "UnityEngineColor.__get_red__UnityEngineColor"
         PUSH, __0_intnl_UnityEngineMaterial
-        PUSH, __0_const_intnl_SystemString
+        PUSH, __1_const_intnl_SystemString
         PUSH, __0_intnl_UnityEngineColor
         EXTERN, "UnityEngineMaterial.__SetColor__SystemString_UnityEngineColor__SystemVoid"
+        JUMP, 0x00000434
+        
+         # else //If not in the water
+        
+         # {
+        
+         # if (hookBite == true)
+        PUSH, hookBite
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, __1_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __1_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x000003B0
+        
+         # {
+        
+         # Debug.Log("Fish Pulled out of water");
+        PUSH, __2_const_intnl_SystemString
+        EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
+        
+         # if (fishSpawned==false)
+        PUSH, fishSpawned
+        PUSH, __1_const_intnl_SystemBoolean
+        PUSH, __2_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __2_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00000360
+        
+         # {
+        
+         # var myNewSmoke = testFish;//VRCInstantiate(testFish);
+        PUSH, testFish
+        PUSH, __0_myNewSmoke_GameObject
+        COPY
+        
+         # myNewSmoke.transform.position = gameObject.transform.position;
+        PUSH, __0_myNewSmoke_GameObject
+        PUSH, __0_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __0_this_intnl_UnityEngineGameObject
+        PUSH, __1_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __1_intnl_UnityEngineTransform
+        PUSH, __1_intnl_UnityEngineVector3
+        EXTERN, "UnityEngineTransform.__get_position__UnityEngineVector3"
+        PUSH, __0_intnl_UnityEngineTransform
+        PUSH, __1_intnl_UnityEngineVector3
+        EXTERN, "UnityEngineTransform.__set_position__UnityEngineVector3__SystemVoid"
+        
+         # myNewSmoke.transform.parent = gameObject.transform;
+        PUSH, __0_myNewSmoke_GameObject
+        PUSH, __2_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __0_this_intnl_UnityEngineGameObject
+        PUSH, __3_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __2_intnl_UnityEngineTransform
+        PUSH, __3_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineTransform.__set_parent__UnityEngineTransform__SystemVoid"
+        
+         # fishSpawned = true;
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, fishSpawned
+        COPY
+        
+         # hookBite = false;
+        PUSH, __1_const_intnl_SystemBoolean
+        PUSH, hookBite
+        COPY
+        
+         # myCubeRenderer.material.SetColor("_Color", Color.blue);
+        PUSH, myCubeRenderer
+        PUSH, __0_intnl_UnityEngineMaterial
+        EXTERN, "UnityEngineRenderer.__get_material__UnityEngineMaterial"
+        PUSH, __0_intnl_UnityEngineColor
+        EXTERN, "UnityEngineColor.__get_blue__UnityEngineColor"
+        PUSH, __0_intnl_UnityEngineMaterial
+        PUSH, __1_const_intnl_SystemString
+        PUSH, __0_intnl_UnityEngineColor
+        EXTERN, "UnityEngineMaterial.__SetColor__SystemString_UnityEngineColor__SystemVoid"
+        JUMP, 0x00000434
+        
+         # else
+        
+         # {
+        
+         # hookBite = false;
+        PUSH, __1_const_intnl_SystemBoolean
+        PUSH, hookBite
+        COPY
+        
+         # timer = 0;
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, timer
+        COPY
+        
+         # timerBig = 0;
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, timerBig
+        COPY
+        
+         # myCubeRenderer.material.SetColor("_Color", Color.white);
+        PUSH, myCubeRenderer
+        PUSH, __0_intnl_UnityEngineMaterial
+        EXTERN, "UnityEngineRenderer.__get_material__UnityEngineMaterial"
+        PUSH, __0_intnl_UnityEngineColor
+        EXTERN, "UnityEngineColor.__get_white__UnityEngineColor"
+        PUSH, __0_intnl_UnityEngineMaterial
+        PUSH, __1_const_intnl_SystemString
+        PUSH, __0_intnl_UnityEngineColor
+        EXTERN, "UnityEngineMaterial.__SetColor__SystemString_UnityEngineColor__SystemVoid"
+        PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
+        COPY
+        JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
+        
+        
+         # public void biteHook()
+    .export biteHook
+        
+    biteHook:
+        
+        PUSH, __0_const_intnl_SystemUInt32
+        
+         # {
+        PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
+        COPY
+        JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
+        
+        
+         # private void FixedUpdate()
+    .export _fixedUpdate
+        
+    _fixedUpdate:
+        
+        PUSH, __0_const_intnl_SystemUInt32
+        
+         # {
+        
+         # if (hookBite==false && inWater==true)
+        PUSH, hookBite
+        PUSH, __1_const_intnl_SystemBoolean
+        PUSH, __4_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __4_intnl_SystemBoolean
+        PUSH, __3_intnl_SystemBoolean
+        COPY
+        PUSH, __3_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00000504
+        PUSH, inWater
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, __5_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __3_intnl_SystemBoolean
+        PUSH, __5_intnl_SystemBoolean
+        PUSH, __6_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_ConditionalAnd__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __6_intnl_SystemBoolean
+        PUSH, __3_intnl_SystemBoolean
+        COPY
+        PUSH, __3_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x000005C8
+        
+         # {
+        
+         # if (timer <= 30)
+        PUSH, timer
+        PUSH, __1_const_intnl_SystemInt32
+        PUSH, __7_intnl_SystemBoolean
+        EXTERN, "SystemInt32.__op_LessThanOrEqual__SystemInt32_SystemInt32__SystemBoolean"
+        PUSH, __7_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00000580
+        
+         # {
+        
+         # timer += 1;
+        PUSH, timer
+        PUSH, __2_const_intnl_SystemInt32
+        PUSH, __1_intnl_SystemInt32
+        EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, __1_intnl_SystemInt32
+        PUSH, timer
+        COPY
+        JUMP, 0x000005C8
+        
+         # else
+        
+         # {
+        
+         # timerBig += 1;
+        PUSH, timerBig
+        PUSH, __2_const_intnl_SystemInt32
+        PUSH, __1_intnl_SystemInt32
+        EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, __1_intnl_SystemInt32
+        PUSH, timerBig
+        COPY
+        
+         # timer = 0;
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, timer
+        COPY
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
         COPY
         JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
@@ -133,11 +442,11 @@
         PUSH, __0_intnl_SystemString
         EXTERN, "UnityEngineGameObject.__get_name__SystemString"
         PUSH, __0_intnl_SystemString
-        PUSH, __1_const_intnl_SystemString
-        PUSH, __1_intnl_SystemBoolean
+        PUSH, __3_const_intnl_SystemString
+        PUSH, __8_intnl_SystemBoolean
         EXTERN, "SystemString.__op_Equality__SystemString_SystemString__SystemBoolean"
-        PUSH, __1_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000001B0
+        PUSH, __8_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x0000067C
         
          # {
         
@@ -147,7 +456,7 @@
         COPY
         
          # Debug.Log("In the Water");
-        PUSH, __2_const_intnl_SystemString
+        PUSH, __4_const_intnl_SystemString
         EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
         COPY
@@ -174,11 +483,11 @@
         PUSH, __1_intnl_SystemString
         EXTERN, "UnityEngineGameObject.__get_name__SystemString"
         PUSH, __1_intnl_SystemString
-        PUSH, __1_const_intnl_SystemString
-        PUSH, __2_intnl_SystemBoolean
+        PUSH, __3_const_intnl_SystemString
+        PUSH, __9_intnl_SystemBoolean
         EXTERN, "SystemString.__op_Equality__SystemString_SystemString__SystemBoolean"
-        PUSH, __2_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000264
+        PUSH, __9_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00000730
         
          # {
         
@@ -188,7 +497,7 @@
         COPY
         
          # Debug.Log("Out of Water");
-        PUSH, __3_const_intnl_SystemString
+        PUSH, __5_const_intnl_SystemString
         EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
         COPY
