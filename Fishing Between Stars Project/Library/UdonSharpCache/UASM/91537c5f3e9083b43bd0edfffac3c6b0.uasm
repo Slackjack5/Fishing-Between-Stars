@@ -62,7 +62,7 @@
         JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
         
         
-         # private void OnPickup()
+         # public virtual void OnPickup()
     .export _onPickup
         
     _onPickup:

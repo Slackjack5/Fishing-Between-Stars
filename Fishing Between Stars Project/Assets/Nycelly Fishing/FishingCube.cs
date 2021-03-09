@@ -31,7 +31,7 @@ public class FishingCube : UdonSharpBehaviour
 
     private void Update()
     {
-        transform.Rotate(Vector3.up, 90f * Time.deltaTime);
+        //transform.Rotate(Vector3.up, 90f * Time.deltaTime);
 
         //If the hook is in the water , Run the Code for Catching a Fish
         if (inWater==true)

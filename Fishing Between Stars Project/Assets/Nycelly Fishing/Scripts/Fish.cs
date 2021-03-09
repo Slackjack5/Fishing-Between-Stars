@@ -20,8 +20,8 @@ public class Fish : UdonSharpBehaviour
 
     }
 
-    //On Pickup un-parent the fish
-    private void OnPickup()
+
+    public virtual void OnPickup() 
     {
         transform.DetachChildren();
         gameObject.transform.parent = null;
