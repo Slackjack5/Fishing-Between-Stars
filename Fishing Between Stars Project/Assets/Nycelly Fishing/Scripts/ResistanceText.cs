@@ -27,7 +27,7 @@ public class ResistanceText : UdonSharpBehaviour
     public bool fishFlee = false;
     public int fishType=0;
     private float fishDecay = 0;
-    public float fishDecayMax = 20;
+    public float fishDecayMax = 200;
     //Variables for Counting Resistance
     private float timerDelay = 0;
     public float timerDelayMax = 10;
@@ -50,25 +50,66 @@ public class ResistanceText : UdonSharpBehaviour
 
     //Gameobjects
     public GameObject myHook;
+
+    //UI
+    public RectTransform canvas;
+    public RectTransform resistanceTarget;
+    public RectTransform fish;
+    private Vector3 startingPosition;
+    public float speed;
+
+    //New Variables
+    private float deltaResistanceScore = 1f;
+    public float deltaResistanceScoreMaxRise = 4f;
+    public float deltaResistanceScoreMaxFall = 4f;
+    private float fishMovement = 1;
+    public float fishMovementMax = 16;
     void Start()
     {
-        
+        resistanceTarget = resistanceTarget.GetComponent<RectTransform>();
+        fish = fish.GetComponent<RectTransform>();
+        canvas = canvas.GetComponent<RectTransform>();
+        startingPosition = resistanceTarget.transform.position;
+        speed = .1f;
     }
 
     private void FixedUpdate()
     {
+
+
+        
+
         //Player Resistance
         //If The Trigger is being held , increase player resistance
         if (triggerHeld)
         {
+
             //Slow down how fast we count player resistance
             reistanceRate += 1;
-            if(reistanceRate>= reistanceRateMax)
-            {
-                resistanceScore += 1;
-                reistanceRate = 0;
-            }
             
+            if (reistanceRate>= reistanceRateMax)
+            {
+                //Resistance
+                reistanceRate = 0;
+
+                //Go to positive if negative
+                if (deltaResistanceScore == -1)
+                {
+                    deltaResistanceScore *= -1;
+                }
+                else
+                {
+                    if(deltaResistanceScore<=-1)
+                    {
+                        deltaResistanceScore /= 2;
+                    }
+                    else
+                    {
+                        deltaResistanceScore *= 2;
+                    }
+                    
+                }
+            }
         }
         else
         {
@@ -76,54 +117,83 @@ public class ResistanceText : UdonSharpBehaviour
             reistanceDecay += 1;
             if(reistanceDecay>= reistanceRateMax/2)
             {
-                resistanceScore -= 1;
                 reistanceDecay = 0;
+
+                if (deltaResistanceScore == 1)
+                {
+                    deltaResistanceScore *= -1;
+                }
+                else
+                {
+                    if(deltaResistanceScore<=-1)
+                    {
+                        deltaResistanceScore *= 2;
+                    }
+                    else
+                    {
+                        deltaResistanceScore /= 2;
+                    }
+                }
             }
         }
 
-   
-
+        //Set Maximum Values
+        if (deltaResistanceScore >= deltaResistanceScoreMaxRise)
+        {
+            deltaResistanceScore = deltaResistanceScoreMaxRise;
+        }
+        else if (deltaResistanceScore <= -deltaResistanceScoreMaxFall)
+        {
+            deltaResistanceScore = -deltaResistanceScoreMaxFall;
+        }
+        //Update Resistance Score
+        resistanceScore += deltaResistanceScore;
+        
+        //Resistance Calculator
+        
+        //Ui
+        float squarePosition = Mathf.Lerp(-44f, 44f, resistanceScore / 1000f);
+        float fishPosition = Mathf.Lerp(-44f, 44f, fishResistanceScore / 1000f);
+        resistanceTarget.anchoredPosition = new Vector3(0f, squarePosition, 0f);
+        fish.anchoredPosition = new Vector3(0f, fishPosition, 0f);
         //Fish Resistance
         if (hookBite==true)
         {
 
-            if (fishFight)
-            {
-                
-                if (randFight==0)
-                {
-                    fightSmall();
-                }
-                else if (randFight == 1)
-                {
-                    fleeSmall();
-                }
-            }
-            else if (fishFlee)
-            {
-
-            }
-            else
-            {
+    
+                /*
                 fightTimer += 1;
                 if (fightTimer>= timeBetweenFights)
                 {
                     fishFight = true;
                     fightTimer = 0;
                 }
-                
+                */
                     
                 //Decay Resistance if not currently fighting
                 fishDecay += 1;
                 if (fishDecay >= fishDecayMax)
                 {
-                    fishResistanceScore -= 1;
+                    float newFishMovement = Random.Range(0, fishMovementMax);
+                    
+
+                   
+                    if(fishMovement<=0)
+                    {
+                        fishMovement = newFishMovement;
+                    }
+                    else
+                    {
+                        fishMovement = -newFishMovement;
+                    }
                     fishDecay = 0;
                 }
-            }
+            
+            //Move our fish
+            fishResistanceScore += fishMovement;
 
             //When our resistance is close to fish resistance, give the fish exhaustion
-            if(resistanceScore<= fishResistanceScore+5)
+            if (resistanceScore<= fishResistanceScore+5)
             {
                 if(resistanceScore >= fishResistanceScore - 5)
                 {
@@ -141,24 +211,29 @@ public class ResistanceText : UdonSharpBehaviour
         {
             resistanceScore = 0;
         }
-        if (resistanceScore > 100)
+        if (resistanceScore > 1000)
         {
-            resistanceScore = 100;
+            resistanceScore = 1000;
         }
         if (fishResistanceScore < 0)
         {
             fishResistanceScore = 0;
         }
-        if (fishResistanceScore > 100)
+        if (fishResistanceScore > 1000)
         {
-            fishResistanceScore = 100;
+            fishResistanceScore = 1000;
         }
+
 
         //If we meet our goal, the fish is exhausted!
         if (exhaustionScore>=100)
         {
             myHook.GetComponent<FishingCube>().fishExhausted = true;
         }
+
+
+            
+
     }
     private void Update()
     {
@@ -227,5 +302,31 @@ public class ResistanceText : UdonSharpBehaviour
 
     }
 
-
+    public void resetVariables()
+    {
+        //Player
+         resistanceScore = 0;
+         triggerHeld = false;
+         reistanceRate = 0;
+         reistanceDecay = 0;
+    //Fish
+         fishResistanceScore = 0;
+         fishFight = true;
+         fishFlee = false;
+         fishType = 0;
+         fishDecay = 0;
+    //Variables for Counting Resistance
+         timerDelay = 0;
+    //Varaibles for Fights
+         endFight = 0;
+    //Reactions
+         hookBite = false;
+         buildingFight = false;
+         fightTimer = 0;
+    //Types of fish
+         randFight = Random.Range(0, 2);
+    //Exhaustion
+         exhaustionScore = 0;
+         exhaustionDelay = 0;
+}
 }

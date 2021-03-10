@@ -21,9 +21,6 @@ public class FishingCube : UdonSharpBehaviour
     public GameObject testFish;
 
     public bool fishSpawned = false;
-    //Fighting The Fish
-    private int resistance = 0;
-    private int playerStrength = 100;
 
     //Test
     private bool testBool = false;
@@ -68,7 +65,8 @@ public class FishingCube : UdonSharpBehaviour
                 myFishingRod.GetComponent<ResistanceText>().hookBite = true;
                 if(testBool==false)
                 {
-                    myFishingRod.GetComponent<ResistanceText>().fishResistanceScore = 50;
+                    myFishingRod.GetComponent<ResistanceText>().fishResistanceScore = 500;
+                    myFishingRod.GetComponent<ResistanceText>().resistanceScore = 500;
                     myFishingRod.GetComponent<ResistanceText>().fishType = Random.Range(0,1);
                     testBool = true;
                 }
@@ -107,15 +105,21 @@ public class FishingCube : UdonSharpBehaviour
                     myFishingRod.GetComponent<ResistanceText>().exhaustionScore = 0;
 
                 }
+                else
+                {
+                    //Reset all Variables
+                    resetEverything();
+                    myFishingRod.GetComponent<ResistanceText>().resetVariables();
+                }
+                
 
             }
             else
             {
+                
                 //Reset all Variables
-                hookBite = false;
-                timer = 0;
-                timerBig = 0;
-                myCubeRenderer.material.SetColor("_Color", Color.white);
+                resetEverything();
+                myFishingRod.GetComponent<ResistanceText>().resetVariables();
             }
             
         }
@@ -166,4 +170,18 @@ public class FishingCube : UdonSharpBehaviour
         }
 
     }
+
+    public void resetEverything()
+    {
+        myCubeRenderer.material.SetColor("_Color", Color.white);
+        //Bool
+        inWater = false;
+        hookBite = false;
+        fishExhausted = false;
+        //Fishing Timer
+        timer = 0;
+        timerBig = 0;
+        fishSpawned = false;
+        testBool = false;
+}
 }
