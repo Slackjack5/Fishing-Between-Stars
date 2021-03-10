@@ -9,6 +9,7 @@ public class FishingCube : UdonSharpBehaviour
     //Bool
     public bool inWater = false;
     public bool hookBite = false;
+    public bool fishExhausted = false;
 
     public Renderer myCubeRenderer;
     //Fishing Timer
@@ -54,13 +55,21 @@ public class FishingCube : UdonSharpBehaviour
             //If the Fish Bites the Hook
             if (hookBite == true)
             {
-                Debug.Log("Fish Caught the Hook");
-                myCubeRenderer.material.SetColor("_Color", Color.green);
+                if(!fishExhausted)
+                {
+                    myCubeRenderer.material.SetColor("_Color", Color.green);
+                }
+                else
+                {
+                    myCubeRenderer.material.SetColor("_Color", Color.yellow);
+                }
+                
                 //Tell the rod we caught a fish
                 myFishingRod.GetComponent<ResistanceText>().hookBite = true;
                 if(testBool==false)
                 {
-                    myFishingRod.GetComponent<ResistanceText>().fishResistanceScore = 100;
+                    myFishingRod.GetComponent<ResistanceText>().fishResistanceScore = 50;
+                    myFishingRod.GetComponent<ResistanceText>().fishType = Random.Range(0,1);
                     testBool = true;
                 }
                 
@@ -77,18 +86,28 @@ public class FishingCube : UdonSharpBehaviour
             //If player pulls fish out the water, else reset everything
             if (hookBite == true)
             {
-                Debug.Log("Fish Pulled out of water");
-
-                if (fishSpawned==false)
+               
+                if (fishExhausted)
                 {
-                    var myNewSmoke = testFish;//VRCInstantiate(testFish);
-                    myNewSmoke.transform.position = gameObject.transform.position;
-                    myNewSmoke.transform.parent = gameObject.transform;
+                    if (fishSpawned == false)
+                    {
+                        var myNewSmoke = testFish;//VRCInstantiate(testFish);
+                        myNewSmoke.transform.position = gameObject.transform.position;
+                        myNewSmoke.transform.parent = gameObject.transform;
 
-                    fishSpawned = true;
-                    hookBite = false;
+                        fishSpawned = true;
+                        hookBite = false;
+                    }
+                    myCubeRenderer.material.SetColor("_Color", Color.blue);
+
+                    //Reset Variables
+                    fishExhausted = false;
+                    myFishingRod.GetComponent<ResistanceText>().fishResistanceScore = 0;
+                    myFishingRod.GetComponent<ResistanceText>().resistanceScore = 0;
+                    myFishingRod.GetComponent<ResistanceText>().exhaustionScore = 0;
+
                 }
-                myCubeRenderer.material.SetColor("_Color", Color.blue);
+
             }
             else
             {
