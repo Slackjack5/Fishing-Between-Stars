@@ -57,13 +57,14 @@ public class ResistanceText : UdonSharpBehaviour
     public RectTransform fish;
     private Vector3 startingPosition;
     public float speed;
+    public Image fishExhaustionBar;
 
     //New Variables
     private float deltaResistanceScore = 1f;
     public float deltaResistanceScoreMaxRise = 4f;
     public float deltaResistanceScoreMaxFall = 4f;
     private float fishMovement = 1;
-    public float fishMovementMax = 16;
+    public float fishMovementMax = 8;
     void Start()
     {
         resistanceTarget = resistanceTarget.GetComponent<RectTransform>();
@@ -152,24 +153,14 @@ public class ResistanceText : UdonSharpBehaviour
         //Resistance Calculator
         
         //Ui
-        float squarePosition = Mathf.Lerp(-44f, 44f, resistanceScore / 1000f);
-        float fishPosition = Mathf.Lerp(-44f, 44f, fishResistanceScore / 1000f);
+        float squarePosition = Mathf.Lerp(-40f, 40f, resistanceScore / 1000f);
+        float fishPosition = Mathf.Lerp(-40f, 40f, fishResistanceScore / 1000f);
         resistanceTarget.anchoredPosition = new Vector3(0f, squarePosition, 0f);
         fish.anchoredPosition = new Vector3(0f, fishPosition, 0f);
+        fishExhaustionBar.fillAmount = exhaustionScore / 100;
         //Fish Resistance
         if (hookBite==true)
         {
-
-    
-                /*
-                fightTimer += 1;
-                if (fightTimer>= timeBetweenFights)
-                {
-                    fishFight = true;
-                    fightTimer = 0;
-                }
-                */
-                    
                 //Decay Resistance if not currently fighting
                 fishDecay += 1;
                 if (fishDecay >= fishDecayMax)
@@ -193,9 +184,9 @@ public class ResistanceText : UdonSharpBehaviour
             fishResistanceScore += fishMovement;
 
             //When our resistance is close to fish resistance, give the fish exhaustion
-            if (resistanceScore<= fishResistanceScore+5)
+            if (resistanceScore<= fishResistanceScore+200)
             {
-                if(resistanceScore >= fishResistanceScore - 5)
+                if(resistanceScore >= fishResistanceScore - 200)
                 {
                     exhaustionDelay += 1;
                     if(exhaustionDelay>=exhaustionDelayMax)
@@ -223,17 +214,11 @@ public class ResistanceText : UdonSharpBehaviour
         {
             fishResistanceScore = 1000;
         }
-
-
         //If we meet our goal, the fish is exhausted!
         if (exhaustionScore>=100)
         {
             myHook.GetComponent<FishingCube>().fishExhausted = true;
         }
-
-
-            
-
     }
     private void Update()
     {
@@ -254,52 +239,6 @@ public class ResistanceText : UdonSharpBehaviour
     {
         //myFishRenderer.material.SetColor("_Color", Color.blue);
         triggerHeld = false;
-    }
-    //Fish Fights
-    private void fightSmall()
-    {
-        timerDelay += 1;
-        endFight += 1;
-        if (timerDelay>=timerDelayMax/2)
-        {
-            fishResistanceScore += 1;
-            timerDelay = 0;
-            Debug.Log("Fish is Fighting!");
-        }
-        
-        if(endFight>=fightDuration)
-        {
-            //Reset
-            timerDelay = 0;
-            endFight = 0;
-            fishFight = false;
-            //New Random Fight
-            randFight = Random.Range(0, 2);
-        }
-        
-    }
-
-    private void fleeSmall()
-    {
-        timerDelay += 1;
-        endFight += 1;
-        if (timerDelay >= timerDelayMax / 2)
-        {
-            fishResistanceScore -= 1;
-            timerDelay = 0;
-            Debug.Log("Fish is Fleeing!");
-        }
-
-        if (endFight >= fightDuration)
-        {
-            //Reset
-            timerDelay = 0;
-            endFight = 0;
-            fishFight = false;
-            //New Random Fight
-            randFight = Random.Range(0, 2);
-        }
-
     }
 
     public void resetVariables()
