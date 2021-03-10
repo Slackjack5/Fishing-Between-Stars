@@ -23,7 +23,13 @@ public class FishingCube : UdonSharpBehaviour
     //Fighting The Fish
     private int resistance = 0;
     private int playerStrength = 100;
-    
+
+    //Test
+    private bool testBool = false;
+
+    //Fishing Rod
+    public GameObject myFishingRod;
+
     void Start()
     {
        
@@ -50,6 +56,14 @@ public class FishingCube : UdonSharpBehaviour
             {
                 Debug.Log("Fish Caught the Hook");
                 myCubeRenderer.material.SetColor("_Color", Color.green);
+                //Tell the rod we caught a fish
+                myFishingRod.GetComponent<ResistanceText>().hookBite = true;
+                if(testBool==false)
+                {
+                    myFishingRod.GetComponent<ResistanceText>().fishResistanceScore = 100;
+                    testBool = true;
+                }
+                
             }
             else
             {
