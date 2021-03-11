@@ -151,16 +151,21 @@ public class FishingCube : UdonSharpBehaviour
 
     void OnCollisionEnter(Collision other)
     {
+
+
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
         //Change the Name to what the Water Is
-        if(other.gameObject.name == "Test Water")
+        if (other.gameObject.name == "Test Water")
         {
             inWater = true;
             Debug.Log("In the Water");
         }
-
     }
 
-    void OnCollisionExit(Collision other)
+    private void OnTriggerExit(Collider other)
     {
         //Change the Name to what the Water Is
         if (other.gameObject.name == "Test Water")
@@ -168,6 +173,10 @@ public class FishingCube : UdonSharpBehaviour
             inWater = false;
             Debug.Log("Out of Water");
         }
+    }
+    void OnCollisionExit(Collision other)
+    {
+
 
     }
 

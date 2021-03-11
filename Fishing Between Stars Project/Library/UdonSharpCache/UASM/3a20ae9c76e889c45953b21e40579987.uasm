@@ -22,11 +22,15 @@
     timerMin: %SystemInt32, null
     myCubeRenderer: %UnityEngineRenderer, null
     testBool: %SystemBoolean, null
+    onTriggerEnterOther: %UnityEngineCollider, null
+    onTriggerExitOther: %UnityEngineCollider, null
     onCollisionEnterOther: %UnityEngineCollision, null
     onCollisionExitOther: %UnityEngineCollision, null
     timer: %SystemInt32, null
     timerBig: %SystemInt32, null
     __0_this_intnl_UnityEngineGameObject: %UnityEngineGameObject, this
+    __0_other_Collider: %UnityEngineCollider, null
+    __1_other_Collider: %UnityEngineCollider, null
     __0_other_Collision: %UnityEngineCollision, null
     __1_other_Collision: %UnityEngineCollision, null
     __0_myNewSmoke_GameObject: %UnityEngineGameObject, null
@@ -889,7 +893,7 @@
         
          # resetEverything();
         PUSH, __0_const_intnl_exitJumpLoc_UInt32
-        JUMP, 0x000019FC
+        JUMP, 0x00001A5C
         
          # myFishingRod.GetComponent<ResistanceText>().resetVariables();
         PUSH, myFishingRod
@@ -967,7 +971,7 @@
         
          # resetEverything();
         PUSH, __1_const_intnl_exitJumpLoc_UInt32
-        JUMP, 0x000019FC
+        JUMP, 0x00001A5C
         
          # myFishingRod.GetComponent<ResistanceText>().resetVariables();
         PUSH, myFishingRod
@@ -1143,11 +1147,27 @@
         COPY
         
          # {
+        PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
+        COPY
+        JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
         
-         # if(other.gameObject.name == "Test Water")
-        PUSH, __0_other_Collision
+        
+         # private void OnTriggerEnter(Collider other)
+    .export _onTriggerEnter
+        
+    _onTriggerEnter:
+        
+        PUSH, __0_const_intnl_SystemUInt32
+        PUSH, onTriggerEnterOther
+        PUSH, __0_other_Collider
+        COPY
+        
+         # {
+        
+         # if (other.gameObject.name == "Test Water")
+        PUSH, __0_other_Collider
         PUSH, __0_intnl_UnityEngineGameObject
-        EXTERN, "UnityEngineCollision.__get_gameObject__UnityEngineGameObject"
+        EXTERN, "UnityEngineCollider.__get_gameObject__UnityEngineGameObject"
         PUSH, __0_intnl_UnityEngineGameObject
         PUSH, __0_intnl_SystemString
         EXTERN, "UnityEngineGameObject.__get_name__SystemString"
@@ -1156,7 +1176,7 @@
         PUSH, __13_intnl_SystemBoolean
         EXTERN, "SystemString.__op_Equality__SystemString_SystemString__SystemBoolean"
         PUSH, __13_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000192C
+        JUMP_IF_FALSE, 0x0000195C
         
          # {
         
@@ -1167,6 +1187,47 @@
         
          # Debug.Log("In the Water");
         PUSH, __9_const_intnl_SystemString
+        EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
+        PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
+        COPY
+        JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
+        
+        
+         # private void OnTriggerExit(Collider other)
+    .export _onTriggerExit
+        
+    _onTriggerExit:
+        
+        PUSH, __0_const_intnl_SystemUInt32
+        PUSH, onTriggerExitOther
+        PUSH, __1_other_Collider
+        COPY
+        
+         # {
+        
+         # if (other.gameObject.name == "Test Water")
+        PUSH, __1_other_Collider
+        PUSH, __1_intnl_UnityEngineGameObject
+        EXTERN, "UnityEngineCollider.__get_gameObject__UnityEngineGameObject"
+        PUSH, __1_intnl_UnityEngineGameObject
+        PUSH, __1_intnl_SystemString
+        EXTERN, "UnityEngineGameObject.__get_name__SystemString"
+        PUSH, __1_intnl_SystemString
+        PUSH, __8_const_intnl_SystemString
+        PUSH, __14_intnl_SystemBoolean
+        EXTERN, "SystemString.__op_Equality__SystemString_SystemString__SystemBoolean"
+        PUSH, __14_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00001A10
+        
+         # {
+        
+         # inWater = false;
+        PUSH, __1_const_intnl_SystemBoolean
+        PUSH, inWater
+        COPY
+        
+         # Debug.Log("Out of Water");
+        PUSH, __10_const_intnl_SystemString
         EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
         COPY
@@ -1184,31 +1245,6 @@
         COPY
         
          # {
-        
-         # if (other.gameObject.name == "Test Water")
-        PUSH, __1_other_Collision
-        PUSH, __1_intnl_UnityEngineGameObject
-        EXTERN, "UnityEngineCollision.__get_gameObject__UnityEngineGameObject"
-        PUSH, __1_intnl_UnityEngineGameObject
-        PUSH, __1_intnl_SystemString
-        EXTERN, "UnityEngineGameObject.__get_name__SystemString"
-        PUSH, __1_intnl_SystemString
-        PUSH, __8_const_intnl_SystemString
-        PUSH, __14_intnl_SystemBoolean
-        EXTERN, "SystemString.__op_Equality__SystemString_SystemString__SystemBoolean"
-        PUSH, __14_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000019E0
-        
-         # {
-        
-         # inWater = false;
-        PUSH, __1_const_intnl_SystemBoolean
-        PUSH, inWater
-        COPY
-        
-         # Debug.Log("Out of Water");
-        PUSH, __10_const_intnl_SystemString
-        EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
         COPY
         JUMP_INDIRECT, __0_intnl_returnTarget_UInt32

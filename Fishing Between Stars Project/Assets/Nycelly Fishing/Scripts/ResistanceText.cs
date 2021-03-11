@@ -65,6 +65,7 @@ public class ResistanceText : UdonSharpBehaviour
     public float deltaResistanceScoreMaxFall = 4f;
     private float fishMovement = 1;
     public float fishMovementMax = 8;
+    public GameObject velocityMeter;
     void Start()
     {
         resistanceTarget = resistanceTarget.GetComponent<RectTransform>();
@@ -158,6 +159,13 @@ public class ResistanceText : UdonSharpBehaviour
         resistanceTarget.anchoredPosition = new Vector3(0f, squarePosition, 0f);
         fish.anchoredPosition = new Vector3(0f, fishPosition, 0f);
         fishExhaustionBar.fillAmount = exhaustionScore / 100;
+
+        //Jerk Event
+        if(exhaustionScore==25)
+        {
+            velocityMeter.GetComponent<Velocimeter>().jerkRod = true;
+            velocityMeter.GetComponent<Velocimeter>().jerkLeft = true;
+        }
         //Fish Resistance
         if (hookBite==true)
         {
