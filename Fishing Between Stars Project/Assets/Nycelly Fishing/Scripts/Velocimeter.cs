@@ -23,10 +23,12 @@ public class Velocimeter : UdonSharpBehaviour
 
     public bool jerkLeft = false;
     public bool jerkRight = false;
+
+    public GameObject myFishingRod;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        oldAngleVector = transform.position - centerObject.transform.position;
+       
     }
 
     private void Update()
@@ -40,7 +42,11 @@ public class Velocimeter : UdonSharpBehaviour
         if (jerkRod)
         {
 
-
+           if(!positionRecorded)
+            {
+                oldAngleVector = transform.position - centerObject.transform.position;
+                positionRecorded = true;
+            }
 
             if (timer>=timermax)
             {
@@ -48,15 +54,19 @@ public class Velocimeter : UdonSharpBehaviour
                 float vectorAngle = Vector3.SignedAngle(oldAngleVector, currentVector, centerObject.transform.up);
                 oldAngleVector = currentVector;
                 Debug.Log(vectorAngle);
-                if (vectorAngle <= -25 && jerkLeft)
+                if (vectorAngle <= -20 && jerkLeft)
                 {
                     tetherBroken = true;
+                    myFishingRod.GetComponent<ResistanceText>().jerkEvent = false;
                     jerkLeft = false;
+                    positionRecorded = false;
                 }
-                else if(vectorAngle <= 25 && jerkRight)
+                else if(vectorAngle >= 20 && jerkRight)
                 {
                     tetherBroken = true;
+                    myFishingRod.GetComponent<ResistanceText>().jerkEvent = false;
                     jerkRight = false;
+                    positionRecorded = false;
                 }
                 timer = 0;
             }

@@ -58,6 +58,9 @@ public class ResistanceText : UdonSharpBehaviour
     private Vector3 startingPosition;
     public float speed;
     public Image fishExhaustionBar;
+    public GameObject dangerRod;
+    public GameObject leftArrow;
+    public GameObject rightArrow;
 
     //New Variables
     private float deltaResistanceScore = 1f;
@@ -66,6 +69,9 @@ public class ResistanceText : UdonSharpBehaviour
     private float fishMovement = 1;
     public float fishMovementMax = 8;
     public GameObject velocityMeter;
+    public bool jerkEvent = false;
+    
+    
     void Start()
     {
         resistanceTarget = resistanceTarget.GetComponent<RectTransform>();
@@ -163,8 +169,30 @@ public class ResistanceText : UdonSharpBehaviour
         //Jerk Event
         if(exhaustionScore==25)
         {
+            int whichDirection = Random.Range(0, 2);
+            //Turn on Jerk Event
             velocityMeter.GetComponent<Velocimeter>().jerkRod = true;
-            velocityMeter.GetComponent<Velocimeter>().jerkLeft = true;
+            jerkEvent = true;
+            if (whichDirection==0)
+            {
+                velocityMeter.GetComponent<Velocimeter>().jerkLeft = true;
+                leftArrow.SetActive(true);
+            }
+            else
+            {
+                velocityMeter.GetComponent<Velocimeter>().jerkRight = true;
+                rightArrow.SetActive(true);
+            }
+            //Add one exhuastion so previous code only occurs once
+            exhaustionScore += 1;
+        }
+
+        if (jerkEvent==false)
+        {
+            velocityMeter.GetComponent<Velocimeter>().jerkLeft = false;
+            velocityMeter.GetComponent<Velocimeter>().jerkRight = false;
+            leftArrow.SetActive(false);
+            rightArrow.SetActive(false);
         }
         //Fish Resistance
         if (hookBite==true)
@@ -194,8 +222,10 @@ public class ResistanceText : UdonSharpBehaviour
             //When our resistance is close to fish resistance, give the fish exhaustion
             if (resistanceScore<= fishResistanceScore+200)
             {
-                if(resistanceScore >= fishResistanceScore - 200)
+                dangerRod.SetActive(false);
+                if (resistanceScore >= fishResistanceScore - 200)
                 {
+                    dangerRod.SetActive(false);
                     exhaustionDelay += 1;
                     if(exhaustionDelay>=exhaustionDelayMax)
                     {
@@ -203,6 +233,14 @@ public class ResistanceText : UdonSharpBehaviour
                         exhaustionDelay = 0;
                     }
                 }
+                else
+                {
+                    dangerRod.SetActive(true);
+                }
+            }
+            else
+            {
+                dangerRod.SetActive(true);
             }
         }
         //Don't Let Values Drop Below 0

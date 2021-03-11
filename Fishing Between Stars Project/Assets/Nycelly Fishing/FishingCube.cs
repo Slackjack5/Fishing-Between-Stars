@@ -22,6 +22,8 @@ public class FishingCube : UdonSharpBehaviour
 
     public bool fishSpawned = false;
 
+    private int resetTimer = 0;
+    public  int resetTimerMax = 100;
     //Test
     private bool testBool = false;
 
@@ -107,19 +109,30 @@ public class FishingCube : UdonSharpBehaviour
                 }
                 else
                 {
-                    //Reset all Variables
-                    resetEverything();
-                    myFishingRod.GetComponent<ResistanceText>().resetVariables();
+                    //Reset Everything After Some Timer
+                    if (resetTimer >= resetTimerMax)
+                    {
+                        //Reset all Variables
+                        resetTimer = 0;
+                        resetEverything();
+                        myFishingRod.GetComponent<ResistanceText>().resetVariables();
+                    }
+                    else
+                    {
+                        resetTimer += 1;
+                    }
                 }
                 
 
             }
             else
             {
+                    //Reset all Variables
+                    resetTimer = 0;
+                    resetEverything();
+                    myFishingRod.GetComponent<ResistanceText>().resetVariables();
+           
                 
-                //Reset all Variables
-                resetEverything();
-                myFishingRod.GetComponent<ResistanceText>().resetVariables();
             }
             
         }
