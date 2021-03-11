@@ -225,13 +225,22 @@ public class ResistanceText : UdonSharpBehaviour
                 dangerRod.SetActive(false);
                 if (resistanceScore >= fishResistanceScore - 200)
                 {
-                    dangerRod.SetActive(false);
-                    exhaustionDelay += 1;
-                    if(exhaustionDelay>=exhaustionDelayMax)
+                    //If We are in a jerk event, don't give exhastion and warn the player
+                    if(jerkEvent == false)
                     {
-                        exhaustionScore += 1;
-                        exhaustionDelay = 0;
+                        dangerRod.SetActive(false);
+                        exhaustionDelay += 1;
+                        if (exhaustionDelay >= exhaustionDelayMax)
+                        {
+                            exhaustionScore += 1;
+                            exhaustionDelay = 0;
+                        }
                     }
+                    else
+                    {
+                        dangerRod.SetActive(true);
+                    }
+                    
                 }
                 else
                 {
@@ -265,9 +274,13 @@ public class ResistanceText : UdonSharpBehaviour
         {
             myHook.GetComponent<FishingCube>().fishExhausted = true;
         }
+
+
     }
     private void Update()
     {
+        //Sync Inportant Variables
+        
         //Convert Player Resistance to a seeable string
         playerResistance.text = "Me:" + " " + resistanceScore.ToString();
         //Convert Fish Resistance to a seeable string

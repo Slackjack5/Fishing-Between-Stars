@@ -53,7 +53,6 @@ public class Velocimeter : UdonSharpBehaviour
                 Vector3 currentVector = transform.position - centerObject.transform.position;
                 float vectorAngle = Vector3.SignedAngle(oldAngleVector, currentVector, centerObject.transform.up);
                 oldAngleVector = currentVector;
-                Debug.Log(vectorAngle);
                 if (vectorAngle <= -20 && jerkLeft)
                 {
                     tetherBroken = true;
