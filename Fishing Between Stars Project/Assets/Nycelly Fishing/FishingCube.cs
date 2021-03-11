@@ -95,32 +95,39 @@ public class FishingCube : UdonSharpBehaviour
             //If player pulls fish out the water, else reset everything
             if (hookBite == true)
             {
-                Debug.Log("I'm a Dog");
+                
                 if (fishExhausted)
                 {
-                    Debug.Log("I'm Human");
-                    Debug.Log("Fish Exhausted on Pull Out");
+                    
                     if (fishSpawned == false)
                     {
-                        Debug.Log("Generating Fish");
+                        
                         //Randomly generate a tier 1 fish
                         if(!tier1Fish)
                         {
-                            var myNewFish = Tier1Fishes[0];//VRCInstantiate(testFish);
+                            //Put the Fish on the hook and parent it
+                            var myNewFish = Tier1Fishes[Random.Range(0, Tier1Fishes.Length)];//VRCInstantiate(testFish);
                             myNewFish.transform.position = gameObject.transform.position;
                             myNewFish.transform.parent = gameObject.transform;
                             previousFish = myNewFish;
+                            //Say that we caught a tier 1 fish
                             tier1Fish = true;
                         }
                         else if(tier1Fish && Corruption) //Randomly Generate Tier 2 Fish
                         {
-                            Debug.Log("Spawning Tier 2 Fish");
-                            var myNewFish2 = Tier2Fishes[0];//VRCInstantiate(testFish);
+                            //Put the Fish on the hook and parent it
+                            var myNewFish2 = Tier2Fishes[Random.Range(0,Tier2Fishes.Length)];//VRCInstantiate(testFish);
                             myNewFish2.transform.position = gameObject.transform.position;
                             myNewFish2.transform.parent = gameObject.transform;
+
+                            //Send the Tier 1 Fish back to Spawn
+                            previousFish.GetComponent<Fish>().SendtoSpawn();
+                            previousFish = myNewFish2;
+                            //Say that we caught a tier 2 fish
                         }
                         fishSpawned = true;
                         hookBite = false;
+                        
                     }
                     if(fishSpawned)
                     {
