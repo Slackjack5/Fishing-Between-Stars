@@ -70,7 +70,8 @@ public class ResistanceText : UdonSharpBehaviour
     public float fishMovementMax = 8;
     public GameObject velocityMeter;
     public bool jerkEvent = false;
-    
+
+    public Animator myAnimator;
     
     void Start()
     {
@@ -121,6 +122,7 @@ public class ResistanceText : UdonSharpBehaviour
         }
         else
         {
+            
             //Slow down how fast we decay player resistance
             reistanceDecay += 1;
             if(reistanceDecay>= reistanceRateMax/2)
@@ -156,9 +158,28 @@ public class ResistanceText : UdonSharpBehaviour
         }
         //Update Resistance Score
         resistanceScore += deltaResistanceScore;
-        
+
+        //Animations
+        if (triggerHeld)
+        {
+            myAnimator.enabled = true;
+            myAnimator.SetBool("Reeling", true);
+            myAnimator.SetBool("ReelingOut", false);
+
+
+            //myAnimator.enabled = false;
+            //myAnimator.SetBool("ReelingOut", false);
+            //myAnimator.SetBool("Reeling", false);
+        }
+        else
+        {
+            myAnimator.enabled = true;
+            myAnimator.SetBool("ReelingOut", true);
+            myAnimator.SetBool("Reeling", false);
+
+        }
         //Resistance Calculator
-        
+
         //Ui
         float squarePosition = Mathf.Lerp(-40f, 40f, resistanceScore / 1000f);
         float fishPosition = Mathf.Lerp(-40f, 40f, fishResistanceScore / 1000f);
@@ -256,10 +277,18 @@ public class ResistanceText : UdonSharpBehaviour
         if (resistanceScore < 0)
         {
             resistanceScore = 0;
+            //Stop Animations
+            myAnimator.enabled = false;
+            myAnimator.SetBool("ReelingOut", false);
+            myAnimator.SetBool("Reeling", false);
         }
         if (resistanceScore > 1000)
         {
             resistanceScore = 1000;
+            //Stop Animations
+            myAnimator.enabled = false;
+            myAnimator.SetBool("ReelingOut", false);
+            myAnimator.SetBool("Reeling", false);
         }
         if (fishResistanceScore < 0)
         {
