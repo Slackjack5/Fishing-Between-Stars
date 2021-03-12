@@ -19,8 +19,13 @@ public class FishingCube : UdonSharpBehaviour
     public int timerMax = 10;
 
     public GameObject[] Tier1Fishes;
-    public GameObject[] Tier2Fishes;
-
+    public GameObject[] Tier2CorruptedFishes;
+    public GameObject[] Tier2CrimsonFishes;
+    public GameObject[] Tier3CorruptedFishes;
+    public GameObject[] Tier3CrimsonFishes;
+    //Variant Fishes
+    public GameObject[] Tier2CorruptedVariant;
+    public GameObject[] Tier2CrimsonVariant;
     public bool fishSpawned = false;
 
     private int resetTimer = 0;
@@ -33,7 +38,11 @@ public class FishingCube : UdonSharpBehaviour
 
     //Fishes
     public bool tier1Fish = false;
+    public bool tier2Fish = false;
+    public bool tier3Fish = false;
     private GameObject previousFish;
+    public bool previousFishCorrupted;
+    public bool previousFishCrimson;
     public bool fishPulledOut = false;
 
     //Water Type
@@ -101,9 +110,9 @@ public class FishingCube : UdonSharpBehaviour
                     
                     if (fishSpawned == false)
                     {
-                        
+
                         //Randomly generate a tier 1 fish
-                        if(!tier1Fish)
+                        if (!tier1Fish)
                         {
                             //Put the Fish on the hook and parent it
                             var myNewFish = Tier1Fishes[Random.Range(0, Tier1Fishes.Length)];//VRCInstantiate(testFish);
@@ -113,10 +122,13 @@ public class FishingCube : UdonSharpBehaviour
                             //Say that we caught a tier 1 fish
                             tier1Fish = true;
                         }
-                        else if(tier1Fish && Corruption) //Randomly Generate Tier 2 Fish
+                        else if (tier1Fish && Corruption && !tier2Fish) //Randomly Generate Tier 2 Corruption Fish
                         {
                             //Put the Fish on the hook and parent it
-                            var myNewFish2 = Tier2Fishes[Random.Range(0,Tier2Fishes.Length)];//VRCInstantiate(testFish);
+                            var myNewFish2 = Tier2CorruptedFishes[Random.Range(0, Tier2CorruptedFishes.Length)];//VRCInstantiate(testFish);
+                                //If Not a Crimson Fish, try again
+                                myNewFish2 = Tier2CorruptedFishes[Random.Range(0, Tier2CorruptedFishes.Length)];
+
                             myNewFish2.transform.position = gameObject.transform.position;
                             myNewFish2.transform.parent = gameObject.transform;
 
@@ -124,6 +136,83 @@ public class FishingCube : UdonSharpBehaviour
                             previousFish.GetComponent<Fish>().SendtoSpawn();
                             previousFish = myNewFish2;
                             //Say that we caught a tier 2 fish
+                            tier2Fish = true;
+                            //tier1Fish = false;
+                        }
+                        else if (tier1Fish && Crimson && !tier2Fish) //Randomly Generate Tier 2 Crimson Fish
+                        {
+                            //Put the Fish on the hook and parent it
+                            var myNewFish2 = Tier2CrimsonFishes[Random.Range(0, Tier2CrimsonFishes.Length)];//VRCInstantiate(testFish);
+
+                            //If Not a Crimson Fish, try again
+                            myNewFish2 = Tier2CrimsonFishes[Random.Range(0, Tier2CrimsonFishes.Length)];
+
+                            myNewFish2.transform.position = gameObject.transform.position;
+                            myNewFish2.transform.parent = gameObject.transform;
+
+                            //Send the Tier 1 Fish back to Spawn
+                            previousFish.GetComponent<Fish>().SendtoSpawn();
+                            previousFish = myNewFish2;
+                            //Say that we caught a tier 2 fish
+                            tier2Fish = true;
+                            //t
+                        }
+                        else if (tier2Fish) //If we put a tier 2 fish in the water,
+                        {
+                            //Put the Fish on the hook and parent it, If fish is corrupted and dipped into Crimson spawn variant fish
+                            if (previousFish.GetComponent<Fish>().corruptedFish == true && Crimson)
+                            {
+                                var myNewFish2 = Tier2CrimsonVariant[Random.Range(0, Tier2CrimsonVariant.Length)];//VRCInstantiate(testFish);
+                                myNewFish2.transform.position = gameObject.transform.position;
+                                myNewFish2.transform.parent = gameObject.transform;
+
+                                //Send the Tier 1 Fish back to Spawn
+                                previousFish.GetComponent<Fish>().SendtoSpawn();
+                                previousFish = myNewFish2;
+                                //Say that we caught a tier 2 fish
+                                tier2Fish = true;
+                                Debug.Log("Spawning Variant");
+                            }
+                            else if (previousFish.GetComponent<Fish>().corruptedFish == true && Corruption == true) //Else Generate Tier 3 Corrupted Fish
+                            {
+                                var myNewFish2 = Tier3CorruptedFishes[Random.Range(0, Tier3CorruptedFishes.Length)];//VRCInstantiate(testFish);
+                                myNewFish2.transform.position = gameObject.transform.position;
+                                myNewFish2.transform.parent = gameObject.transform;
+
+                                //Send the Tier 1 Fish back to Spawn
+                                previousFish.GetComponent<Fish>().SendtoSpawn();
+                                previousFish = myNewFish2;
+                                //Say that we caught a tier 2 fish
+                                tier3Fish = true;
+                                Debug.Log("Spawning Tier 3");
+                            }
+                            else if (previousFish.GetComponent<Fish>().corruptedFish == false && Corruption == false) //Else Generate Tier 3 Crimson Fish
+                            {
+                                var myNewFish2 = Tier3CrimsonFishes[Random.Range(0, Tier3CrimsonFishes.Length)];//VRCInstantiate(testFish);
+                                myNewFish2.transform.position = gameObject.transform.position;
+                                myNewFish2.transform.parent = gameObject.transform;
+
+                                //Send the Tier 1 Fish back to Spawn
+                                previousFish.GetComponent<Fish>().SendtoSpawn();
+                                previousFish = myNewFish2;
+                                //Say that we caught a tier 2 fish
+                                tier3Fish = true;
+                                Debug.Log("Spawning Tier 3");
+                            }
+                            else if (previousFish.GetComponent<Fish>().corruptedFish == false && Corruption) //Generate Variant
+                            {
+                                var myNewFish2 = Tier2CorruptedVariant[Random.Range(0, Tier2CorruptedVariant.Length)];//VRCInstantiate(testFish);
+                                myNewFish2.transform.position = gameObject.transform.position;
+                                myNewFish2.transform.parent = gameObject.transform;
+
+                                //Send the Tier 1 Fish back to Spawn
+                                previousFish.GetComponent<Fish>().SendtoSpawn();
+                                previousFish = myNewFish2;
+                                //Say that we caught a tier 2 fish
+                                tier2Fish = true;
+                                Debug.Log("Spawning Variant");
+                            }
+                            Debug.Log("Chicken Strips with man Aise");
                         }
                         fishSpawned = true;
                         hookBite = false;
@@ -209,6 +298,13 @@ public class FishingCube : UdonSharpBehaviour
         {
             inWater = true;
             Corruption = true;
+            Crimson = false;
+        }
+        else if(other.gameObject.name == "CrimsonWater")
+        {
+            inWater = true;
+            Crimson = true;
+            Corruption = false;
         }
     }
 
@@ -216,6 +312,10 @@ public class FishingCube : UdonSharpBehaviour
     {
         //Change the Name to what the Water Is
         if (other.gameObject.name == "CorruptedWater")
+        {
+            inWater = false;
+        }
+        else if(other.gameObject.name == "CrimsonWater")
         {
             inWater = false;
         }

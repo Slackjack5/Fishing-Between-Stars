@@ -7,11 +7,20 @@
     .export timerMin
     .export timerMax
     .export Tier1Fishes
-    .export Tier2Fishes
+    .export Tier2CorruptedFishes
+    .export Tier2CrimsonFishes
+    .export Tier3CorruptedFishes
+    .export Tier3CrimsonFishes
+    .export Tier2CorruptedVariant
+    .export Tier2CrimsonVariant
     .export fishSpawned
     .export resetTimerMax
     .export myFishingRod
     .export tier1Fish
+    .export tier2Fish
+    .export tier3Fish
+    .export previousFishCorrupted
+    .export previousFishCrimson
     .export fishPulledOut
     .export Corruption
     .export Crimson
@@ -25,10 +34,19 @@
     fishSpawned: %SystemBoolean, null
     hookBite: %SystemBoolean, null
     inWater: %SystemBoolean, null
+    previousFishCorrupted: %SystemBoolean, null
+    previousFishCrimson: %SystemBoolean, null
     tier1Fish: %SystemBoolean, null
+    tier2Fish: %SystemBoolean, null
+    tier3Fish: %SystemBoolean, null
     myFishingRod: %UnityEngineGameObject, null
     Tier1Fishes: %UnityEngineGameObjectArray, null
-    Tier2Fishes: %UnityEngineGameObjectArray, null
+    Tier2CorruptedFishes: %UnityEngineGameObjectArray, null
+    Tier2CorruptedVariant: %UnityEngineGameObjectArray, null
+    Tier2CrimsonFishes: %UnityEngineGameObjectArray, null
+    Tier2CrimsonVariant: %UnityEngineGameObjectArray, null
+    Tier3CorruptedFishes: %UnityEngineGameObjectArray, null
+    Tier3CrimsonFishes: %UnityEngineGameObjectArray, null
     resetTimerMax: %SystemInt32, null
     timerMax: %SystemInt32, null
     timerMin: %SystemInt32, null
@@ -62,6 +80,11 @@
     __0_const_intnl_SystemObject: %SystemObject, null
     __0_const_intnl_SystemString: %SystemString, null
     __1_const_intnl_SystemString: %SystemString, null
+    __10_const_intnl_SystemString: %SystemString, null
+    __11_const_intnl_SystemString: %SystemString, null
+    __12_const_intnl_SystemString: %SystemString, null
+    __13_const_intnl_SystemString: %SystemString, null
+    __14_const_intnl_SystemString: %SystemString, null
     __2_const_intnl_SystemString: %SystemString, null
     __3_const_intnl_SystemString: %SystemString, null
     __4_const_intnl_SystemString: %SystemString, null
@@ -73,14 +96,23 @@
     __0_const_intnl_SystemType: %SystemType, null
     __0_const_intnl_Fish: %VRCUdonUdonBehaviour, null
     __0_const_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
+    __1_const_intnl_Fish: %VRCUdonUdonBehaviour, null
     __1_const_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
+    __2_const_intnl_Fish: %VRCUdonUdonBehaviour, null
     __2_const_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
+    __3_const_intnl_Fish: %VRCUdonUdonBehaviour, null
     __3_const_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
+    __4_const_intnl_Fish: %VRCUdonUdonBehaviour, null
     __4_const_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
+    __5_const_intnl_Fish: %VRCUdonUdonBehaviour, null
     __5_const_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
+    __6_const_intnl_Fish: %VRCUdonUdonBehaviour, null
     __6_const_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
+    __7_const_intnl_Fish: %VRCUdonUdonBehaviour, null
     __7_const_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
+    __8_const_intnl_Fish: %VRCUdonUdonBehaviour, null
     __8_const_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
+    __9_const_intnl_Fish: %VRCUdonUdonBehaviour, null
     __9_const_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
     __0_const_intnl_exitJumpLoc_UInt32: %SystemUInt32, null
     __0_const_intnl_SystemUInt32: %SystemUInt32, null
@@ -97,10 +129,42 @@
     __16_intnl_SystemBoolean: %SystemBoolean, null
     __17_intnl_SystemBoolean: %SystemBoolean, null
     __18_intnl_SystemBoolean: %SystemBoolean, null
+    __19_intnl_SystemBoolean: %SystemBoolean, null
     __2_intnl_SystemBoolean: %SystemBoolean, null
+    __20_intnl_SystemBoolean: %SystemBoolean, null
+    __21_intnl_SystemBoolean: %SystemBoolean, null
+    __22_intnl_SystemBoolean: %SystemBoolean, null
+    __23_intnl_SystemBoolean: %SystemBoolean, null
+    __24_intnl_SystemBoolean: %SystemBoolean, null
+    __25_intnl_SystemBoolean: %SystemBoolean, null
+    __26_intnl_SystemBoolean: %SystemBoolean, null
+    __27_intnl_SystemBoolean: %SystemBoolean, null
+    __28_intnl_SystemBoolean: %SystemBoolean, null
+    __29_intnl_SystemBoolean: %SystemBoolean, null
     __3_intnl_SystemBoolean: %SystemBoolean, null
+    __30_intnl_SystemBoolean: %SystemBoolean, null
+    __31_intnl_SystemBoolean: %SystemBoolean, null
+    __32_intnl_SystemBoolean: %SystemBoolean, null
+    __33_intnl_SystemBoolean: %SystemBoolean, null
+    __34_intnl_SystemBoolean: %SystemBoolean, null
+    __35_intnl_SystemBoolean: %SystemBoolean, null
+    __36_intnl_SystemBoolean: %SystemBoolean, null
+    __37_intnl_SystemBoolean: %SystemBoolean, null
+    __38_intnl_SystemBoolean: %SystemBoolean, null
+    __39_intnl_SystemBoolean: %SystemBoolean, null
     __4_intnl_SystemBoolean: %SystemBoolean, null
+    __40_intnl_SystemBoolean: %SystemBoolean, null
+    __41_intnl_SystemBoolean: %SystemBoolean, null
+    __42_intnl_SystemBoolean: %SystemBoolean, null
+    __43_intnl_SystemBoolean: %SystemBoolean, null
+    __44_intnl_SystemBoolean: %SystemBoolean, null
+    __45_intnl_SystemBoolean: %SystemBoolean, null
+    __46_intnl_SystemBoolean: %SystemBoolean, null
+    __47_intnl_SystemBoolean: %SystemBoolean, null
+    __48_intnl_SystemBoolean: %SystemBoolean, null
+    __49_intnl_SystemBoolean: %SystemBoolean, null
     __5_intnl_SystemBoolean: %SystemBoolean, null
+    __50_intnl_SystemBoolean: %SystemBoolean, null
     __6_intnl_SystemBoolean: %SystemBoolean, null
     __7_intnl_SystemBoolean: %SystemBoolean, null
     __8_intnl_SystemBoolean: %SystemBoolean, null
@@ -114,11 +178,15 @@
     __2_intnl_UnityEngineComponentArray: %UnityEngineComponentArray, null
     __3_intnl_UnityEngineComponentArray: %UnityEngineComponentArray, null
     __4_intnl_UnityEngineComponentArray: %UnityEngineComponentArray, null
+    __5_intnl_UnityEngineComponentArray: %UnityEngineComponentArray, null
     __0_intnl_UnityEngineGameObject: %UnityEngineGameObject, null
     __1_intnl_UnityEngineGameObject: %UnityEngineGameObject, null
     __2_intnl_UnityEngineGameObject: %UnityEngineGameObject, null
+    __3_intnl_UnityEngineGameObject: %UnityEngineGameObject, null
+    __4_intnl_UnityEngineGameObject: %UnityEngineGameObject, null
     __0_intnl_SystemInt32: %SystemInt32, null
     __1_intnl_SystemInt32: %SystemInt32, null
+    __10_intnl_SystemInt32: %SystemInt32, null
     __2_intnl_SystemInt32: %SystemInt32, null
     __3_intnl_SystemInt32: %SystemInt32, null
     __4_intnl_SystemInt32: %SystemInt32, null
@@ -126,6 +194,7 @@
     __6_intnl_SystemInt32: %SystemInt32, null
     __7_intnl_SystemInt32: %SystemInt32, null
     __8_intnl_SystemInt32: %SystemInt32, null
+    __9_intnl_SystemInt32: %SystemInt32, null
     __0_intnl_SystemInt64: %SystemInt64, null
     __1_intnl_SystemInt64: %SystemInt64, null
     __2_intnl_SystemInt64: %SystemInt64, null
@@ -134,11 +203,17 @@
     __1_intnl_UnityEngineMaterial: %UnityEngineMaterial, null
     __0_intnl_SystemObject: %SystemObject, null
     __1_intnl_SystemObject: %SystemObject, null
+    __2_intnl_SystemObject: %SystemObject, null
+    __3_intnl_SystemObject: %SystemObject, null
+    __4_intnl_SystemObject: %SystemObject, null
+    __5_intnl_SystemObject: %SystemObject, null
     __0_intnl_SystemSingle: %SystemSingle, null
     __1_intnl_SystemSingle: %SystemSingle, null
     __2_intnl_SystemSingle: %SystemSingle, null
     __0_intnl_SystemString: %SystemString, null
     __1_intnl_SystemString: %SystemString, null
+    __2_intnl_SystemString: %SystemString, null
+    __3_intnl_SystemString: %SystemString, null
     __0_intnl_UnityEngineTransform: %UnityEngineTransform, null
     __1_intnl_UnityEngineTransform: %UnityEngineTransform, null
     __2_intnl_UnityEngineTransform: %UnityEngineTransform, null
@@ -147,9 +222,13 @@
     __0_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
     __1_intnl_Fish: %VRCUdonUdonBehaviour, null
     __1_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
+    __2_intnl_Fish: %VRCUdonUdonBehaviour, null
     __2_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
+    __3_intnl_Fish: %VRCUdonUdonBehaviour, null
     __3_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
+    __4_intnl_Fish: %VRCUdonUdonBehaviour, null
     __4_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
+    __5_intnl_Fish: %VRCUdonUdonBehaviour, null
     __5_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
     __6_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
     __0_intnl_returnTarget_UInt32: %SystemUInt32, null
@@ -187,7 +266,17 @@
         
          # public GameObject[] Tier1Fishes;
         
-         # public GameObject[] Tier2Fishes;
+         # public GameObject[] Tier2CorruptedFishes;
+        
+         # public GameObject[] Tier2CrimsonFishes;
+        
+         # public GameObject[] Tier3CorruptedFishes;
+        
+         # public GameObject[] Tier3CrimsonFishes;
+        
+         # public GameObject[] Tier2CorruptedVariant;
+        
+         # public GameObject[] Tier2CrimsonVariant;
         
          # public bool fishSpawned = false;
         
@@ -201,7 +290,15 @@
         
          # public bool tier1Fish = false;
         
+         # public bool tier2Fish = false;
+        
+         # public bool tier3Fish = false;
+        
          # private GameObject previousFish;
+        
+         # public bool previousFishCorrupted;
+        
+         # public bool previousFishCrimson;
         
          # public bool fishPulledOut = false;
         
@@ -631,7 +728,7 @@
         PUSH, __0_const_intnl_SystemString
         PUSH, __0_intnl_UnityEngineColor
         EXTERN, "UnityEngineMaterial.__SetColor__SystemString_UnityEngineColor__SystemVoid"
-        JUMP, 0x00001BD4
+        JUMP, 0x00003950
         
          # else //If not in the water
         
@@ -643,13 +740,13 @@
         PUSH, __1_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
         PUSH, __1_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000019B4
+        JUMP_IF_FALSE, 0x00003730
         
          # {
         
          # if (fishExhausted)
         PUSH, fishExhausted
-        JUMP_IF_FALSE, 0x00001720
+        JUMP_IF_FALSE, 0x0000349C
         
          # {
         
@@ -659,11 +756,11 @@
         PUSH, __2_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
         PUSH, __2_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001048
+        JUMP_IF_FALSE, 0x00002DC4
         
          # {
         
-         # if(!tier1Fish)
+         # if (!tier1Fish)
         PUSH, tier1Fish
         PUSH, __3_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_UnaryNegation__SystemBoolean__SystemBoolean"
@@ -722,41 +819,69 @@
         PUSH, __0_const_intnl_SystemBoolean
         PUSH, tier1Fish
         COPY
-        JUMP, 0x00001020
+        JUMP, 0x00002D9C
         
-         # else if(tier1Fish && Corruption) //Randomly Generate Tier 2 Fish
+         # else if (tier1Fish && Corruption && !tier2Fish) //Randomly Generate Tier 2 Corruption Fish
         PUSH, tier1Fish
-        PUSH, __4_intnl_SystemBoolean
+        PUSH, __5_intnl_SystemBoolean
         COPY
-        PUSH, __4_intnl_SystemBoolean
+        PUSH, __5_intnl_SystemBoolean
         JUMP_IF_FALSE, 0x00000CEC
-        PUSH, __4_intnl_SystemBoolean
-        PUSH, Corruption
         PUSH, __5_intnl_SystemBoolean
+        PUSH, Corruption
+        PUSH, __6_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_ConditionalAnd__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __6_intnl_SystemBoolean
+        PUSH, __5_intnl_SystemBoolean
+        COPY
         PUSH, __5_intnl_SystemBoolean
         PUSH, __4_intnl_SystemBoolean
         COPY
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001020
+        JUMP_IF_FALSE, 0x00000D5C
+        PUSH, tier2Fish
+        PUSH, __7_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_UnaryNegation__SystemBoolean__SystemBoolean"
+        PUSH, __4_intnl_SystemBoolean
+        PUSH, __7_intnl_SystemBoolean
+        PUSH, __8_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_ConditionalAnd__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __8_intnl_SystemBoolean
+        PUSH, __4_intnl_SystemBoolean
+        COPY
+        PUSH, __4_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00001104
         
          # {
         
-         # var myNewFish2 = Tier2Fishes[Random.Range(0,Tier2Fishes.Length)];//VRCInstantiate(testFish);
-        PUSH, Tier2Fishes
+         # var myNewFish2 = Tier2CorruptedFishes[Random.Range(0, Tier2CorruptedFishes.Length)];//VRCInstantiate(testFish);
+        PUSH, Tier2CorruptedFishes
         PUSH, __0_intnl_SystemInt32
         EXTERN, "UnityEngineGameObjectArray.__get_Length__SystemInt32"
         PUSH, __0_const_intnl_SystemInt32
         PUSH, __0_intnl_SystemInt32
         PUSH, __1_intnl_SystemInt32
         EXTERN, "UnityEngineRandom.__Range__SystemInt32_SystemInt32__SystemInt32"
-        PUSH, Tier2Fishes
+        PUSH, Tier2CorruptedFishes
         PUSH, __1_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineGameObject
         EXTERN, "UnityEngineGameObjectArray.__Get__SystemInt32__UnityEngineGameObject"
         PUSH, __0_intnl_UnityEngineGameObject
         PUSH, __0_myNewFish2_GameObject
         COPY
+        
+         # myNewFish2 = Tier2CorruptedFishes[Random.Range(0, Tier2CorruptedFishes.Length)];
+        PUSH, Tier2CorruptedFishes
+        PUSH, __2_intnl_SystemInt32
+        EXTERN, "UnityEngineGameObjectArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __2_intnl_SystemInt32
+        PUSH, __3_intnl_SystemInt32
+        EXTERN, "UnityEngineRandom.__Range__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, Tier2CorruptedFishes
+        PUSH, __3_intnl_SystemInt32
+        PUSH, __0_myNewFish2_GameObject
+        EXTERN, "UnityEngineGameObjectArray.__Get__SystemInt32__UnityEngineGameObject"
         
          # myNewFish2.transform.position = gameObject.transform.position;
         PUSH, __0_myNewFish2_GameObject
@@ -792,19 +917,19 @@
         PUSH, __0_intnl_Fish
         COPY
         PUSH, __0_intnl_UnityEngineComponentArray
-        PUSH, __2_intnl_SystemInt32
+        PUSH, __4_intnl_SystemInt32
         EXTERN, "UnityEngineComponentArray.__get_Length__SystemInt32"
         PUSH, __0_const_intnl_SystemInt32
-        PUSH, __3_intnl_SystemInt32
+        PUSH, __5_intnl_SystemInt32
         COPY
-        PUSH, __3_intnl_SystemInt32
-        PUSH, __2_intnl_SystemInt32
-        PUSH, __6_intnl_SystemBoolean
+        PUSH, __5_intnl_SystemInt32
+        PUSH, __4_intnl_SystemInt32
+        PUSH, __9_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
-        PUSH, __6_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000FF4
+        PUSH, __9_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x000010BC
         PUSH, __0_intnl_UnityEngineComponentArray
-        PUSH, __3_intnl_SystemInt32
+        PUSH, __5_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
         EXTERN, "UnityEngineComponentArray.__Get__SystemInt32__UnityEngineComponent"
         PUSH, __0_intnl_UnityEngineComponent
@@ -816,38 +941,38 @@
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
         PUSH, __0_intnl_SystemObject
         PUSH, __0_const_intnl_SystemObject
-        PUSH, __7_intnl_SystemBoolean
+        PUSH, __10_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
-        PUSH, __7_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000F58
+        PUSH, __10_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00001020
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00000F6C
+        JUMP, 0x00001034
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
         PUSH, __0_intnl_SystemInt64
         PUSH, __2_const_intnl_SystemInt64
-        PUSH, __8_intnl_SystemBoolean
+        PUSH, __11_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
-        PUSH, __8_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000FB8
+        PUSH, __11_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00001080
         PUSH, __1_intnl_Fish
         PUSH, __0_intnl_Fish
         COPY
-        JUMP, 0x00000FF4
-        PUSH, __3_intnl_SystemInt32
+        JUMP, 0x000010BC
+        PUSH, __5_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
-        PUSH, __4_intnl_SystemInt32
+        PUSH, __6_intnl_SystemInt32
         EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
-        PUSH, __4_intnl_SystemInt32
-        PUSH, __3_intnl_SystemInt32
+        PUSH, __6_intnl_SystemInt32
+        PUSH, __5_intnl_SystemInt32
         COPY
-        JUMP, 0x00000E70
+        JUMP, 0x00000F38
         PUSH, __0_intnl_Fish
         PUSH, __6_const_intnl_SystemString
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
@@ -856,6 +981,1068 @@
         PUSH, __0_myNewFish2_GameObject
         PUSH, previousFish
         COPY
+        
+         # tier2Fish = true;
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, tier2Fish
+        COPY
+        JUMP, 0x00002D9C
+        
+         # else if (tier1Fish && Crimson && !tier2Fish) //Randomly Generate Tier 2 Crimson Fish
+        PUSH, tier1Fish
+        PUSH, __10_intnl_SystemBoolean
+        COPY
+        PUSH, __10_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x0000115C
+        PUSH, __10_intnl_SystemBoolean
+        PUSH, Crimson
+        PUSH, __11_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_ConditionalAnd__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __11_intnl_SystemBoolean
+        PUSH, __10_intnl_SystemBoolean
+        COPY
+        PUSH, __10_intnl_SystemBoolean
+        PUSH, __9_intnl_SystemBoolean
+        COPY
+        PUSH, __9_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x000011CC
+        PUSH, tier2Fish
+        PUSH, __12_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_UnaryNegation__SystemBoolean__SystemBoolean"
+        PUSH, __9_intnl_SystemBoolean
+        PUSH, __12_intnl_SystemBoolean
+        PUSH, __13_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_ConditionalAnd__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __13_intnl_SystemBoolean
+        PUSH, __9_intnl_SystemBoolean
+        COPY
+        PUSH, __9_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00001574
+        
+         # {
+        
+         # var myNewFish2 = Tier2CrimsonFishes[Random.Range(0, Tier2CrimsonFishes.Length)];//VRCInstantiate(testFish);
+        PUSH, Tier2CrimsonFishes
+        PUSH, __0_intnl_SystemInt32
+        EXTERN, "UnityEngineGameObjectArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __0_intnl_SystemInt32
+        PUSH, __1_intnl_SystemInt32
+        EXTERN, "UnityEngineRandom.__Range__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, Tier2CrimsonFishes
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __0_intnl_UnityEngineGameObject
+        EXTERN, "UnityEngineGameObjectArray.__Get__SystemInt32__UnityEngineGameObject"
+        PUSH, __0_intnl_UnityEngineGameObject
+        PUSH, __0_myNewFish2_GameObject
+        COPY
+        
+         # myNewFish2 = Tier2CrimsonFishes[Random.Range(0, Tier2CrimsonFishes.Length)];
+        PUSH, Tier2CrimsonFishes
+        PUSH, __2_intnl_SystemInt32
+        EXTERN, "UnityEngineGameObjectArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __2_intnl_SystemInt32
+        PUSH, __3_intnl_SystemInt32
+        EXTERN, "UnityEngineRandom.__Range__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, Tier2CrimsonFishes
+        PUSH, __3_intnl_SystemInt32
+        PUSH, __0_myNewFish2_GameObject
+        EXTERN, "UnityEngineGameObjectArray.__Get__SystemInt32__UnityEngineGameObject"
+        
+         # myNewFish2.transform.position = gameObject.transform.position;
+        PUSH, __0_myNewFish2_GameObject
+        PUSH, __0_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __0_this_intnl_UnityEngineGameObject
+        PUSH, __1_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __1_intnl_UnityEngineTransform
+        PUSH, __0_intnl_UnityEngineVector3
+        EXTERN, "UnityEngineTransform.__get_position__UnityEngineVector3"
+        PUSH, __0_intnl_UnityEngineTransform
+        PUSH, __0_intnl_UnityEngineVector3
+        EXTERN, "UnityEngineTransform.__set_position__UnityEngineVector3__SystemVoid"
+        
+         # myNewFish2.transform.parent = gameObject.transform;
+        PUSH, __0_myNewFish2_GameObject
+        PUSH, __2_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __0_this_intnl_UnityEngineGameObject
+        PUSH, __3_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __2_intnl_UnityEngineTransform
+        PUSH, __3_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineTransform.__set_parent__UnityEngineTransform__SystemVoid"
+        
+         # previousFish.GetComponent<Fish>().SendtoSpawn();
+        PUSH, previousFish
+        PUSH, __0_const_intnl_SystemType
+        PUSH, __0_intnl_UnityEngineComponentArray
+        EXTERN, "UnityEngineGameObject.__GetComponents__SystemType__UnityEngineComponentArray"
+        PUSH, __1_const_intnl_Fish
+        PUSH, __0_intnl_Fish
+        COPY
+        PUSH, __0_intnl_UnityEngineComponentArray
+        PUSH, __4_intnl_SystemInt32
+        EXTERN, "UnityEngineComponentArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __5_intnl_SystemInt32
+        COPY
+        PUSH, __5_intnl_SystemInt32
+        PUSH, __4_intnl_SystemInt32
+        PUSH, __14_intnl_SystemBoolean
+        EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
+        PUSH, __14_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x0000152C
+        PUSH, __0_intnl_UnityEngineComponentArray
+        PUSH, __5_intnl_SystemInt32
+        PUSH, __0_intnl_UnityEngineComponent
+        EXTERN, "UnityEngineComponentArray.__Get__SystemInt32__UnityEngineComponent"
+        PUSH, __0_intnl_UnityEngineComponent
+        PUSH, __1_intnl_Fish
+        COPY
+        PUSH, __1_intnl_Fish
+        PUSH, __1_const_intnl_SystemString
+        PUSH, __0_intnl_SystemObject
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
+        PUSH, __0_intnl_SystemObject
+        PUSH, __0_const_intnl_SystemObject
+        PUSH, __15_intnl_SystemBoolean
+        EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
+        PUSH, __15_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00001490
+        PUSH, __0_intnl_SystemObject
+        PUSH, __1_intnl_SystemInt64
+        EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
+        PUSH, __1_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        JUMP, 0x000014A4
+        PUSH, __1_const_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        PUSH, __0_intnl_SystemInt64
+        PUSH, __2_const_intnl_SystemInt64
+        PUSH, __16_intnl_SystemBoolean
+        EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
+        PUSH, __16_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x000014F0
+        PUSH, __1_intnl_Fish
+        PUSH, __0_intnl_Fish
+        COPY
+        JUMP, 0x0000152C
+        PUSH, __5_intnl_SystemInt32
+        PUSH, __1_const_intnl_SystemInt32
+        PUSH, __6_intnl_SystemInt32
+        EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, __6_intnl_SystemInt32
+        PUSH, __5_intnl_SystemInt32
+        COPY
+        JUMP, 0x000013A8
+        PUSH, __0_intnl_Fish
+        PUSH, __6_const_intnl_SystemString
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
+        
+         # previousFish = myNewFish2;
+        PUSH, __0_myNewFish2_GameObject
+        PUSH, previousFish
+        COPY
+        
+         # tier2Fish = true;
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, tier2Fish
+        COPY
+        JUMP, 0x00002D9C
+        
+         # else if (tier2Fish) //If we put a tier 2 fish in the water,
+        PUSH, tier2Fish
+        JUMP_IF_FALSE, 0x00002D9C
+        
+         # {
+        
+         # if (previousFish.GetComponent<Fish>().corruptedFish == true && Crimson)
+        PUSH, previousFish
+        PUSH, __0_const_intnl_SystemType
+        PUSH, __0_intnl_UnityEngineComponentArray
+        EXTERN, "UnityEngineGameObject.__GetComponents__SystemType__UnityEngineComponentArray"
+        PUSH, __2_const_intnl_Fish
+        PUSH, __0_intnl_Fish
+        COPY
+        PUSH, __0_intnl_UnityEngineComponentArray
+        PUSH, __0_intnl_SystemInt32
+        EXTERN, "UnityEngineComponentArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __1_intnl_SystemInt32
+        COPY
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __0_intnl_SystemInt32
+        PUSH, __15_intnl_SystemBoolean
+        EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
+        PUSH, __15_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00001768
+        PUSH, __0_intnl_UnityEngineComponentArray
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __0_intnl_UnityEngineComponent
+        EXTERN, "UnityEngineComponentArray.__Get__SystemInt32__UnityEngineComponent"
+        PUSH, __0_intnl_UnityEngineComponent
+        PUSH, __1_intnl_Fish
+        COPY
+        PUSH, __1_intnl_Fish
+        PUSH, __1_const_intnl_SystemString
+        PUSH, __0_intnl_SystemObject
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
+        PUSH, __0_intnl_SystemObject
+        PUSH, __0_const_intnl_SystemObject
+        PUSH, __16_intnl_SystemBoolean
+        EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
+        PUSH, __16_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x000016CC
+        PUSH, __0_intnl_SystemObject
+        PUSH, __1_intnl_SystemInt64
+        EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
+        PUSH, __1_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        JUMP, 0x000016E0
+        PUSH, __1_const_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        PUSH, __0_intnl_SystemInt64
+        PUSH, __2_const_intnl_SystemInt64
+        PUSH, __17_intnl_SystemBoolean
+        EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
+        PUSH, __17_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x0000172C
+        PUSH, __1_intnl_Fish
+        PUSH, __0_intnl_Fish
+        COPY
+        JUMP, 0x00001768
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __1_const_intnl_SystemInt32
+        PUSH, __2_intnl_SystemInt32
+        EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, __2_intnl_SystemInt32
+        PUSH, __1_intnl_SystemInt32
+        COPY
+        JUMP, 0x000015E4
+        PUSH, __0_intnl_Fish
+        PUSH, __7_const_intnl_SystemString
+        PUSH, __0_intnl_SystemObject
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
+        PUSH, __0_intnl_SystemObject
+        PUSH, __16_intnl_SystemBoolean
+        EXTERN, "SystemConvert.__ToBoolean__SystemObject__SystemBoolean"
+        PUSH, __16_intnl_SystemBoolean
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, __17_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __17_intnl_SystemBoolean
+        PUSH, __14_intnl_SystemBoolean
+        COPY
+        PUSH, __14_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00001818
+        PUSH, __14_intnl_SystemBoolean
+        PUSH, Crimson
+        PUSH, __18_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_ConditionalAnd__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __18_intnl_SystemBoolean
+        PUSH, __14_intnl_SystemBoolean
+        COPY
+        PUSH, __14_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00001B78
+        
+         # {
+        
+         # var myNewFish2 = Tier2CrimsonVariant[Random.Range(0, Tier2CrimsonVariant.Length)];//VRCInstantiate(testFish);
+        PUSH, Tier2CrimsonVariant
+        PUSH, __0_intnl_SystemInt32
+        EXTERN, "UnityEngineGameObjectArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __0_intnl_SystemInt32
+        PUSH, __1_intnl_SystemInt32
+        EXTERN, "UnityEngineRandom.__Range__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, Tier2CrimsonVariant
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __0_intnl_UnityEngineGameObject
+        EXTERN, "UnityEngineGameObjectArray.__Get__SystemInt32__UnityEngineGameObject"
+        PUSH, __0_intnl_UnityEngineGameObject
+        PUSH, __0_myNewFish2_GameObject
+        COPY
+        
+         # myNewFish2.transform.position = gameObject.transform.position;
+        PUSH, __0_myNewFish2_GameObject
+        PUSH, __0_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __0_this_intnl_UnityEngineGameObject
+        PUSH, __1_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __1_intnl_UnityEngineTransform
+        PUSH, __0_intnl_UnityEngineVector3
+        EXTERN, "UnityEngineTransform.__get_position__UnityEngineVector3"
+        PUSH, __0_intnl_UnityEngineTransform
+        PUSH, __0_intnl_UnityEngineVector3
+        EXTERN, "UnityEngineTransform.__set_position__UnityEngineVector3__SystemVoid"
+        
+         # myNewFish2.transform.parent = gameObject.transform;
+        PUSH, __0_myNewFish2_GameObject
+        PUSH, __2_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __0_this_intnl_UnityEngineGameObject
+        PUSH, __3_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __2_intnl_UnityEngineTransform
+        PUSH, __3_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineTransform.__set_parent__UnityEngineTransform__SystemVoid"
+        
+         # previousFish.GetComponent<Fish>().SendtoSpawn();
+        PUSH, previousFish
+        PUSH, __0_const_intnl_SystemType
+        PUSH, __1_intnl_UnityEngineComponentArray
+        EXTERN, "UnityEngineGameObject.__GetComponents__SystemType__UnityEngineComponentArray"
+        PUSH, __3_const_intnl_Fish
+        PUSH, __1_intnl_Fish
+        COPY
+        PUSH, __1_intnl_UnityEngineComponentArray
+        PUSH, __2_intnl_SystemInt32
+        EXTERN, "UnityEngineComponentArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __3_intnl_SystemInt32
+        COPY
+        PUSH, __3_intnl_SystemInt32
+        PUSH, __2_intnl_SystemInt32
+        PUSH, __19_intnl_SystemBoolean
+        EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
+        PUSH, __19_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00001B20
+        PUSH, __1_intnl_UnityEngineComponentArray
+        PUSH, __3_intnl_SystemInt32
+        PUSH, __0_intnl_UnityEngineComponent
+        EXTERN, "UnityEngineComponentArray.__Get__SystemInt32__UnityEngineComponent"
+        PUSH, __0_intnl_UnityEngineComponent
+        PUSH, __2_intnl_Fish
+        COPY
+        PUSH, __2_intnl_Fish
+        PUSH, __1_const_intnl_SystemString
+        PUSH, __1_intnl_SystemObject
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
+        PUSH, __1_intnl_SystemObject
+        PUSH, __0_const_intnl_SystemObject
+        PUSH, __20_intnl_SystemBoolean
+        EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
+        PUSH, __20_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00001A84
+        PUSH, __1_intnl_SystemObject
+        PUSH, __1_intnl_SystemInt64
+        EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
+        PUSH, __1_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        JUMP, 0x00001A98
+        PUSH, __1_const_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        PUSH, __0_intnl_SystemInt64
+        PUSH, __2_const_intnl_SystemInt64
+        PUSH, __21_intnl_SystemBoolean
+        EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
+        PUSH, __21_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00001AE4
+        PUSH, __2_intnl_Fish
+        PUSH, __1_intnl_Fish
+        COPY
+        JUMP, 0x00001B20
+        PUSH, __3_intnl_SystemInt32
+        PUSH, __1_const_intnl_SystemInt32
+        PUSH, __4_intnl_SystemInt32
+        EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, __4_intnl_SystemInt32
+        PUSH, __3_intnl_SystemInt32
+        COPY
+        JUMP, 0x0000199C
+        PUSH, __1_intnl_Fish
+        PUSH, __6_const_intnl_SystemString
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
+        
+         # previousFish = myNewFish2;
+        PUSH, __0_myNewFish2_GameObject
+        PUSH, previousFish
+        COPY
+        
+         # tier2Fish = true;
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, tier2Fish
+        COPY
+        
+         # Debug.Log("Spawning Variant");
+        PUSH, __8_const_intnl_SystemString
+        EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
+        JUMP, 0x00002D8C
+        
+         # else if (previousFish.GetComponent<Fish>().corruptedFish == true && Corruption == true) //Else Generate Tier 3 Corrupted Fish
+        PUSH, previousFish
+        PUSH, __0_const_intnl_SystemType
+        PUSH, __1_intnl_UnityEngineComponentArray
+        EXTERN, "UnityEngineGameObject.__GetComponents__SystemType__UnityEngineComponentArray"
+        PUSH, __4_const_intnl_Fish
+        PUSH, __1_intnl_Fish
+        COPY
+        PUSH, __1_intnl_UnityEngineComponentArray
+        PUSH, __0_intnl_SystemInt32
+        EXTERN, "UnityEngineComponentArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __1_intnl_SystemInt32
+        COPY
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __0_intnl_SystemInt32
+        PUSH, __20_intnl_SystemBoolean
+        EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
+        PUSH, __20_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00001D5C
+        PUSH, __1_intnl_UnityEngineComponentArray
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __0_intnl_UnityEngineComponent
+        EXTERN, "UnityEngineComponentArray.__Get__SystemInt32__UnityEngineComponent"
+        PUSH, __0_intnl_UnityEngineComponent
+        PUSH, __2_intnl_Fish
+        COPY
+        PUSH, __2_intnl_Fish
+        PUSH, __1_const_intnl_SystemString
+        PUSH, __1_intnl_SystemObject
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
+        PUSH, __1_intnl_SystemObject
+        PUSH, __0_const_intnl_SystemObject
+        PUSH, __21_intnl_SystemBoolean
+        EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
+        PUSH, __21_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00001CC0
+        PUSH, __1_intnl_SystemObject
+        PUSH, __1_intnl_SystemInt64
+        EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
+        PUSH, __1_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        JUMP, 0x00001CD4
+        PUSH, __1_const_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        PUSH, __0_intnl_SystemInt64
+        PUSH, __2_const_intnl_SystemInt64
+        PUSH, __22_intnl_SystemBoolean
+        EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
+        PUSH, __22_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00001D20
+        PUSH, __2_intnl_Fish
+        PUSH, __1_intnl_Fish
+        COPY
+        JUMP, 0x00001D5C
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __1_const_intnl_SystemInt32
+        PUSH, __2_intnl_SystemInt32
+        EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, __2_intnl_SystemInt32
+        PUSH, __1_intnl_SystemInt32
+        COPY
+        JUMP, 0x00001BD8
+        PUSH, __1_intnl_Fish
+        PUSH, __7_const_intnl_SystemString
+        PUSH, __1_intnl_SystemObject
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
+        PUSH, __1_intnl_SystemObject
+        PUSH, __21_intnl_SystemBoolean
+        EXTERN, "SystemConvert.__ToBoolean__SystemObject__SystemBoolean"
+        PUSH, __21_intnl_SystemBoolean
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, __22_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __22_intnl_SystemBoolean
+        PUSH, __19_intnl_SystemBoolean
+        COPY
+        PUSH, __19_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00001E2C
+        PUSH, Corruption
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, __23_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __19_intnl_SystemBoolean
+        PUSH, __23_intnl_SystemBoolean
+        PUSH, __24_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_ConditionalAnd__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __24_intnl_SystemBoolean
+        PUSH, __19_intnl_SystemBoolean
+        COPY
+        PUSH, __19_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x0000218C
+        
+         # {
+        
+         # var myNewFish2 = Tier3CorruptedFishes[Random.Range(0, Tier3CorruptedFishes.Length)];//VRCInstantiate(testFish);
+        PUSH, Tier3CorruptedFishes
+        PUSH, __0_intnl_SystemInt32
+        EXTERN, "UnityEngineGameObjectArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __0_intnl_SystemInt32
+        PUSH, __1_intnl_SystemInt32
+        EXTERN, "UnityEngineRandom.__Range__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, Tier3CorruptedFishes
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __0_intnl_UnityEngineGameObject
+        EXTERN, "UnityEngineGameObjectArray.__Get__SystemInt32__UnityEngineGameObject"
+        PUSH, __0_intnl_UnityEngineGameObject
+        PUSH, __0_myNewFish2_GameObject
+        COPY
+        
+         # myNewFish2.transform.position = gameObject.transform.position;
+        PUSH, __0_myNewFish2_GameObject
+        PUSH, __0_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __0_this_intnl_UnityEngineGameObject
+        PUSH, __1_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __1_intnl_UnityEngineTransform
+        PUSH, __0_intnl_UnityEngineVector3
+        EXTERN, "UnityEngineTransform.__get_position__UnityEngineVector3"
+        PUSH, __0_intnl_UnityEngineTransform
+        PUSH, __0_intnl_UnityEngineVector3
+        EXTERN, "UnityEngineTransform.__set_position__UnityEngineVector3__SystemVoid"
+        
+         # myNewFish2.transform.parent = gameObject.transform;
+        PUSH, __0_myNewFish2_GameObject
+        PUSH, __2_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __0_this_intnl_UnityEngineGameObject
+        PUSH, __3_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __2_intnl_UnityEngineTransform
+        PUSH, __3_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineTransform.__set_parent__UnityEngineTransform__SystemVoid"
+        
+         # previousFish.GetComponent<Fish>().SendtoSpawn();
+        PUSH, previousFish
+        PUSH, __0_const_intnl_SystemType
+        PUSH, __2_intnl_UnityEngineComponentArray
+        EXTERN, "UnityEngineGameObject.__GetComponents__SystemType__UnityEngineComponentArray"
+        PUSH, __5_const_intnl_Fish
+        PUSH, __2_intnl_Fish
+        COPY
+        PUSH, __2_intnl_UnityEngineComponentArray
+        PUSH, __2_intnl_SystemInt32
+        EXTERN, "UnityEngineComponentArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __3_intnl_SystemInt32
+        COPY
+        PUSH, __3_intnl_SystemInt32
+        PUSH, __2_intnl_SystemInt32
+        PUSH, __25_intnl_SystemBoolean
+        EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
+        PUSH, __25_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00002134
+        PUSH, __2_intnl_UnityEngineComponentArray
+        PUSH, __3_intnl_SystemInt32
+        PUSH, __0_intnl_UnityEngineComponent
+        EXTERN, "UnityEngineComponentArray.__Get__SystemInt32__UnityEngineComponent"
+        PUSH, __0_intnl_UnityEngineComponent
+        PUSH, __3_intnl_Fish
+        COPY
+        PUSH, __3_intnl_Fish
+        PUSH, __1_const_intnl_SystemString
+        PUSH, __2_intnl_SystemObject
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
+        PUSH, __2_intnl_SystemObject
+        PUSH, __0_const_intnl_SystemObject
+        PUSH, __26_intnl_SystemBoolean
+        EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
+        PUSH, __26_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00002098
+        PUSH, __2_intnl_SystemObject
+        PUSH, __1_intnl_SystemInt64
+        EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
+        PUSH, __1_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        JUMP, 0x000020AC
+        PUSH, __1_const_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        PUSH, __0_intnl_SystemInt64
+        PUSH, __2_const_intnl_SystemInt64
+        PUSH, __27_intnl_SystemBoolean
+        EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
+        PUSH, __27_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x000020F8
+        PUSH, __3_intnl_Fish
+        PUSH, __2_intnl_Fish
+        COPY
+        JUMP, 0x00002134
+        PUSH, __3_intnl_SystemInt32
+        PUSH, __1_const_intnl_SystemInt32
+        PUSH, __4_intnl_SystemInt32
+        EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, __4_intnl_SystemInt32
+        PUSH, __3_intnl_SystemInt32
+        COPY
+        JUMP, 0x00001FB0
+        PUSH, __2_intnl_Fish
+        PUSH, __6_const_intnl_SystemString
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
+        
+         # previousFish = myNewFish2;
+        PUSH, __0_myNewFish2_GameObject
+        PUSH, previousFish
+        COPY
+        
+         # tier3Fish = true;
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, tier3Fish
+        COPY
+        
+         # Debug.Log("Spawning Tier 3");
+        PUSH, __9_const_intnl_SystemString
+        EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
+        JUMP, 0x00002D8C
+        
+         # else if (previousFish.GetComponent<Fish>().corruptedFish == false && Corruption == false) //Else Generate Tier 3 Crimson Fish
+        PUSH, previousFish
+        PUSH, __0_const_intnl_SystemType
+        PUSH, __2_intnl_UnityEngineComponentArray
+        EXTERN, "UnityEngineGameObject.__GetComponents__SystemType__UnityEngineComponentArray"
+        PUSH, __6_const_intnl_Fish
+        PUSH, __2_intnl_Fish
+        COPY
+        PUSH, __2_intnl_UnityEngineComponentArray
+        PUSH, __0_intnl_SystemInt32
+        EXTERN, "UnityEngineComponentArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __1_intnl_SystemInt32
+        COPY
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __0_intnl_SystemInt32
+        PUSH, __26_intnl_SystemBoolean
+        EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
+        PUSH, __26_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00002370
+        PUSH, __2_intnl_UnityEngineComponentArray
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __0_intnl_UnityEngineComponent
+        EXTERN, "UnityEngineComponentArray.__Get__SystemInt32__UnityEngineComponent"
+        PUSH, __0_intnl_UnityEngineComponent
+        PUSH, __3_intnl_Fish
+        COPY
+        PUSH, __3_intnl_Fish
+        PUSH, __1_const_intnl_SystemString
+        PUSH, __2_intnl_SystemObject
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
+        PUSH, __2_intnl_SystemObject
+        PUSH, __0_const_intnl_SystemObject
+        PUSH, __27_intnl_SystemBoolean
+        EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
+        PUSH, __27_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x000022D4
+        PUSH, __2_intnl_SystemObject
+        PUSH, __1_intnl_SystemInt64
+        EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
+        PUSH, __1_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        JUMP, 0x000022E8
+        PUSH, __1_const_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        PUSH, __0_intnl_SystemInt64
+        PUSH, __2_const_intnl_SystemInt64
+        PUSH, __28_intnl_SystemBoolean
+        EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
+        PUSH, __28_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00002334
+        PUSH, __3_intnl_Fish
+        PUSH, __2_intnl_Fish
+        COPY
+        JUMP, 0x00002370
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __1_const_intnl_SystemInt32
+        PUSH, __2_intnl_SystemInt32
+        EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, __2_intnl_SystemInt32
+        PUSH, __1_intnl_SystemInt32
+        COPY
+        JUMP, 0x000021EC
+        PUSH, __2_intnl_Fish
+        PUSH, __7_const_intnl_SystemString
+        PUSH, __2_intnl_SystemObject
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
+        PUSH, __2_intnl_SystemObject
+        PUSH, __27_intnl_SystemBoolean
+        EXTERN, "SystemConvert.__ToBoolean__SystemObject__SystemBoolean"
+        PUSH, __27_intnl_SystemBoolean
+        PUSH, __1_const_intnl_SystemBoolean
+        PUSH, __28_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __28_intnl_SystemBoolean
+        PUSH, __25_intnl_SystemBoolean
+        COPY
+        PUSH, __25_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00002440
+        PUSH, Corruption
+        PUSH, __1_const_intnl_SystemBoolean
+        PUSH, __29_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __25_intnl_SystemBoolean
+        PUSH, __29_intnl_SystemBoolean
+        PUSH, __30_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_ConditionalAnd__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __30_intnl_SystemBoolean
+        PUSH, __25_intnl_SystemBoolean
+        COPY
+        PUSH, __25_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x000027A0
+        
+         # {
+        
+         # var myNewFish2 = Tier3CrimsonFishes[Random.Range(0, Tier3CrimsonFishes.Length)];//VRCInstantiate(testFish);
+        PUSH, Tier3CrimsonFishes
+        PUSH, __0_intnl_SystemInt32
+        EXTERN, "UnityEngineGameObjectArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __0_intnl_SystemInt32
+        PUSH, __1_intnl_SystemInt32
+        EXTERN, "UnityEngineRandom.__Range__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, Tier3CrimsonFishes
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __0_intnl_UnityEngineGameObject
+        EXTERN, "UnityEngineGameObjectArray.__Get__SystemInt32__UnityEngineGameObject"
+        PUSH, __0_intnl_UnityEngineGameObject
+        PUSH, __0_myNewFish2_GameObject
+        COPY
+        
+         # myNewFish2.transform.position = gameObject.transform.position;
+        PUSH, __0_myNewFish2_GameObject
+        PUSH, __0_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __0_this_intnl_UnityEngineGameObject
+        PUSH, __1_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __1_intnl_UnityEngineTransform
+        PUSH, __0_intnl_UnityEngineVector3
+        EXTERN, "UnityEngineTransform.__get_position__UnityEngineVector3"
+        PUSH, __0_intnl_UnityEngineTransform
+        PUSH, __0_intnl_UnityEngineVector3
+        EXTERN, "UnityEngineTransform.__set_position__UnityEngineVector3__SystemVoid"
+        
+         # myNewFish2.transform.parent = gameObject.transform;
+        PUSH, __0_myNewFish2_GameObject
+        PUSH, __2_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __0_this_intnl_UnityEngineGameObject
+        PUSH, __3_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __2_intnl_UnityEngineTransform
+        PUSH, __3_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineTransform.__set_parent__UnityEngineTransform__SystemVoid"
+        
+         # previousFish.GetComponent<Fish>().SendtoSpawn();
+        PUSH, previousFish
+        PUSH, __0_const_intnl_SystemType
+        PUSH, __3_intnl_UnityEngineComponentArray
+        EXTERN, "UnityEngineGameObject.__GetComponents__SystemType__UnityEngineComponentArray"
+        PUSH, __7_const_intnl_Fish
+        PUSH, __3_intnl_Fish
+        COPY
+        PUSH, __3_intnl_UnityEngineComponentArray
+        PUSH, __2_intnl_SystemInt32
+        EXTERN, "UnityEngineComponentArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __3_intnl_SystemInt32
+        COPY
+        PUSH, __3_intnl_SystemInt32
+        PUSH, __2_intnl_SystemInt32
+        PUSH, __31_intnl_SystemBoolean
+        EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
+        PUSH, __31_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00002748
+        PUSH, __3_intnl_UnityEngineComponentArray
+        PUSH, __3_intnl_SystemInt32
+        PUSH, __0_intnl_UnityEngineComponent
+        EXTERN, "UnityEngineComponentArray.__Get__SystemInt32__UnityEngineComponent"
+        PUSH, __0_intnl_UnityEngineComponent
+        PUSH, __4_intnl_Fish
+        COPY
+        PUSH, __4_intnl_Fish
+        PUSH, __1_const_intnl_SystemString
+        PUSH, __3_intnl_SystemObject
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
+        PUSH, __3_intnl_SystemObject
+        PUSH, __0_const_intnl_SystemObject
+        PUSH, __32_intnl_SystemBoolean
+        EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
+        PUSH, __32_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x000026AC
+        PUSH, __3_intnl_SystemObject
+        PUSH, __1_intnl_SystemInt64
+        EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
+        PUSH, __1_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        JUMP, 0x000026C0
+        PUSH, __1_const_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        PUSH, __0_intnl_SystemInt64
+        PUSH, __2_const_intnl_SystemInt64
+        PUSH, __33_intnl_SystemBoolean
+        EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
+        PUSH, __33_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x0000270C
+        PUSH, __4_intnl_Fish
+        PUSH, __3_intnl_Fish
+        COPY
+        JUMP, 0x00002748
+        PUSH, __3_intnl_SystemInt32
+        PUSH, __1_const_intnl_SystemInt32
+        PUSH, __4_intnl_SystemInt32
+        EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, __4_intnl_SystemInt32
+        PUSH, __3_intnl_SystemInt32
+        COPY
+        JUMP, 0x000025C4
+        PUSH, __3_intnl_Fish
+        PUSH, __6_const_intnl_SystemString
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
+        
+         # previousFish = myNewFish2;
+        PUSH, __0_myNewFish2_GameObject
+        PUSH, previousFish
+        COPY
+        
+         # tier3Fish = true;
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, tier3Fish
+        COPY
+        
+         # Debug.Log("Spawning Tier 3");
+        PUSH, __9_const_intnl_SystemString
+        EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
+        JUMP, 0x00002D8C
+        
+         # else if (previousFish.GetComponent<Fish>().corruptedFish == false && Corruption) //Generate Variant
+        PUSH, previousFish
+        PUSH, __0_const_intnl_SystemType
+        PUSH, __3_intnl_UnityEngineComponentArray
+        EXTERN, "UnityEngineGameObject.__GetComponents__SystemType__UnityEngineComponentArray"
+        PUSH, __8_const_intnl_Fish
+        PUSH, __3_intnl_Fish
+        COPY
+        PUSH, __3_intnl_UnityEngineComponentArray
+        PUSH, __0_intnl_SystemInt32
+        EXTERN, "UnityEngineComponentArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __1_intnl_SystemInt32
+        COPY
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __0_intnl_SystemInt32
+        PUSH, __32_intnl_SystemBoolean
+        EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
+        PUSH, __32_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00002984
+        PUSH, __3_intnl_UnityEngineComponentArray
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __0_intnl_UnityEngineComponent
+        EXTERN, "UnityEngineComponentArray.__Get__SystemInt32__UnityEngineComponent"
+        PUSH, __0_intnl_UnityEngineComponent
+        PUSH, __4_intnl_Fish
+        COPY
+        PUSH, __4_intnl_Fish
+        PUSH, __1_const_intnl_SystemString
+        PUSH, __3_intnl_SystemObject
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
+        PUSH, __3_intnl_SystemObject
+        PUSH, __0_const_intnl_SystemObject
+        PUSH, __33_intnl_SystemBoolean
+        EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
+        PUSH, __33_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x000028E8
+        PUSH, __3_intnl_SystemObject
+        PUSH, __1_intnl_SystemInt64
+        EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
+        PUSH, __1_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        JUMP, 0x000028FC
+        PUSH, __1_const_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        PUSH, __0_intnl_SystemInt64
+        PUSH, __2_const_intnl_SystemInt64
+        PUSH, __34_intnl_SystemBoolean
+        EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
+        PUSH, __34_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00002948
+        PUSH, __4_intnl_Fish
+        PUSH, __3_intnl_Fish
+        COPY
+        JUMP, 0x00002984
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __1_const_intnl_SystemInt32
+        PUSH, __2_intnl_SystemInt32
+        EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, __2_intnl_SystemInt32
+        PUSH, __1_intnl_SystemInt32
+        COPY
+        JUMP, 0x00002800
+        PUSH, __3_intnl_Fish
+        PUSH, __7_const_intnl_SystemString
+        PUSH, __3_intnl_SystemObject
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
+        PUSH, __3_intnl_SystemObject
+        PUSH, __33_intnl_SystemBoolean
+        EXTERN, "SystemConvert.__ToBoolean__SystemObject__SystemBoolean"
+        PUSH, __33_intnl_SystemBoolean
+        PUSH, __1_const_intnl_SystemBoolean
+        PUSH, __34_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __34_intnl_SystemBoolean
+        PUSH, __31_intnl_SystemBoolean
+        COPY
+        PUSH, __31_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00002A34
+        PUSH, __31_intnl_SystemBoolean
+        PUSH, Corruption
+        PUSH, __35_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_ConditionalAnd__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __35_intnl_SystemBoolean
+        PUSH, __31_intnl_SystemBoolean
+        COPY
+        PUSH, __31_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00002D8C
+        
+         # {
+        
+         # var myNewFish2 = Tier2CorruptedVariant[Random.Range(0, Tier2CorruptedVariant.Length)];//VRCInstantiate(testFish);
+        PUSH, Tier2CorruptedVariant
+        PUSH, __0_intnl_SystemInt32
+        EXTERN, "UnityEngineGameObjectArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __0_intnl_SystemInt32
+        PUSH, __1_intnl_SystemInt32
+        EXTERN, "UnityEngineRandom.__Range__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, Tier2CorruptedVariant
+        PUSH, __1_intnl_SystemInt32
+        PUSH, __0_intnl_UnityEngineGameObject
+        EXTERN, "UnityEngineGameObjectArray.__Get__SystemInt32__UnityEngineGameObject"
+        PUSH, __0_intnl_UnityEngineGameObject
+        PUSH, __0_myNewFish2_GameObject
+        COPY
+        
+         # myNewFish2.transform.position = gameObject.transform.position;
+        PUSH, __0_myNewFish2_GameObject
+        PUSH, __0_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __0_this_intnl_UnityEngineGameObject
+        PUSH, __1_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __1_intnl_UnityEngineTransform
+        PUSH, __0_intnl_UnityEngineVector3
+        EXTERN, "UnityEngineTransform.__get_position__UnityEngineVector3"
+        PUSH, __0_intnl_UnityEngineTransform
+        PUSH, __0_intnl_UnityEngineVector3
+        EXTERN, "UnityEngineTransform.__set_position__UnityEngineVector3__SystemVoid"
+        
+         # myNewFish2.transform.parent = gameObject.transform;
+        PUSH, __0_myNewFish2_GameObject
+        PUSH, __2_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __0_this_intnl_UnityEngineGameObject
+        PUSH, __3_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, __2_intnl_UnityEngineTransform
+        PUSH, __3_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineTransform.__set_parent__UnityEngineTransform__SystemVoid"
+        
+         # previousFish.GetComponent<Fish>().SendtoSpawn();
+        PUSH, previousFish
+        PUSH, __0_const_intnl_SystemType
+        PUSH, __4_intnl_UnityEngineComponentArray
+        EXTERN, "UnityEngineGameObject.__GetComponents__SystemType__UnityEngineComponentArray"
+        PUSH, __9_const_intnl_Fish
+        PUSH, __4_intnl_Fish
+        COPY
+        PUSH, __4_intnl_UnityEngineComponentArray
+        PUSH, __2_intnl_SystemInt32
+        EXTERN, "UnityEngineComponentArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __3_intnl_SystemInt32
+        COPY
+        PUSH, __3_intnl_SystemInt32
+        PUSH, __2_intnl_SystemInt32
+        PUSH, __36_intnl_SystemBoolean
+        EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
+        PUSH, __36_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00002D3C
+        PUSH, __4_intnl_UnityEngineComponentArray
+        PUSH, __3_intnl_SystemInt32
+        PUSH, __0_intnl_UnityEngineComponent
+        EXTERN, "UnityEngineComponentArray.__Get__SystemInt32__UnityEngineComponent"
+        PUSH, __0_intnl_UnityEngineComponent
+        PUSH, __5_intnl_Fish
+        COPY
+        PUSH, __5_intnl_Fish
+        PUSH, __1_const_intnl_SystemString
+        PUSH, __4_intnl_SystemObject
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
+        PUSH, __4_intnl_SystemObject
+        PUSH, __0_const_intnl_SystemObject
+        PUSH, __37_intnl_SystemBoolean
+        EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
+        PUSH, __37_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00002CA0
+        PUSH, __4_intnl_SystemObject
+        PUSH, __1_intnl_SystemInt64
+        EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
+        PUSH, __1_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        JUMP, 0x00002CB4
+        PUSH, __1_const_intnl_SystemInt64
+        PUSH, __0_intnl_SystemInt64
+        COPY
+        PUSH, __0_intnl_SystemInt64
+        PUSH, __2_const_intnl_SystemInt64
+        PUSH, __38_intnl_SystemBoolean
+        EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
+        PUSH, __38_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00002D00
+        PUSH, __5_intnl_Fish
+        PUSH, __4_intnl_Fish
+        COPY
+        JUMP, 0x00002D3C
+        PUSH, __3_intnl_SystemInt32
+        PUSH, __1_const_intnl_SystemInt32
+        PUSH, __4_intnl_SystemInt32
+        EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, __4_intnl_SystemInt32
+        PUSH, __3_intnl_SystemInt32
+        COPY
+        JUMP, 0x00002BB8
+        PUSH, __4_intnl_Fish
+        PUSH, __6_const_intnl_SystemString
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
+        
+         # previousFish = myNewFish2;
+        PUSH, __0_myNewFish2_GameObject
+        PUSH, previousFish
+        COPY
+        
+         # tier2Fish = true;
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, tier2Fish
+        COPY
+        
+         # Debug.Log("Spawning Variant");
+        PUSH, __8_const_intnl_SystemString
+        EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
+        
+         # Debug.Log("Chicken Strips with man Aise");
+        PUSH, __10_const_intnl_SystemString
+        EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
         
          # fishSpawned = true;
         PUSH, __0_const_intnl_SystemBoolean
@@ -869,7 +2056,7 @@
         
          # if(fishSpawned)
         PUSH, fishSpawned
-        JUMP_IF_FALSE, 0x00001058
+        JUMP_IF_FALSE, 0x00002DD4
         
          # {
         
@@ -908,7 +2095,7 @@
         PUSH, __3_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __3_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001298
+        JUMP_IF_FALSE, 0x00003014
         PUSH, __0_intnl_UnityEngineComponentArray
         PUSH, __1_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -925,14 +2112,14 @@
         PUSH, __4_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000011FC
+        JUMP_IF_FALSE, 0x00002F78
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00001210
+        JUMP, 0x00002F8C
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -941,11 +2128,11 @@
         PUSH, __5_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __5_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000125C
+        JUMP_IF_FALSE, 0x00002FD8
         PUSH, __1_intnl_ResistanceText
         PUSH, __0_intnl_ResistanceText
         COPY
-        JUMP, 0x00001298
+        JUMP, 0x00003014
         PUSH, __1_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
@@ -953,7 +2140,7 @@
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_intnl_SystemInt32
         COPY
-        JUMP, 0x00001114
+        JUMP, 0x00002E90
         PUSH, __0_const_intnl_SystemInt32
         PUSH, __0_intnl_SystemSingle
         EXTERN, "SystemConvert.__ToSingle__SystemInt32__SystemSingle"
@@ -981,7 +2168,7 @@
         PUSH, __3_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __3_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000014B4
+        JUMP_IF_FALSE, 0x00003230
         PUSH, __1_intnl_UnityEngineComponentArray
         PUSH, __1_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -998,14 +2185,14 @@
         PUSH, __4_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001418
+        JUMP_IF_FALSE, 0x00003194
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x0000142C
+        JUMP, 0x000031A8
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -1014,11 +2201,11 @@
         PUSH, __5_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __5_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001478
+        JUMP_IF_FALSE, 0x000031F4
         PUSH, __2_intnl_ResistanceText
         PUSH, __1_intnl_ResistanceText
         COPY
-        JUMP, 0x000014B4
+        JUMP, 0x00003230
         PUSH, __1_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
@@ -1026,7 +2213,7 @@
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_intnl_SystemInt32
         COPY
-        JUMP, 0x00001330
+        JUMP, 0x000030AC
         PUSH, __0_const_intnl_SystemInt32
         PUSH, __1_intnl_SystemSingle
         EXTERN, "SystemConvert.__ToSingle__SystemInt32__SystemSingle"
@@ -1054,7 +2241,7 @@
         PUSH, __3_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __3_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000016D0
+        JUMP_IF_FALSE, 0x0000344C
         PUSH, __2_intnl_UnityEngineComponentArray
         PUSH, __1_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -1071,14 +2258,14 @@
         PUSH, __4_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001634
+        JUMP_IF_FALSE, 0x000033B0
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00001648
+        JUMP, 0x000033C4
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -1087,11 +2274,11 @@
         PUSH, __5_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __5_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001694
+        JUMP_IF_FALSE, 0x00003410
         PUSH, __3_intnl_ResistanceText
         PUSH, __2_intnl_ResistanceText
         COPY
-        JUMP, 0x000016D0
+        JUMP, 0x0000344C
         PUSH, __1_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
@@ -1099,19 +2286,19 @@
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_intnl_SystemInt32
         COPY
-        JUMP, 0x0000154C
+        JUMP, 0x000032C8
         PUSH, __0_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemSingle
         EXTERN, "SystemConvert.__ToSingle__SystemInt32__SystemSingle"
         PUSH, __2_intnl_ResistanceText
-        PUSH, __7_const_intnl_SystemString
+        PUSH, __11_const_intnl_SystemString
         PUSH, __2_intnl_SystemSingle
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SetProgramVariable__SystemString_SystemObject__SystemVoid"
         
          # resetEverything();
         PUSH, __0_const_intnl_exitJumpLoc_UInt32
-        JUMP, 0x00001F40
-        JUMP, 0x000019AC
+        JUMP, 0x00003DF0
+        JUMP, 0x00003728
         
          # else
         
@@ -1123,7 +2310,7 @@
         PUSH, __2_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_GreaterThanOrEqual__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __2_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001978
+        JUMP_IF_FALSE, 0x000036F4
         
          # {
         
@@ -1134,7 +2321,7 @@
         
          # resetEverything();
         PUSH, __1_const_intnl_exitJumpLoc_UInt32
-        JUMP, 0x00001F40
+        JUMP, 0x00003DF0
         
          # myFishingRod.GetComponent<ResistanceText>().resetVariables();
         PUSH, myFishingRod
@@ -1155,7 +2342,7 @@
         PUSH, __3_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __3_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001958
+        JUMP_IF_FALSE, 0x000036D4
         PUSH, __0_intnl_UnityEngineComponentArray
         PUSH, __1_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -1172,14 +2359,14 @@
         PUSH, __4_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000018BC
+        JUMP_IF_FALSE, 0x00003638
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x000018D0
+        JUMP, 0x0000364C
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -1188,11 +2375,11 @@
         PUSH, __5_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __5_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000191C
+        JUMP_IF_FALSE, 0x00003698
         PUSH, __1_intnl_ResistanceText
         PUSH, __0_intnl_ResistanceText
         COPY
-        JUMP, 0x00001958
+        JUMP, 0x000036D4
         PUSH, __1_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
@@ -1200,11 +2387,11 @@
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_intnl_SystemInt32
         COPY
-        JUMP, 0x000017D4
+        JUMP, 0x00003550
         PUSH, __0_intnl_ResistanceText
-        PUSH, __8_const_intnl_SystemString
+        PUSH, __12_const_intnl_SystemString
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
-        JUMP, 0x000019AC
+        JUMP, 0x00003728
         
          # else
         
@@ -1218,7 +2405,7 @@
         PUSH, __0_intnl_SystemInt32
         PUSH, resetTimer
         COPY
-        JUMP, 0x00001BD4
+        JUMP, 0x00003950
         
          # else
         
@@ -1231,7 +2418,7 @@
         
          # resetEverything();
         PUSH, __2_const_intnl_exitJumpLoc_UInt32
-        JUMP, 0x00001F40
+        JUMP, 0x00003DF0
         
          # myFishingRod.GetComponent<ResistanceText>().resetVariables();
         PUSH, myFishingRod
@@ -1252,7 +2439,7 @@
         PUSH, __2_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __2_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001BBC
+        JUMP_IF_FALSE, 0x00003938
         PUSH, __0_intnl_UnityEngineComponentArray
         PUSH, __1_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -1269,14 +2456,14 @@
         PUSH, __3_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __3_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001B20
+        JUMP_IF_FALSE, 0x0000389C
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00001B34
+        JUMP, 0x000038B0
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -1285,11 +2472,11 @@
         PUSH, __4_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001B80
+        JUMP_IF_FALSE, 0x000038FC
         PUSH, __1_intnl_ResistanceText
         PUSH, __0_intnl_ResistanceText
         COPY
-        JUMP, 0x00001BBC
+        JUMP, 0x00003938
         PUSH, __1_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
@@ -1297,9 +2484,9 @@
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_intnl_SystemInt32
         COPY
-        JUMP, 0x00001A38
+        JUMP, 0x000037B4
         PUSH, __0_intnl_ResistanceText
-        PUSH, __8_const_intnl_SystemString
+        PUSH, __12_const_intnl_SystemString
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
         COPY
@@ -1331,48 +2518,48 @@
          # if (hookBite==false && inWater==true)
         PUSH, hookBite
         PUSH, __1_const_intnl_SystemBoolean
-        PUSH, __10_intnl_SystemBoolean
+        PUSH, __40_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
-        PUSH, __10_intnl_SystemBoolean
-        PUSH, __9_intnl_SystemBoolean
+        PUSH, __40_intnl_SystemBoolean
+        PUSH, __39_intnl_SystemBoolean
         COPY
-        PUSH, __9_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001CA4
+        PUSH, __39_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00003A20
         PUSH, inWater
         PUSH, __0_const_intnl_SystemBoolean
-        PUSH, __11_intnl_SystemBoolean
+        PUSH, __41_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
-        PUSH, __9_intnl_SystemBoolean
-        PUSH, __11_intnl_SystemBoolean
-        PUSH, __12_intnl_SystemBoolean
+        PUSH, __39_intnl_SystemBoolean
+        PUSH, __41_intnl_SystemBoolean
+        PUSH, __42_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_ConditionalAnd__SystemBoolean_SystemBoolean__SystemBoolean"
-        PUSH, __12_intnl_SystemBoolean
-        PUSH, __9_intnl_SystemBoolean
+        PUSH, __42_intnl_SystemBoolean
+        PUSH, __39_intnl_SystemBoolean
         COPY
-        PUSH, __9_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001D68
+        PUSH, __39_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00003AE4
         
          # {
         
          # if (timer <= 30)
         PUSH, timer
         PUSH, __3_const_intnl_SystemInt32
-        PUSH, __13_intnl_SystemBoolean
+        PUSH, __43_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThanOrEqual__SystemInt32_SystemInt32__SystemBoolean"
-        PUSH, __13_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001D20
+        PUSH, __43_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00003A9C
         
          # {
         
          # timer += 1;
         PUSH, timer
         PUSH, __1_const_intnl_SystemInt32
-        PUSH, __5_intnl_SystemInt32
+        PUSH, __7_intnl_SystemInt32
         EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
-        PUSH, __5_intnl_SystemInt32
+        PUSH, __7_intnl_SystemInt32
         PUSH, timer
         COPY
-        JUMP, 0x00001D68
+        JUMP, 0x00003AE4
         
          # else
         
@@ -1381,9 +2568,9 @@
          # timerBig += 1;
         PUSH, timerBig
         PUSH, __1_const_intnl_SystemInt32
-        PUSH, __5_intnl_SystemInt32
+        PUSH, __7_intnl_SystemInt32
         EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
-        PUSH, __5_intnl_SystemInt32
+        PUSH, __7_intnl_SystemInt32
         PUSH, timerBig
         COPY
         
@@ -1432,11 +2619,11 @@
         PUSH, __0_intnl_SystemString
         EXTERN, "UnityEngineGameObject.__get_name__SystemString"
         PUSH, __0_intnl_SystemString
-        PUSH, __9_const_intnl_SystemString
-        PUSH, __14_intnl_SystemBoolean
+        PUSH, __13_const_intnl_SystemString
+        PUSH, __44_intnl_SystemBoolean
         EXTERN, "SystemString.__op_Equality__SystemString_SystemString__SystemBoolean"
-        PUSH, __14_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001E50
+        PUSH, __44_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00003BE8
         
          # {
         
@@ -1447,6 +2634,43 @@
         
          # Corruption = true;
         PUSH, __0_const_intnl_SystemBoolean
+        PUSH, Corruption
+        COPY
+        
+         # Crimson = false;
+        PUSH, __1_const_intnl_SystemBoolean
+        PUSH, Crimson
+        COPY
+        JUMP, 0x00003C84
+        
+         # else if(other.gameObject.name == "CrimsonWater")
+        PUSH, __0_other_Collider
+        PUSH, __2_intnl_UnityEngineGameObject
+        EXTERN, "UnityEngineCollider.__get_gameObject__UnityEngineGameObject"
+        PUSH, __2_intnl_UnityEngineGameObject
+        PUSH, __1_intnl_SystemString
+        EXTERN, "UnityEngineGameObject.__get_name__SystemString"
+        PUSH, __1_intnl_SystemString
+        PUSH, __14_const_intnl_SystemString
+        PUSH, __45_intnl_SystemBoolean
+        EXTERN, "SystemString.__op_Equality__SystemString_SystemString__SystemBoolean"
+        PUSH, __45_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00003C84
+        
+         # {
+        
+         # inWater = true;
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, inWater
+        COPY
+        
+         # Crimson = true;
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, Crimson
+        COPY
+        
+         # Corruption = false;
+        PUSH, __1_const_intnl_SystemBoolean
         PUSH, Corruption
         COPY
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
@@ -1468,17 +2692,39 @@
         
          # if (other.gameObject.name == "CorruptedWater")
         PUSH, __1_other_Collider
-        PUSH, __2_intnl_UnityEngineGameObject
+        PUSH, __3_intnl_UnityEngineGameObject
         EXTERN, "UnityEngineCollider.__get_gameObject__UnityEngineGameObject"
-        PUSH, __2_intnl_UnityEngineGameObject
-        PUSH, __1_intnl_SystemString
+        PUSH, __3_intnl_UnityEngineGameObject
+        PUSH, __2_intnl_SystemString
         EXTERN, "UnityEngineGameObject.__get_name__SystemString"
-        PUSH, __1_intnl_SystemString
-        PUSH, __9_const_intnl_SystemString
-        PUSH, __15_intnl_SystemBoolean
+        PUSH, __2_intnl_SystemString
+        PUSH, __13_const_intnl_SystemString
+        PUSH, __46_intnl_SystemBoolean
         EXTERN, "SystemString.__op_Equality__SystemString_SystemString__SystemBoolean"
-        PUSH, __15_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001EF4
+        PUSH, __46_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00003D30
+        
+         # {
+        
+         # inWater = false;
+        PUSH, __1_const_intnl_SystemBoolean
+        PUSH, inWater
+        COPY
+        JUMP, 0x00003DA4
+        
+         # else if(other.gameObject.name == "CrimsonWater")
+        PUSH, __1_other_Collider
+        PUSH, __4_intnl_UnityEngineGameObject
+        EXTERN, "UnityEngineCollider.__get_gameObject__UnityEngineGameObject"
+        PUSH, __4_intnl_UnityEngineGameObject
+        PUSH, __3_intnl_SystemString
+        EXTERN, "UnityEngineGameObject.__get_name__SystemString"
+        PUSH, __3_intnl_SystemString
+        PUSH, __14_const_intnl_SystemString
+        PUSH, __47_intnl_SystemBoolean
+        EXTERN, "SystemString.__op_Equality__SystemString_SystemString__SystemBoolean"
+        PUSH, __47_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00003DA4
         
          # {
         
@@ -1575,25 +2821,25 @@
          # myFishingRod.GetComponent<ResistanceText>().resetVariables();
         PUSH, myFishingRod
         PUSH, __0_const_intnl_SystemType
-        PUSH, __4_intnl_UnityEngineComponentArray
+        PUSH, __5_intnl_UnityEngineComponentArray
         EXTERN, "UnityEngineGameObject.__GetComponents__SystemType__UnityEngineComponentArray"
         PUSH, __9_const_intnl_ResistanceText
         PUSH, __5_intnl_ResistanceText
         COPY
-        PUSH, __4_intnl_UnityEngineComponentArray
-        PUSH, __6_intnl_SystemInt32
+        PUSH, __5_intnl_UnityEngineComponentArray
+        PUSH, __8_intnl_SystemInt32
         EXTERN, "UnityEngineComponentArray.__get_Length__SystemInt32"
         PUSH, __0_const_intnl_SystemInt32
-        PUSH, __7_intnl_SystemInt32
+        PUSH, __9_intnl_SystemInt32
         COPY
-        PUSH, __7_intnl_SystemInt32
-        PUSH, __6_intnl_SystemInt32
-        PUSH, __16_intnl_SystemBoolean
+        PUSH, __9_intnl_SystemInt32
+        PUSH, __8_intnl_SystemInt32
+        PUSH, __48_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
-        PUSH, __16_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002220
-        PUSH, __4_intnl_UnityEngineComponentArray
-        PUSH, __7_intnl_SystemInt32
+        PUSH, __48_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x000040D0
+        PUSH, __5_intnl_UnityEngineComponentArray
+        PUSH, __9_intnl_SystemInt32
         PUSH, __1_intnl_UnityEngineComponent
         EXTERN, "UnityEngineComponentArray.__Get__SystemInt32__UnityEngineComponent"
         PUSH, __1_intnl_UnityEngineComponent
@@ -1601,44 +2847,44 @@
         COPY
         PUSH, __6_intnl_ResistanceText
         PUSH, __1_const_intnl_SystemString
-        PUSH, __1_intnl_SystemObject
+        PUSH, __5_intnl_SystemObject
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
-        PUSH, __1_intnl_SystemObject
+        PUSH, __5_intnl_SystemObject
         PUSH, __0_const_intnl_SystemObject
-        PUSH, __17_intnl_SystemBoolean
+        PUSH, __49_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
-        PUSH, __17_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002184
-        PUSH, __1_intnl_SystemObject
+        PUSH, __49_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00004034
+        PUSH, __5_intnl_SystemObject
         PUSH, __3_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __3_intnl_SystemInt64
         PUSH, __2_intnl_SystemInt64
         COPY
-        JUMP, 0x00002198
+        JUMP, 0x00004048
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __2_intnl_SystemInt64
         COPY
         PUSH, __2_intnl_SystemInt64
         PUSH, __0_const_intnl_SystemInt64
-        PUSH, __18_intnl_SystemBoolean
+        PUSH, __50_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
-        PUSH, __18_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000021E4
+        PUSH, __50_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00004094
         PUSH, __6_intnl_ResistanceText
         PUSH, __5_intnl_ResistanceText
         COPY
-        JUMP, 0x00002220
-        PUSH, __7_intnl_SystemInt32
+        JUMP, 0x000040D0
+        PUSH, __9_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
-        PUSH, __8_intnl_SystemInt32
+        PUSH, __10_intnl_SystemInt32
         EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
-        PUSH, __8_intnl_SystemInt32
-        PUSH, __7_intnl_SystemInt32
+        PUSH, __10_intnl_SystemInt32
+        PUSH, __9_intnl_SystemInt32
         COPY
-        JUMP, 0x0000209C
+        JUMP, 0x00003F4C
         PUSH, __5_intnl_ResistanceText
-        PUSH, __8_const_intnl_SystemString
+        PUSH, __12_const_intnl_SystemString
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
         COPY

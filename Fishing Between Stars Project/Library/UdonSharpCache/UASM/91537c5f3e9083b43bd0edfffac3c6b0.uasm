@@ -5,14 +5,20 @@
     .export tier2Fishy
     .export tier3Fishy
     .export tier4Fishy
+    .export variantFish
+    .export corruptedFish
+    .export crimsonFish
     .export fishSpawn
 
     __refl_const_intnl_udonTypeID: %SystemInt64, null
     __refl_const_intnl_udonTypeName: %SystemString, null
+    corruptedFish: %SystemBoolean, null
+    crimsonFish: %SystemBoolean, null
     tier1Fishy: %SystemBoolean, null
     tier2Fishy: %SystemBoolean, null
     tier3Fishy: %SystemBoolean, null
     tier4Fishy: %SystemBoolean, null
+    variantFish: %SystemBoolean, null
     myFishRenderer: %UnityEngineRenderer, null
     fishSpawn: %UnityEngineTransform, null
     __0_this_intnl_UnityEngineGameObject: %UnityEngineGameObject, this
@@ -87,6 +93,12 @@
          # public bool tier3Fishy;
         
          # public bool tier4Fishy;
+        
+         # public bool variantFish;
+        
+         # public bool corruptedFish;
+        
+         # public bool crimsonFish;
         
          # public Transform fishSpawn;
         

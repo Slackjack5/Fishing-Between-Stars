@@ -12,6 +12,9 @@ public class Fish : UdonSharpBehaviour
     public bool tier2Fishy;
     public bool tier3Fishy;
     public bool tier4Fishy;
+    public bool variantFish;
+    public bool corruptedFish;
+    public bool crimsonFish;
 
     public Transform fishSpawn;
 
