@@ -164,20 +164,17 @@ public class ResistanceText : UdonSharpBehaviour
         {
             myAnimator.enabled = true;
             myAnimator.SetBool("Reeling", true);
-            myAnimator.SetBool("ReelingOut", false);
+            myAnimator.SetFloat("AnimSpeed", 1.5f);
 
-
-            //myAnimator.enabled = false;
-            //myAnimator.SetBool("ReelingOut", false);
-            //myAnimator.SetBool("Reeling", false);
         }
         else
         {
             myAnimator.enabled = true;
-            myAnimator.SetBool("ReelingOut", true);
-            myAnimator.SetBool("Reeling", false);
+            myAnimator.SetFloat("AnimSpeed", .5f);
+            myAnimator.SetBool("Reeling", true);
 
         }
+
         //Resistance Calculator
 
         //Ui
@@ -279,7 +276,6 @@ public class ResistanceText : UdonSharpBehaviour
             resistanceScore = 0;
             //Stop Animations
             myAnimator.enabled = false;
-            myAnimator.SetBool("ReelingOut", false);
             myAnimator.SetBool("Reeling", false);
         }
         if (resistanceScore > 1000)
@@ -287,7 +283,6 @@ public class ResistanceText : UdonSharpBehaviour
             resistanceScore = 1000;
             //Stop Animations
             myAnimator.enabled = false;
-            myAnimator.SetBool("ReelingOut", false);
             myAnimator.SetBool("Reeling", false);
         }
         if (fishResistanceScore < 0)
