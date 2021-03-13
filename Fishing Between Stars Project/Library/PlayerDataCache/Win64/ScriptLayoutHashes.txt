@@ -15,7 +15,7 @@ e6baf3ef68d60bd0901dfb91c02bc1c3 UnityEngine.UI.dll:UnityEngine.UI.Image
 d25601db5f800892b41ff09aef0f5e19 VRCCore-Editor.dll:VRC.Core.PipelineManager
 0f9dd91ac85e0b374352b9b2a5e289af Assembly-CSharp.dll:.DynamicBone
 4828730ea597a0734df2292f3745cd3e Assembly-CSharp.dll:.FishingCube
-15b8158580334c1944d1c2dc49e70c08 Assembly-CSharp.dll:.ResistanceText
+06544438796c8c195076f7cf16984624 Assembly-CSharp.dll:.ResistanceText
 f167ec4f0628e41ed2ffe7bc6043f1a8 Assembly-CSharp.dll:.TouchTest
 bad0f5a58d4b55ed1442379677ba2587 VRC.Udon.dll:VRC.Udon.ProgramSources.SerializedUdonProgramAsset
 98802acfe9980994b612b48375d6584f VRC.Udon.dll:VRC.Udon.UdonBehaviour

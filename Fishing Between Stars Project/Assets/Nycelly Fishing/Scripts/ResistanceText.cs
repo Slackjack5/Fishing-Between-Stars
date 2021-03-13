@@ -21,6 +21,7 @@ public class ResistanceText : UdonSharpBehaviour
     public float reistanceRate = 0;
     private float reistanceDecay = 0;
     public float reistanceRateMax = 30;
+    public float resistanceRuns = 0;
 
     //Fish
     public float fishResistanceScore = 0;
@@ -111,7 +112,7 @@ public class ResistanceText : UdonSharpBehaviour
         //If The Trigger is being held , increase player resistance
         if (triggerHeld)
         {
-
+            //For VR
             //Slow down how fast we count player resistance
             reistanceRate += 1;
             
@@ -119,7 +120,6 @@ public class ResistanceText : UdonSharpBehaviour
             {
                 //Resistance
                 reistanceRate = 0;
-
                 //Go to positive if negative
                 if (deltaResistanceScore == -1)
                 {
@@ -138,6 +138,8 @@ public class ResistanceText : UdonSharpBehaviour
                     
                 }
             }
+
+            //For Desktop
         }
         else
         {
