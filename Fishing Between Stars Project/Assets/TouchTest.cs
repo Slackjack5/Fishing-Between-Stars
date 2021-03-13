@@ -14,6 +14,7 @@ public class TouchTest : UdonSharpBehaviour
     public GameObject myFishingRod;
 
     public GameObject[] myCircles;
+    public GameObject myHandle;
     public int arrayPos;
     public int lastPos;
     public bool resistanceAdded = false;
@@ -37,11 +38,8 @@ public class TouchTest : UdonSharpBehaviour
 
         if (Vector3.Distance(r, myCircles[arrayPos].transform.position) <= range)
         {
-            //Debug.Log("Player in Range");
-            myCircles[arrayPos].GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
 
-            //Increment Array Position
-            arrayPos = (arrayPos+1) % myCircles.Length;
+
             if(arrayPos==0)
             {
                 for(int x=0;x<myCircles.Length-1;x++)
@@ -54,13 +52,17 @@ public class TouchTest : UdonSharpBehaviour
             //Slow down how fast we count player resistance
             if(myCircles[arrayPos].GetComponent<TouchTest>().resistanceAdded==false)
             {
-                Debug.Log("Adding Runs");
 
+                if (myHandle.GetComponent<Handle>().handleHeld==true)
+                {
                     Debug.Log("adding resistance by Hand");
                     //myFishingRod.GetComponent<ResistanceText>().triggerHeld = true;
-                    myFishingRod.GetComponent<ResistanceText>().resistanceScore+=20;
+                    myFishingRod.GetComponent<ResistanceText>().resistanceScore += 20;
                     myFishingRod.GetComponent<ResistanceText>().deltaResistanceScore = 16;
                     myCircles[arrayPos].GetComponent<TouchTest>().resistanceAdded = true;
+                    //Debug.Log("Player in Range");
+                    myCircles[arrayPos].GetComponent<Renderer>().material.SetColor("_Color", Color.blue);
+                }
 
             }
 
@@ -68,9 +70,18 @@ public class TouchTest : UdonSharpBehaviour
 
             //myFishingRod.GetComponent<ResistanceText>().wasTouched = true;
 
+            //Increment Array Position
+            arrayPos = (arrayPos + 1) % myCircles.Length;
         }
 
-
+        if(myHandle.GetComponent<Handle>().handleHeld == false)
+        {
+            myFishingRod.GetComponent<ResistanceText>().handleBeingHeld = false;
+        }
+        else
+        {
+            myFishingRod.GetComponent<ResistanceText>().handleBeingHeld = true;
+        }
     }
 
 

@@ -92,6 +92,12 @@ public class ResistanceText : UdonSharpBehaviour
     //
     private int animStopTimer = 0;
     public int animStopTimerMax = 8;
+
+    //Mode
+    public bool VR = false;
+
+    //handle
+    public bool handleBeingHeld=false;
     void Start()
     {
         resistanceTarget = resistanceTarget.GetComponent<RectTransform>();
@@ -107,66 +113,114 @@ public class ResistanceText : UdonSharpBehaviour
 
 
         
-
-        //Player Resistance
-        //If The Trigger is being held , increase player resistance
-        if (triggerHeld)
+        //If we are in Desktop
+        if(VR==false)
         {
-            //For VR
-            //Slow down how fast we count player resistance
-            reistanceRate += 1;
-            
-            if (reistanceRate>= reistanceRateMax)
+
+            //Player Resistance
+            //If The Trigger is being held , increase player resistance
+            if (triggerHeld)
             {
-                //Resistance
-                reistanceRate = 0;
-                //Go to positive if negative
-                if (deltaResistanceScore == -1)
+                
+                //For VR
+                //Slow down how fast we count player resistance
+                reistanceRate += 1;
+
+                if (reistanceRate >= reistanceRateMax)
                 {
-                    deltaResistanceScore *= -1;
-                }
-                else
-                {
-                    if(deltaResistanceScore<=-1)
+                    //Resistance
+                    reistanceRate = 0;
+                    //Go to positive if negative
+                    if (deltaResistanceScore == -1)
                     {
-                        deltaResistanceScore /= 2;
+                        deltaResistanceScore *= -1;
                     }
                     else
                     {
-                        deltaResistanceScore *= 2;
+                        if (deltaResistanceScore <= -1)
+                        {
+                            deltaResistanceScore /= 2;
+                        }
+                        else
+                        {
+                            deltaResistanceScore *= 2;
+                        }
+
                     }
-                    
                 }
+                
+                //For Desktop
             }
-
-            //For Desktop
-        }
-        else
-        {
-            
-            //Slow down how fast we decay player resistance
-            reistanceDecay += 1;
-            if(reistanceDecay>= reistanceRateMax/2)
+            else
             {
-                reistanceDecay = 0;
+                
+                //Slow down how fast we decay player resistance
+                reistanceDecay += 1;
+                if (reistanceDecay >= reistanceRateMax / 2)
+                {
+                    reistanceDecay = 0;
 
-                if (deltaResistanceScore == 1)
-                {
-                    deltaResistanceScore *= -1;
-                }
-                else
-                {
-                    if(deltaResistanceScore<=-1)
+                    if (deltaResistanceScore == 1)
                     {
-                        deltaResistanceScore *= 2;
+                        deltaResistanceScore *= -1;
                     }
                     else
                     {
-                        deltaResistanceScore /= 2;
+                        if (deltaResistanceScore <= -1)
+                        {
+                            deltaResistanceScore *= 2;
+                        }
+                        else
+                        {
+                            deltaResistanceScore /= 2;
+                        }
+                    }
+                }
+                
+            }
+
+
+
+        }
+        else //If in VR
+        {
+            if(handleBeingHeld==false)
+            {
+                //Slow down how fast we decay player resistance
+                reistanceDecay += 1;
+                if (reistanceDecay >= reistanceRateMax / 2)
+                {
+                    reistanceDecay = 0;
+                    if(deltaResistanceScore == 0)
+                    {
+                        deltaResistanceScore = 1;
+                    }
+
+                    if (deltaResistanceScore == 1)
+                    {
+                        deltaResistanceScore *= -1;
+                    }
+                    else
+                    {
+                        if (deltaResistanceScore <= -1)
+                        {
+                            deltaResistanceScore *= 2;
+                        }
+                        else
+                        {
+                            deltaResistanceScore /= 2;
+                        }
                     }
                 }
             }
+            else if(handleBeingHeld == true)
+            {
+                deltaResistanceScore = 0;
+            }
+
         }
+
+
 
         //Set Maximum Values
         if (deltaResistanceScore >= deltaResistanceScoreMaxRise)
