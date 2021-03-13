@@ -6,6 +6,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 
+
 public class ResistanceText : UdonSharpBehaviour
 {
 
@@ -16,8 +17,8 @@ public class ResistanceText : UdonSharpBehaviour
 
     //Player
     public float resistanceScore = 0;
-    private bool triggerHeld = false;
-    private float reistanceRate = 0;
+    public bool triggerHeld = false;
+    public float reistanceRate = 0;
     private float reistanceDecay = 0;
     public float reistanceRateMax = 30;
 
@@ -64,7 +65,7 @@ public class ResistanceText : UdonSharpBehaviour
     public GameObject exhaustionCompletetion;
 
     //New Variables
-    private float deltaResistanceScore = 1f;
+    public float deltaResistanceScore = 1f;
     public float deltaResistanceScoreMaxRise = 4f;
     public float deltaResistanceScoreMaxFall = 4f;
     private float fishMovement = 1;
@@ -84,6 +85,12 @@ public class ResistanceText : UdonSharpBehaviour
     //Player
     private VRCPlayerApi player;
 
+    //Animation
+    public bool wasTouched = false;
+
+    //
+    private int animStopTimer = 0;
+    public int animStopTimerMax = 8;
     void Start()
     {
         resistanceTarget = resistanceTarget.GetComponent<RectTransform>();
@@ -174,16 +181,20 @@ public class ResistanceText : UdonSharpBehaviour
         //Animations
         if (triggerHeld)
         {
+            /*
             myAnimator.enabled = true;
             myAnimator.SetBool("Reeling", true);
             myAnimator.SetFloat("AnimSpeed", 1.5f);
+            */
 
         }
         else
         {
+            /*
             myAnimator.enabled = true;
             myAnimator.SetFloat("AnimSpeed", .5f);
             myAnimator.SetBool("Reeling", true);
+            */
 
         }
 
@@ -336,9 +347,36 @@ public class ResistanceText : UdonSharpBehaviour
             failureTimer = 0;
         }
 
+        //Animations
+        if(wasTouched)
+        {
+            
+            myAnimator.enabled = true;
+            myAnimator.SetBool("Reeling", true);
+            myAnimator.SetFloat("AnimSpeed", 1.5f);
+
+            if(animStopTimer>= animStopTimerMax)
+            {
+                //Stop Animations
+                myAnimator.enabled = false;
+                myAnimator.SetBool("Reeling", false);
+                wasTouched = false;
+                Debug.Log("Animations Stopped");
+                animStopTimer = 0;
+
+            }
+            else
+            {
+                animStopTimer += 1;
+            }
+            //Animation["Reeling"].time = 5.0;
+
+        }
+
         Vector3 r = player.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position - player.GetPosition();
         //Debug.Log(r);
     }
+
     private void Update()
     {
         //Sync Inportant Variables
@@ -349,6 +387,15 @@ public class ResistanceText : UdonSharpBehaviour
         //fishResistance.text = "Fish:" + " " + fishResistanceScore.ToString();
         //Convert Fish Resistance to a seeable string
         //fishExhaustion.text = "Goal:" + " " + exhaustionScore.ToString();
+    }
+    public virtual void OnPickup() 
+    {
+        gameObject.GetComponent<SphereCollider>().enabled = false;
+    }
+
+    public virtual void OnDrop() 
+    {
+        gameObject.GetComponent<SphereCollider>().enabled = true;
     }
 
     public virtual void OnPickupUseDown()
@@ -403,5 +450,15 @@ public class ResistanceText : UdonSharpBehaviour
         failing = false;
 
 
+    }
+
+
+    void stopAnimations()
+    {
+        //Stop Animations
+        myAnimator.enabled = false;
+        myAnimator.SetBool("Reeling", false);
+        wasTouched = false;
+        Debug.Log("Animations Stopped");
     }
 }
