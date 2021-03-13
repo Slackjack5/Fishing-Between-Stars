@@ -13,7 +13,7 @@ e6baf3ef68d60bd0901dfb91c02bc1c3 UnityEngine.UI.dll:UnityEngine.UI.Image
 748dd2a2a28da4e618912da5ac45684b UnityEngine.UI.dll:UnityEngine.EventSystems.StandaloneInputModule
 72712369a7c681ad84fc255a5ec0b333 UnityEngine.UI.dll:UnityEngine.UI.Text
 4828730ea597a0734df2292f3745cd3e Assembly-CSharp.dll:.FishingCube
-23d6611ac415eff1031090ddc773225b Assembly-CSharp.dll:.ResistanceText
+a88e756f1f4625cffb24c40815263692 Assembly-CSharp.dll:.ResistanceText
 107d1a0b4d3ff3c7ac72054037850273 Assembly-CSharp.dll:.TouchTest
 bad0f5a58d4b55ed1442379677ba2587 VRC.Udon.dll:VRC.Udon.ProgramSources.SerializedUdonProgramAsset
 3614bae5f2ee7232eea55e930d1eb42d VRCSDK3.dll:VRC.SDK3.Components.VRCPickup
@@ -22,5 +22,5 @@ bad0f5a58d4b55ed1442379677ba2587 VRC.Udon.dll:VRC.Udon.ProgramSources.Serialized
 43b443e892da1a15ae049d417d09ba57 Assembly-CSharp.dll:.Fish
 2faf8f843e9a90b7bd5360d205148b95 Assembly-CSharp.dll:.Water
 0c42704ac838f08fd4d77a3eadac1957 Assembly-CSharp.dll:.Velocimeter
-d25601db5f800892b41ff09aef0f5e19 VRCCore-Editor.dll:VRC.Core.PipelineManager
 4b6043126f64bf5a6aebb4ccc39137ba Assembly-CSharp.dll:.Handle
+d25601db5f800892b41ff09aef0f5e19 VRCCore-Editor.dll:VRC.Core.PipelineManager

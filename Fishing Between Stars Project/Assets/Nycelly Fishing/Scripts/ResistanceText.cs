@@ -98,6 +98,9 @@ public class ResistanceText : UdonSharpBehaviour
 
     //handle
     public bool handleBeingHeld=false;
+
+    //Unsync Player
+    public GameObject rodLever;
     void Start()
     {
         resistanceTarget = resistanceTarget.GetComponent<RectTransform>();
@@ -447,11 +450,15 @@ public class ResistanceText : UdonSharpBehaviour
     public virtual void OnPickup() 
     {
         gameObject.GetComponent<SphereCollider>().enabled = false;
+
+        //Set this as the player
+        rodLever.GetComponent<LeverRotation>().player = Networking.LocalPlayer;
     }
 
     public virtual void OnDrop() 
     {
         gameObject.GetComponent<SphereCollider>().enabled = true;
+        rodLever.GetComponent<LeverRotation>().player = null;
     }
 
     public virtual void OnPickupUseDown()

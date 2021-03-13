@@ -6,7 +6,7 @@ using VRC.Udon;
 
 public class LeverRotation : UdonSharpBehaviour
 {
-    private VRCPlayerApi player;
+    public VRCPlayerApi player;
     public Transform Target;
     public float RotationSpeed;
 
@@ -15,23 +15,26 @@ public class LeverRotation : UdonSharpBehaviour
     private Vector3 _direction;
     void Start()
     {
-        player = Networking.LocalPlayer;
+        player = null;
     }
 
     void FixedUpdate()
     {
-        Vector3 r = player.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;// - player.GetPosition();
+        if(player!=null)
+        {
+            Vector3 r = player.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;// - player.GetPosition();
 
-        //find the vector pointing from our position to the target
-        _direction = (r - transform.position).normalized;
-        _direction.x = 0;
-        //_direction.z = 0;
-        //_direction.y = 0;
-        //create the rotation we need to be in to look at the target
-        _lookRotation = Quaternion.LookRotation(Quaternion.Euler(-90, 0, 0)*_direction *-1,Vector3.right);
-        
-        //rotate us over time according to speed until we are in the required rotation
-        transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * RotationSpeed);
+            //find the vector pointing from our position to the target
+            _direction = (r - transform.position).normalized;
+            _direction.x = 0;
+            //_direction.z = 0;
+            //_direction.y = 0;
+            //create the rotation we need to be in to look at the target
+            _lookRotation = Quaternion.LookRotation(Quaternion.Euler(-90, 0, 0) * _direction * -1, Vector3.right);
+
+            //rotate us over time according to speed until we are in the required rotation
+            transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * RotationSpeed);
+        }
        
     }
 }
