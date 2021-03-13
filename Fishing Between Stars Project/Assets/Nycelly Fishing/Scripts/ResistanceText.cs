@@ -81,6 +81,9 @@ public class ResistanceText : UdonSharpBehaviour
     public int failureTimerMax = 150;
     private bool failing = false;
 
+    //Player
+    private VRCPlayerApi player;
+
     void Start()
     {
         resistanceTarget = resistanceTarget.GetComponent<RectTransform>();
@@ -88,6 +91,7 @@ public class ResistanceText : UdonSharpBehaviour
         canvas = canvas.GetComponent<RectTransform>();
         startingPosition = resistanceTarget.transform.position;
         speed = .1f;
+        player = Networking.LocalPlayer;
     }
 
     private void FixedUpdate()
@@ -331,6 +335,9 @@ public class ResistanceText : UdonSharpBehaviour
         {
             failureTimer = 0;
         }
+
+        Vector3 r = player.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position - player.GetPosition();
+        //Debug.Log(r);
     }
     private void Update()
     {
