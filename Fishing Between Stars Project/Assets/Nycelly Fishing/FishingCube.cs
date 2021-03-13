@@ -48,6 +48,9 @@ public class FishingCube : UdonSharpBehaviour
     //Water Type
     public bool Corruption = false;
     public bool Crimson = false;
+
+    //Difficulty
+
     void Start()
     {
        
@@ -88,6 +91,34 @@ public class FishingCube : UdonSharpBehaviour
                     myFishingRod.GetComponent<ResistanceText>().fishResistanceScore = 500;
                     myFishingRod.GetComponent<ResistanceText>().resistanceScore = 500;
                     myFishingRod.GetComponent<ResistanceText>().fishType = Random.Range(0,1);
+
+                    if(!tier1Fish)//If currently fishing for tier 1 fish
+                    {
+                        myFishingRod.GetComponent<ResistanceText>().jerkAdder = 0;
+                        myFishingRod.GetComponent<ResistanceText>().jerkNumber = 50;
+                        //Generate Exhaustion Easily
+                        myFishingRod.GetComponent<ResistanceText>().exhaustionDelayMax = 10;
+                        //Make Fish Faster
+                        myFishingRod.GetComponent<ResistanceText>().fishMovementMax = 5;
+                    }
+                    else if (tier1Fish && !tier2Fish)//If currently fishing for tier 2 fish
+                    {
+                        myFishingRod.GetComponent<ResistanceText>().jerkAdder = 35;
+                        myFishingRod.GetComponent<ResistanceText>().jerkNumber = 35;
+                        //Generate Exhaustion Moderately
+                        myFishingRod.GetComponent<ResistanceText>().exhaustionDelayMax = 20;
+                        //Make Fish Faster
+                        myFishingRod.GetComponent<ResistanceText>().fishMovementMax = 8;
+                    }
+                    else if (tier2Fish)//If currently fishing for tier 3 fish
+                    {
+                        myFishingRod.GetComponent<ResistanceText>().jerkAdder = 26;
+                        myFishingRod.GetComponent<ResistanceText>().jerkNumber = 25;
+                        //Generate Exhaustion Moderately
+                        myFishingRod.GetComponent<ResistanceText>().exhaustionDelayMax = 30;
+                        //Make Fish Faster
+                        myFishingRod.GetComponent<ResistanceText>().fishMovementMax = 12;
+                    }
                     testBool = true;
                 }
                 
@@ -107,7 +138,7 @@ public class FishingCube : UdonSharpBehaviour
                 
                 if (fishExhausted)
                 {
-                    
+                    //Generate Difficulty
                     if (fishSpawned == false)
                     {
 
@@ -341,5 +372,19 @@ public class FishingCube : UdonSharpBehaviour
         Corruption = false;
         Crimson = false;
         myFishingRod.GetComponent<ResistanceText>().resetVariables();
+
+
+    }
+
+    public void fishPulledReset()
+    {
+        //Fishes
+        tier1Fish = false;
+        tier2Fish = false;
+        tier3Fish = false;
+
+        previousFishCorrupted = false;
+        previousFishCrimson = false;
+        fishPulledOut = false;
     }
 }

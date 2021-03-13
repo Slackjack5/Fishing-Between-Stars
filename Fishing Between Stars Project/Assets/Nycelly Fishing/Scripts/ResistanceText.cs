@@ -61,6 +61,7 @@ public class ResistanceText : UdonSharpBehaviour
     public GameObject dangerRod;
     public GameObject leftArrow;
     public GameObject rightArrow;
+    public GameObject exhaustionCompletetion;
 
     //New Variables
     private float deltaResistanceScore = 1f;
@@ -69,7 +70,10 @@ public class ResistanceText : UdonSharpBehaviour
     private float fishMovement = 1;
     public float fishMovementMax = 8;
     public GameObject velocityMeter;
+    //Jerk Event
     public bool jerkEvent = false;
+    public int jerkNumber = 1000;
+    public int jerkAdder = 1000;
 
     public Animator myAnimator;
     
@@ -185,7 +189,7 @@ public class ResistanceText : UdonSharpBehaviour
         fishExhaustionBar.fillAmount = exhaustionScore / 100;
 
         //Jerk Event
-        if(exhaustionScore==25)
+        if(exhaustionScore==jerkNumber)
         {
             int whichDirection = Random.Range(0, 2);
             //Turn on Jerk Event
@@ -203,6 +207,7 @@ public class ResistanceText : UdonSharpBehaviour
             }
             //Add one exhuastion so previous code only occurs once
             exhaustionScore += 1;
+            jerkNumber += jerkAdder;
         }
 
         if (jerkEvent==false)
@@ -297,6 +302,11 @@ public class ResistanceText : UdonSharpBehaviour
         if (exhaustionScore>=100)
         {
             myHook.GetComponent<FishingCube>().fishExhausted = true;
+            //Ui
+            exhaustionCompletetion.SetActive(true);
+            exhaustionScore = 100;
+            //Change Color on Completion
+            
         }
 
 
@@ -306,11 +316,11 @@ public class ResistanceText : UdonSharpBehaviour
         //Sync Inportant Variables
         
         //Convert Player Resistance to a seeable string
-        playerResistance.text = "Me:" + " " + resistanceScore.ToString();
+        //playerResistance.text = "Me:" + " " + resistanceScore.ToString();
         //Convert Fish Resistance to a seeable string
-        fishResistance.text = "Fish:" + " " + fishResistanceScore.ToString();
+        //fishResistance.text = "Fish:" + " " + fishResistanceScore.ToString();
         //Convert Fish Resistance to a seeable string
-        fishExhaustion.text = "Goal:" + " " + exhaustionScore.ToString();
+        //fishExhaustion.text = "Goal:" + " " + exhaustionScore.ToString();
     }
 
     public virtual void OnPickupUseDown()
@@ -350,5 +360,16 @@ public class ResistanceText : UdonSharpBehaviour
     //Exhaustion
          exhaustionScore = 0;
          exhaustionDelay = 0;
-}
+        //Jerk Event
+        jerkEvent = false;
+        jerkNumber = 1000;
+        jerkAdder = 1000;
+
+        //Difficulty
+        exhaustionDelayMax = 10;
+        fishMovementMax = 5;
+        //Ui
+        exhaustionCompletetion.SetActive(false);
+        
+    }
 }

@@ -32,12 +32,12 @@ public class Fish : UdonSharpBehaviour
 
     public virtual void OnPickup() 
     {
-        //If your a tier 1 fish , then reset the fishing rod if taken off the hook.
-        if (tier1Fishy)
-        {
+        //If your a fish , then reset the fishing rod if taken off the hook.
+
             gameObject.transform.parent.gameObject.GetComponent<FishingCube>().tier1Fish = false;
             gameObject.transform.parent.gameObject.GetComponent<FishingCube>().resetEverything();
-        }
+            gameObject.transform.parent.gameObject.GetComponent<FishingCube>().fishPulledReset();
+        
         
         transform.DetachChildren();
         gameObject.transform.parent = null;
@@ -63,5 +63,7 @@ public class Fish : UdonSharpBehaviour
     public void SendtoSpawn()
     {
         gameObject.transform.position = fishSpawn.transform.position;
+        transform.DetachChildren();
+        gameObject.transform.parent = null;
     }
 }
