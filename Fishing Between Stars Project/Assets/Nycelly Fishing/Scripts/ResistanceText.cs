@@ -41,7 +41,7 @@ public class ResistanceText : UdonSharpBehaviour
     public int fightTimer = 0;
 
     //Types of fish
-    int randFight = Random.Range(0, 2);
+    //int randFight = Random.Range(0, 2);
 
     //Exhaustion
     public float exhaustionScore = 0;
@@ -76,7 +76,11 @@ public class ResistanceText : UdonSharpBehaviour
     public int jerkAdder = 1000;
 
     public Animator myAnimator;
-    
+    //Failure Timer
+    private int failureTimer = 0;
+    public int failureTimerMax = 150;
+    private bool failing = false;
+
     void Start()
     {
         resistanceTarget = resistanceTarget.GetComponent<RectTransform>();
@@ -246,10 +250,12 @@ public class ResistanceText : UdonSharpBehaviour
             if (resistanceScore<= fishResistanceScore+200)
             {
                 dangerRod.SetActive(false);
+                failing = false;
                 if (resistanceScore >= fishResistanceScore - 200)
                 {
+                    failing = false;
                     //If We are in a jerk event, don't give exhastion and warn the player
-                    if(jerkEvent == false)
+                    if (jerkEvent == false)
                     {
                         dangerRod.SetActive(false);
                         exhaustionDelay += 1;
@@ -268,11 +274,13 @@ public class ResistanceText : UdonSharpBehaviour
                 else
                 {
                     dangerRod.SetActive(true);
+                    failing = true;
                 }
             }
             else
             {
                 dangerRod.SetActive(true);
+                failing = true;
             }
         }
         //Don't Let Values Drop Below 0
@@ -309,7 +317,20 @@ public class ResistanceText : UdonSharpBehaviour
             
         }
 
-
+        if(failing==true && myHook.GetComponent<FishingCube>().hookBite==true)
+        {
+            if(failureTimer>=failureTimerMax)
+            {
+                resetVariables();
+                myHook.GetComponent<FishingCube>().softResetEverything();
+                failureTimer = 0;
+            }
+            failureTimer += 1;
+        }
+        else
+        {
+            failureTimer = 0;
+        }
     }
     private void Update()
     {
@@ -356,7 +377,7 @@ public class ResistanceText : UdonSharpBehaviour
          buildingFight = false;
          fightTimer = 0;
     //Types of fish
-         randFight = Random.Range(0, 2);
+         //randFight = Random.Range(0, 2);
     //Exhaustion
          exhaustionScore = 0;
          exhaustionDelay = 0;
@@ -370,6 +391,10 @@ public class ResistanceText : UdonSharpBehaviour
         fishMovementMax = 5;
         //Ui
         exhaustionCompletetion.SetActive(false);
-        
+
+        //Failing
+        failing = false;
+
+
     }
 }

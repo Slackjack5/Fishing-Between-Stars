@@ -376,6 +376,19 @@ public class FishingCube : UdonSharpBehaviour
 
     }
 
+    public void softResetEverything()
+    {
+        myCubeRenderer.material.SetColor("_Color", Color.white);
+        //Bool
+        hookBite = false;
+        fishExhausted = false;
+        //Fishing Timer
+        timer = 0;
+        timerBig = 0;
+        fishSpawned = false;
+        testBool = false;
+    }
+
     public void fishPulledReset()
     {
         //Fishes
