@@ -15,3 +15,15 @@ Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
 Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: compileComputeKernel
+  api=4 insize=2167 outsize=349 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=10935 outsize=9849 ok=1
+Cmd: compileComputeKernel
+  api=4 insize=18337 outsize=10549 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
