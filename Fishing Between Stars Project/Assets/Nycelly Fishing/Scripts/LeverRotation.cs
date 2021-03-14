@@ -23,6 +23,8 @@ public class LeverRotation : UdonSharpBehaviour
         if(player!=null)
         {
             Vector3 r = player.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;// - player.GetPosition();
+            //public static Action<VRCPlayerApi, VRC_Pickup.PickupHand, float, float, float> _PlayHapticEventInHand;
+            
 
             //find the vector pointing from our position to the target
             _direction = (r - transform.position).normalized;

@@ -101,6 +101,10 @@ public class ResistanceText : UdonSharpBehaviour
 
     //Unsync Player
     public GameObject rodLever;
+
+    //Vibration
+    private int vibrationTimer=0;
+    private int vibrationTimerMax = 15;
     void Start()
     {
         resistanceTarget = resistanceTarget.GetComponent<RectTransform>();
@@ -270,6 +274,8 @@ public class ResistanceText : UdonSharpBehaviour
         if(exhaustionScore==jerkNumber)
         {
             int whichDirection = Random.Range(0, 2);
+
+
             //Turn on Jerk Event
             velocityMeter.GetComponent<Velocimeter>().jerkRod = true;
             jerkEvent = true;
@@ -287,7 +293,12 @@ public class ResistanceText : UdonSharpBehaviour
             exhaustionScore += 1;
             jerkNumber += jerkAdder;
         }
+        //Vibration
+        if(jerkEvent==true)
+        {
 
+            Networking.LocalPlayer.PlayHapticEventInHand(VRC_Pickup.PickupHand.Left, 0.1f, 30, 30);
+        }
         if (jerkEvent==false)
         {
             velocityMeter.GetComponent<Velocimeter>().jerkLeft = false;
@@ -328,6 +339,7 @@ public class ResistanceText : UdonSharpBehaviour
                 if (resistanceScore >= fishResistanceScore - 200)
                 {
                     failing = false;
+                    vibrationTimer = 0;
                     //If We are in a jerk event, don't give exhastion and warn the player
                     if (jerkEvent == false)
                     {
@@ -349,12 +361,40 @@ public class ResistanceText : UdonSharpBehaviour
                 {
                     dangerRod.SetActive(true);
                     failing = true;
+                    //Vibrate Controller
+                    if(!jerkEvent)
+                    {
+                        if (vibrationTimer >= vibrationTimerMax)
+                        {
+                            //Vibrate Controller
+                            Networking.LocalPlayer.PlayHapticEventInHand(VRC_Pickup.PickupHand.Left, 0.2f, 100, 100);
+                            vibrationTimer = 0;
+                        }
+                        else
+                        {
+                            vibrationTimer += 1;
+                        }
+                    }
                 }
             }
             else
             {
                 dangerRod.SetActive(true);
                 failing = true;
+                //Vibrate Controller
+                if (!jerkEvent)
+                {
+                    if (vibrationTimer >= vibrationTimerMax)
+                    {
+                        //Vibrate Controller
+                        Networking.LocalPlayer.PlayHapticEventInHand(VRC_Pickup.PickupHand.Left, 0.2f, 100, 100);
+                        vibrationTimer = 0;
+                    }
+                    else
+                    {
+                        vibrationTimer += 1;
+                    }
+                }
             }
         }
         //Don't Let Values Drop Below 0

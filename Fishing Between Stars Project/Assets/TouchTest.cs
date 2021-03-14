@@ -49,6 +49,8 @@ public class TouchTest : UdonSharpBehaviour
                 if (myHandle.GetComponent<Handle>().handleHeld==true)
                 {
                     Debug.Log("adding resistance by Hand");
+                    //Add Vibration
+                    Networking.LocalPlayer.PlayHapticEventInHand(VRC_Pickup.PickupHand.Right, 0.1f, 50, 50);
                     //myFishingRod.GetComponent<ResistanceText>().triggerHeld = true;
                     myFishingRod.GetComponent<ResistanceText>().resistanceScore += 100;
                     myFishingRod.GetComponent<ResistanceText>().deltaResistanceScore = 16;
