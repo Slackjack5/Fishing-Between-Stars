@@ -16,7 +16,7 @@ public class ResistanceText : UdonSharpBehaviour
     public Text fishExhaustion;
 
     //Player
-    public float resistanceScore = 0;
+    [UdonSynced] public float resistanceScore = 0;
     public bool triggerHeld = false;
     public float reistanceRate = 0;
     private float reistanceDecay = 0;
@@ -24,7 +24,7 @@ public class ResistanceText : UdonSharpBehaviour
     public float resistanceRuns = 0;
 
     //Fish
-    public float fishResistanceScore = 0;
+    [UdonSynced] public float fishResistanceScore = 0;
     public bool fishFight = true;
     public bool fishFlee = false;
     public int fishType=0;
@@ -46,9 +46,9 @@ public class ResistanceText : UdonSharpBehaviour
     //int randFight = Random.Range(0, 2);
 
     //Exhaustion
-    public float exhaustionScore = 0;
+    [UdonSynced] public float exhaustionScore = 0;
     private float exhaustionDelay = 0;
-    public float exhaustionDelayMax = 10;
+    [UdonSynced] public float exhaustionDelayMax = 10;
 
     //Gameobjects
     public GameObject myHook;
@@ -69,13 +69,13 @@ public class ResistanceText : UdonSharpBehaviour
     public float deltaResistanceScore = 1f;
     public float deltaResistanceScoreMaxRise = 4f;
     public float deltaResistanceScoreMaxFall = 4f;
-    private float fishMovement = 1;
-    public float fishMovementMax = 8;
+     private float fishMovement = 1;
+    [UdonSynced] public float fishMovementMax = 8;
     public GameObject velocityMeter;
     //Jerk Event
-    public bool jerkEvent = false;
-    public int jerkNumber = 1000;
-    public int jerkAdder = 1000;
+    [UdonSynced] public bool jerkEvent = false;
+    [UdonSynced] public int jerkNumber = 1000;
+    [UdonSynced] public int jerkAdder = 1000;
 
     public Animator myAnimator;
     //Failure Timer
@@ -94,13 +94,17 @@ public class ResistanceText : UdonSharpBehaviour
     public int animStopTimerMax = 8;
 
     //Mode
-    public bool VR = false;
+    [UdonSynced] public bool VR = false;
 
     //handle
     public bool handleBeingHeld=false;
 
     //Unsync Player
     public GameObject rodLever;
+
+    //Sync
+    public bool playerHolding = false;
+    [UdonSynced] public int whichDirection = 5;
 
     //Vibration
     private int vibrationTimer=0;
@@ -119,205 +123,200 @@ public class ResistanceText : UdonSharpBehaviour
     {
 
 
-        
-        //If we are in Desktop
-        if(VR==false)
+        if (playerHolding)
         {
 
-            //Player Resistance
-            //If The Trigger is being held , increase player resistance
+
+            //If we are in Desktop
+            if (VR == false)
+            {
+
+                //Player Resistance
+                //If The Trigger is being held , increase player resistance
+                if (triggerHeld)
+                {
+
+                    //For VR
+                    //Slow down how fast we count player resistance
+                    reistanceRate += 1;
+
+                    if (reistanceRate >= reistanceRateMax)
+                    {
+                        //Resistance
+                        reistanceRate = 0;
+                        //Go to positive if negative
+                        if (deltaResistanceScore == -1)
+                        {
+                            deltaResistanceScore *= -1;
+                        }
+                        else
+                        {
+                            if (deltaResistanceScore <= -1)
+                            {
+                                deltaResistanceScore /= 2;
+                            }
+                            else
+                            {
+                                deltaResistanceScore *= 2;
+                            }
+
+                        }
+                    }
+
+                    //For Desktop
+                }
+                else
+                {
+
+                    //Slow down how fast we decay player resistance
+                    reistanceDecay += 1;
+                    if (reistanceDecay >= reistanceRateMax / 2)
+                    {
+                        reistanceDecay = 0;
+
+                        if (deltaResistanceScore == 1)
+                        {
+                            deltaResistanceScore *= -1;
+                        }
+                        else
+                        {
+                            if (deltaResistanceScore <= -1)
+                            {
+                                deltaResistanceScore *= 2;
+                            }
+                            else
+                            {
+                                deltaResistanceScore /= 2;
+                            }
+                        }
+                    }
+
+                }
+
+
+
+            }
+            else //If in VR
+            {
+                if (handleBeingHeld == false)
+                {
+                    //Slow down how fast we decay player resistance
+                    reistanceDecay += 1;
+                    if (reistanceDecay >= reistanceRateMax / 2)
+                    {
+                        reistanceDecay = 0;
+                        if (deltaResistanceScore == 0)
+                        {
+                            deltaResistanceScore = 1;
+                        }
+
+                        if (deltaResistanceScore == 1)
+                        {
+                            deltaResistanceScore *= -1;
+                        }
+                        else
+                        {
+                            if (deltaResistanceScore <= -1)
+                            {
+                                deltaResistanceScore *= 2;
+                            }
+                            else
+                            {
+                                deltaResistanceScore /= 2;
+                            }
+                        }
+                    }
+                }
+                else if (handleBeingHeld == true)
+                {
+                    deltaResistanceScore = 0;
+                }
+
+            }
+
+
+
+
+            //Set Maximum Values
+            if (deltaResistanceScore >= deltaResistanceScoreMaxRise)
+            {
+                deltaResistanceScore = deltaResistanceScoreMaxRise;
+            }
+            else if (deltaResistanceScore <= -deltaResistanceScoreMaxFall)
+            {
+                deltaResistanceScore = -deltaResistanceScoreMaxFall;
+            }
+            //Update Resistance Score
+            resistanceScore += deltaResistanceScore;
+
+            //Animations
             if (triggerHeld)
             {
-                
-                //For VR
-                //Slow down how fast we count player resistance
-                reistanceRate += 1;
+                /*
+                myAnimator.enabled = true;
+                myAnimator.SetBool("Reeling", true);
+                myAnimator.SetFloat("AnimSpeed", 1.5f);
+                */
 
-                if (reistanceRate >= reistanceRateMax)
-                {
-                    //Resistance
-                    reistanceRate = 0;
-                    //Go to positive if negative
-                    if (deltaResistanceScore == -1)
-                    {
-                        deltaResistanceScore *= -1;
-                    }
-                    else
-                    {
-                        if (deltaResistanceScore <= -1)
-                        {
-                            deltaResistanceScore /= 2;
-                        }
-                        else
-                        {
-                            deltaResistanceScore *= 2;
-                        }
-
-                    }
-                }
-                
-                //For Desktop
             }
             else
             {
-                
-                //Slow down how fast we decay player resistance
-                reistanceDecay += 1;
-                if (reistanceDecay >= reistanceRateMax / 2)
+                /*
+                myAnimator.enabled = true;
+                myAnimator.SetFloat("AnimSpeed", .5f);
+                myAnimator.SetBool("Reeling", true);
+                */
+
+            }
+
+            //Resistance Calculator
+
+
+
+            //Jerk Event
+            if (exhaustionScore == jerkNumber)
+            {
+                whichDirection = Random.Range(0, 2);
+
+
+                //Turn on Jerk Event
+                velocityMeter.GetComponent<Velocimeter>().jerkRod = true;
+                jerkEvent = true;
+                if (whichDirection == 0)
                 {
-                    reistanceDecay = 0;
-
-                    if (deltaResistanceScore == 1)
-                    {
-                        deltaResistanceScore *= -1;
-                    }
-                    else
-                    {
-                        if (deltaResistanceScore <= -1)
-                        {
-                            deltaResistanceScore *= 2;
-                        }
-                        else
-                        {
-                            deltaResistanceScore /= 2;
-                        }
-                    }
+                    velocityMeter.GetComponent<Velocimeter>().jerkLeft = true;
                 }
-                
-            }
-
-
-
-        }
-        else //If in VR
-        {
-            if(handleBeingHeld==false)
-            {
-                //Slow down how fast we decay player resistance
-                reistanceDecay += 1;
-                if (reistanceDecay >= reistanceRateMax / 2)
+                else
                 {
-                    reistanceDecay = 0;
-                    if(deltaResistanceScore == 0)
-                    {
-                        deltaResistanceScore = 1;
-                    }
-
-                    if (deltaResistanceScore == 1)
-                    {
-                        deltaResistanceScore *= -1;
-                    }
-                    else
-                    {
-                        if (deltaResistanceScore <= -1)
-                        {
-                            deltaResistanceScore *= 2;
-                        }
-                        else
-                        {
-                            deltaResistanceScore /= 2;
-                        }
-                    }
+                    velocityMeter.GetComponent<Velocimeter>().jerkRight = true;
                 }
+                //Add one exhuastion so previous code only occurs once
+                exhaustionScore += 1;
+                jerkNumber += jerkAdder;
             }
-            else if(handleBeingHeld == true)
+            //Vibration
+            if (jerkEvent == true)
             {
-                deltaResistanceScore = 0;
+
+                Networking.LocalPlayer.PlayHapticEventInHand(VRC_Pickup.PickupHand.Left, 0.1f, 30, 30);
             }
-
-        }
-
-
-
-        //Set Maximum Values
-        if (deltaResistanceScore >= deltaResistanceScoreMaxRise)
-        {
-            deltaResistanceScore = deltaResistanceScoreMaxRise;
-        }
-        else if (deltaResistanceScore <= -deltaResistanceScoreMaxFall)
-        {
-            deltaResistanceScore = -deltaResistanceScoreMaxFall;
-        }
-        //Update Resistance Score
-        resistanceScore += deltaResistanceScore;
-
-        //Animations
-        if (triggerHeld)
-        {
-            /*
-            myAnimator.enabled = true;
-            myAnimator.SetBool("Reeling", true);
-            myAnimator.SetFloat("AnimSpeed", 1.5f);
-            */
-
-        }
-        else
-        {
-            /*
-            myAnimator.enabled = true;
-            myAnimator.SetFloat("AnimSpeed", .5f);
-            myAnimator.SetBool("Reeling", true);
-            */
-
-        }
-
-        //Resistance Calculator
-
-        //Ui
-        float squarePosition = Mathf.Lerp(-40f, 40f, resistanceScore / 1000f);
-        float fishPosition = Mathf.Lerp(-40f, 40f, fishResistanceScore / 1000f);
-        resistanceTarget.anchoredPosition = new Vector3(0f, squarePosition, 0f);
-        fish.anchoredPosition = new Vector3(0f, fishPosition, 0f);
-        fishExhaustionBar.fillAmount = exhaustionScore / 100;
-
-        //Jerk Event
-        if(exhaustionScore==jerkNumber)
-        {
-            int whichDirection = Random.Range(0, 2);
-
-
-            //Turn on Jerk Event
-            velocityMeter.GetComponent<Velocimeter>().jerkRod = true;
-            jerkEvent = true;
-            if (whichDirection==0)
+            if (jerkEvent == false)
             {
-                velocityMeter.GetComponent<Velocimeter>().jerkLeft = true;
-                leftArrow.SetActive(true);
+                velocityMeter.GetComponent<Velocimeter>().jerkLeft = false;
+                velocityMeter.GetComponent<Velocimeter>().jerkRight = false;
             }
-            else
+                //Fish Resistance
+                if (hookBite == true)
             {
-                velocityMeter.GetComponent<Velocimeter>().jerkRight = true;
-                rightArrow.SetActive(true);
-            }
-            //Add one exhuastion so previous code only occurs once
-            exhaustionScore += 1;
-            jerkNumber += jerkAdder;
-        }
-        //Vibration
-        if(jerkEvent==true)
-        {
-
-            Networking.LocalPlayer.PlayHapticEventInHand(VRC_Pickup.PickupHand.Left, 0.1f, 30, 30);
-        }
-        if (jerkEvent==false)
-        {
-            velocityMeter.GetComponent<Velocimeter>().jerkLeft = false;
-            velocityMeter.GetComponent<Velocimeter>().jerkRight = false;
-            leftArrow.SetActive(false);
-            rightArrow.SetActive(false);
-        }
-        //Fish Resistance
-        if (hookBite==true)
-        {
                 //Decay Resistance if not currently fighting
                 fishDecay += 1;
                 if (fishDecay >= fishDecayMax)
                 {
                     float newFishMovement = Random.Range(0, fishMovementMax);
-                    
 
-                   
-                    if(fishMovement<=0)
+
+
+                    if (fishMovement <= 0)
                     {
                         fishMovement = newFishMovement;
                     }
@@ -327,42 +326,62 @@ public class ResistanceText : UdonSharpBehaviour
                     }
                     fishDecay = 0;
                 }
-            
-            //Move our fish
-            fishResistanceScore += fishMovement;
 
-            //When our resistance is close to fish resistance, give the fish exhaustion
-            if (resistanceScore<= fishResistanceScore+200)
-            {
-                dangerRod.SetActive(false);
-                failing = false;
-                if (resistanceScore >= fishResistanceScore - 200)
+                //Move our fish
+                fishResistanceScore += fishMovement;
+
+                //When our resistance is close to fish resistance, give the fish exhaustion
+                if (resistanceScore <= fishResistanceScore + 200)
                 {
+                    dangerRod.SetActive(false);
                     failing = false;
-                    vibrationTimer = 0;
-                    //If We are in a jerk event, don't give exhastion and warn the player
-                    if (jerkEvent == false)
+                    if (resistanceScore >= fishResistanceScore - 200)
                     {
-                        dangerRod.SetActive(false);
-                        exhaustionDelay += 1;
-                        if (exhaustionDelay >= exhaustionDelayMax)
+                        failing = false;
+                        vibrationTimer = 0;
+                        //If We are in a jerk event, don't give exhastion and warn the player
+                        if (jerkEvent == false)
                         {
-                            exhaustionScore += 1;
-                            exhaustionDelay = 0;
+                            dangerRod.SetActive(false);
+                            exhaustionDelay += 1;
+                            if (exhaustionDelay >= exhaustionDelayMax)
+                            {
+                                exhaustionScore += 1;
+                                exhaustionDelay = 0;
+                            }
                         }
+                        else
+                        {
+                            dangerRod.SetActive(true);
+                        }
+
                     }
                     else
                     {
                         dangerRod.SetActive(true);
+                        failing = true;
+                        //Vibrate Controller
+                        if (!jerkEvent)
+                        {
+                            if (vibrationTimer >= vibrationTimerMax)
+                            {
+                                //Vibrate Controller
+                                Networking.LocalPlayer.PlayHapticEventInHand(VRC_Pickup.PickupHand.Left, 0.2f, 100, 100);
+                                vibrationTimer = 0;
+                            }
+                            else
+                            {
+                                vibrationTimer += 1;
+                            }
+                        }
                     }
-                    
                 }
                 else
                 {
                     dangerRod.SetActive(true);
                     failing = true;
                     //Vibrate Controller
-                    if(!jerkEvent)
+                    if (!jerkEvent)
                     {
                         if (vibrationTimer >= vibrationTimerMax)
                         {
@@ -377,66 +396,85 @@ public class ResistanceText : UdonSharpBehaviour
                     }
                 }
             }
-            else
+            //Don't Let Values Drop Below 0
+            if (resistanceScore < 0)
             {
-                dangerRod.SetActive(true);
-                failing = true;
-                //Vibrate Controller
-                if (!jerkEvent)
-                {
-                    if (vibrationTimer >= vibrationTimerMax)
-                    {
-                        //Vibrate Controller
-                        Networking.LocalPlayer.PlayHapticEventInHand(VRC_Pickup.PickupHand.Left, 0.2f, 100, 100);
-                        vibrationTimer = 0;
-                    }
-                    else
-                    {
-                        vibrationTimer += 1;
-                    }
-                }
+                resistanceScore = 0;
+                //Stop Animations
+                myAnimator.enabled = false;
+                myAnimator.SetBool("Reeling", false);
             }
+            if (resistanceScore > 1000)
+            {
+                resistanceScore = 1000;
+                //Stop Animations
+                myAnimator.enabled = false;
+                myAnimator.SetBool("Reeling", false);
+            }
+            if (fishResistanceScore < 0)
+            {
+                fishResistanceScore = 0;
+            }
+            if (fishResistanceScore > 1000)
+            {
+                fishResistanceScore = 1000;
+            }
+            //If we meet our goal, the fish is exhausted!
+            
+
+
+            //Animations
+            if (wasTouched)
+            {
+
+                myAnimator.enabled = true;
+                myAnimator.SetBool("Reeling", true);
+                myAnimator.SetFloat("AnimSpeed", 1.5f);
+
+                if (animStopTimer >= animStopTimerMax)
+                {
+                    //Stop Animations
+                    myAnimator.enabled = false;
+                    myAnimator.SetBool("Reeling", false);
+                    wasTouched = false;
+                    Debug.Log("Animations Stopped");
+                    animStopTimer = 0;
+
+                }
+                else
+                {
+                    animStopTimer += 1;
+                }
+                //Animation["Reeling"].time = 5.0;
+
+            }
+
+            Vector3 r = player.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position - player.GetPosition();
         }
-        //Don't Let Values Drop Below 0
-        if (resistanceScore < 0)
+        else
         {
-            resistanceScore = 0;
-            //Stop Animations
-            myAnimator.enabled = false;
-            myAnimator.SetBool("Reeling", false);
+
         }
-        if (resistanceScore > 1000)
-        {
-            resistanceScore = 1000;
-            //Stop Animations
-            myAnimator.enabled = false;
-            myAnimator.SetBool("Reeling", false);
-        }
-        if (fishResistanceScore < 0)
-        {
-            fishResistanceScore = 0;
-        }
-        if (fishResistanceScore > 1000)
-        {
-            fishResistanceScore = 1000;
-        }
-        //If we meet our goal, the fish is exhausted!
-        if (exhaustionScore>=100)
+        //Sync
+
+        if (exhaustionScore >= 100)
         {
             myHook.GetComponent<FishingCube>().fishExhausted = true;
             //Ui
             exhaustionCompletetion.SetActive(true);
             exhaustionScore = 100;
             //Change Color on Completion
-            
+
         }
 
-        if(failing==true && myHook.GetComponent<FishingCube>().hookBite==true)
+        
+        //Failing
+        if (failing == true && myHook.GetComponent<FishingCube>().hookBite == true)
         {
-            if(failureTimer>=failureTimerMax)
+            if (failureTimer >= failureTimerMax)
             {
                 resetVariables();
-                myHook.GetComponent<FishingCube>().softResetEverything();
+                myHook.GetComponent<FishingCube>().softReset = true;
                 failureTimer = 0;
             }
             failureTimer += 1;
@@ -445,35 +483,30 @@ public class ResistanceText : UdonSharpBehaviour
         {
             failureTimer = 0;
         }
+        //Ui
+        float squarePosition = Mathf.Lerp(-40f, 40f, resistanceScore / 1000f);
+        float fishPosition = Mathf.Lerp(-40f, 40f, fishResistanceScore / 1000f);
+        resistanceTarget.anchoredPosition = new Vector3(0f, squarePosition, 0f);
+        fish.anchoredPosition = new Vector3(0f, fishPosition, 0f);
+        fishExhaustionBar.fillAmount = exhaustionScore / 100;
 
-        //Animations
-        if(wasTouched)
+        if (jerkEvent == false)
         {
-            
-            myAnimator.enabled = true;
-            myAnimator.SetBool("Reeling", true);
-            myAnimator.SetFloat("AnimSpeed", 1.5f);
-
-            if(animStopTimer>= animStopTimerMax)
+            leftArrow.SetActive(false);
+            rightArrow.SetActive(false);
+        }
+        if(jerkEvent)
+        {
+            if (whichDirection == 0)
             {
-                //Stop Animations
-                myAnimator.enabled = false;
-                myAnimator.SetBool("Reeling", false);
-                wasTouched = false;
-                Debug.Log("Animations Stopped");
-                animStopTimer = 0;
-
+                leftArrow.SetActive(true);
             }
             else
             {
-                animStopTimer += 1;
+                rightArrow.SetActive(true);
             }
-            //Animation["Reeling"].time = 5.0;
-
         }
 
-        Vector3 r = player.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position - player.GetPosition();
-        //Debug.Log(r);
     }
 
     private void Update()
@@ -489,16 +522,19 @@ public class ResistanceText : UdonSharpBehaviour
     }
     public virtual void OnPickup() 
     {
+       
         gameObject.GetComponent<SphereCollider>().enabled = false;
 
         //Set this as the player
         rodLever.GetComponent<LeverRotation>().player = Networking.LocalPlayer;
+        playerHolding = true;
     }
 
     public virtual void OnDrop() 
     {
         gameObject.GetComponent<SphereCollider>().enabled = true;
         rodLever.GetComponent<LeverRotation>().player = null;
+        playerHolding = false;
     }
 
     public virtual void OnPickupUseDown()

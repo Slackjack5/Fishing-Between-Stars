@@ -4,7 +4,10 @@ C:/Users/slack/AppData/Local/Temp/DefaultCompany/Fishing Between Stars Project/c
 SceneListBegin?
 Assets/Scenes/Fishing Test.unity
 SceneListEnd?
+a1f19ad47d3094e235f21b74dfc423a8 Unity.Postprocessing.Runtime.dll:UnityEngine.Rendering.PostProcessing.PostProcessLayer
 0f9dd91ac85e0b374352b9b2a5e289af Assembly-CSharp.dll:.DynamicBone
+726fcf7961cbb4108aa5be5e55b8c8bf Unity.Postprocessing.Runtime.dll:UnityEngine.Rendering.PostProcessing.ColorGrading
+71f7f12b8d0f4fd73590db8bcb6d453c Unity.Postprocessing.Runtime.dll:UnityEngine.Rendering.PostProcessing.Bloom
 2c938a50c8b62d52c602da9db1e91c1e Assembly-CSharp.dll:.LeverRotation
 4bc4346a71a8df53a6b106f68ef3a190 UnityEngine.UI.dll:UnityEngine.UI.CanvasScaler
 cc4274b586df3c02688bac01b88bd16c UnityEngine.UI.dll:UnityEngine.EventSystems.EventSystem
@@ -12,15 +15,19 @@ ae83e830e7a90c0aff918c4c2e520825 UnityEngine.UI.dll:UnityEngine.UI.GraphicRaycas
 e6baf3ef68d60bd0901dfb91c02bc1c3 UnityEngine.UI.dll:UnityEngine.UI.Image
 748dd2a2a28da4e618912da5ac45684b UnityEngine.UI.dll:UnityEngine.EventSystems.StandaloneInputModule
 72712369a7c681ad84fc255a5ec0b333 UnityEngine.UI.dll:UnityEngine.UI.Text
-4828730ea597a0734df2292f3745cd3e Assembly-CSharp.dll:.FishingCube
-a88e756f1f4625cffb24c40815263692 Assembly-CSharp.dll:.ResistanceText
+38bcb4d3f9a1812fd650f92e87a4cf64 Unity.Postprocessing.Runtime.dll:UnityEngine.Rendering.PostProcessing.PostProcessProfile
+7523e7a77d9a36999888b49b9e6b3fce Assembly-CSharp.dll:.FishingCube
+a420ce6930e94c037b4ae83f4d5132f7 Assembly-CSharp.dll:.ResistanceText
 107d1a0b4d3ff3c7ac72054037850273 Assembly-CSharp.dll:.TouchTest
 bad0f5a58d4b55ed1442379677ba2587 VRC.Udon.dll:VRC.Udon.ProgramSources.SerializedUdonProgramAsset
 3614bae5f2ee7232eea55e930d1eb42d VRCSDK3.dll:VRC.SDK3.Components.VRCPickup
 10480eec36be4b6bdd6d8cc2b035dc73 VRCSDK3.dll:VRC.SDK3.Components.VRCSceneDescriptor
 98802acfe9980994b612b48375d6584f VRC.Udon.dll:VRC.Udon.UdonBehaviour
-43b443e892da1a15ae049d417d09ba57 Assembly-CSharp.dll:.Fish
+d6fc8d3165070298511ec776ea575626 Unity.Postprocessing.Runtime.dll:UnityEngine.Rendering.PostProcessing.PostProcessResources
+a53651ee3996fbba20dfe0fce02f0b23 Unity.Postprocessing.Runtime.dll:UnityEngine.Rendering.PostProcessing.AutoExposure
+a72e8e528ef391c43f8059930ba86073 Assembly-CSharp.dll:.Fish
 2faf8f843e9a90b7bd5360d205148b95 Assembly-CSharp.dll:.Water
 0c42704ac838f08fd4d77a3eadac1957 Assembly-CSharp.dll:.Velocimeter
 4b6043126f64bf5a6aebb4ccc39137ba Assembly-CSharp.dll:.Handle
+d5630f96bd5a6a6eed7e1754c3fb8703 Unity.Postprocessing.Runtime.dll:UnityEngine.Rendering.PostProcessing.PostProcessVolume
 d25601db5f800892b41ff09aef0f5e19 VRCCore-Editor.dll:VRC.Core.PipelineManager

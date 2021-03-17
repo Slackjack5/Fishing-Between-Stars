@@ -37,19 +37,20 @@ public class FishingCube : UdonSharpBehaviour
     public GameObject myFishingRod;
 
     //Fishes
-    public bool tier1Fish = false;
-    public bool tier2Fish = false;
-    public bool tier3Fish = false;
+    [UdonSynced] public bool tier1Fish = false;
+    [UdonSynced] public bool tier2Fish = false;
+    [UdonSynced] public bool tier3Fish = false;
     private GameObject previousFish;
     public bool previousFishCorrupted;
-    public bool previousFishCrimson;
+     public bool previousFishCrimson;
     public bool fishPulledOut = false;
 
     //Water Type
-    public bool Corruption = false;
+     public bool Corruption = false;
     public bool Crimson = false;
 
-    //Difficulty
+    [UdonSynced]public bool hardReset = false;
+    [UdonSynced] public bool softReset = false;
 
     void Start()
     {
@@ -59,7 +60,18 @@ public class FishingCube : UdonSharpBehaviour
     private void Update()
     {
         //transform.Rotate(Vector3.up, 90f * Time.deltaTime);
+        if(hardReset)
+        {
+            hardReset = false;
+            resetEverything();
+            fishPulledReset();
+        }
 
+        if(softReset)
+        {
+            softReset = false;
+            softResetEverything();
+        }
         //If the hook is in the water , Run the Code for Catching a Fish
         if (inWater==true)
         {
@@ -149,6 +161,8 @@ public class FishingCube : UdonSharpBehaviour
                             var myNewFish = Tier1Fishes[Random.Range(0, Tier1Fishes.Length)];//VRCInstantiate(testFish);
                             myNewFish.transform.position = gameObject.transform.position;
                             myNewFish.transform.parent = gameObject.transform;
+                            myNewFish.GetComponent<Fish>().myHook = gameObject;
+                            myNewFish.GetComponent<Fish>().onHook = true;
                             previousFish = myNewFish;
                             //Say that we caught a tier 1 fish
                             tier1Fish = true;

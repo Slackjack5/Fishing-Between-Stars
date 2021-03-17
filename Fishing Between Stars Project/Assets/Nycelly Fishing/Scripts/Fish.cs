@@ -17,7 +17,10 @@ public class Fish : UdonSharpBehaviour
     public bool crimsonFish;
 
     public Transform fishSpawn;
-
+    //Game Object
+    public GameObject myHook;
+    [UdonSynced] public bool onHook = false;
+    
     void Start()
     {
 
@@ -26,22 +29,26 @@ public class Fish : UdonSharpBehaviour
 
     private void Update()
     {
-
+        if(onHook)
+        {
+            gameObject.transform.position = myHook.transform.position;
+        }
+        else
+        {
+            
+            transform.DetachChildren();
+            gameObject.transform.parent = null;
+            
+        }
     }
 
 
     public virtual void OnPickup() 
     {
         //If your a fish , then reset the fishing rod if taken off the hook.
-
-            gameObject.transform.parent.gameObject.GetComponent<FishingCube>().tier1Fish = false;
-            gameObject.transform.parent.gameObject.GetComponent<FishingCube>().resetEverything();
-            gameObject.transform.parent.gameObject.GetComponent<FishingCube>().fishPulledReset();
-        
-        
-        transform.DetachChildren();
-        gameObject.transform.parent = null;
-        myFishRenderer.material.SetColor("_Color", Color.blue);
+        onHook = false;
+        gameObject.transform.parent.gameObject.GetComponent<FishingCube>().tier1Fish = false;
+        gameObject.transform.parent.gameObject.GetComponent<FishingCube>().hardReset=true;
     }
 
     public virtual void OnPickupUseDown() 
