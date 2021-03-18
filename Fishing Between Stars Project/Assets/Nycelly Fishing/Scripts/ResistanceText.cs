@@ -84,7 +84,7 @@ public class ResistanceText : UdonSharpBehaviour
     private bool failing = false;
 
     //Player
-    private VRCPlayerApi player;
+    public VRCPlayerApi player;
 
     //Animation
     public bool wasTouched = false;
@@ -118,6 +118,7 @@ public class ResistanceText : UdonSharpBehaviour
         startingPosition = resistanceTarget.transform.position;
         speed = .1f;
         player = Networking.LocalPlayer;
+        
     }
 
     private void FixedUpdate()

@@ -37,7 +37,7 @@ public class FishingCube : UdonSharpBehaviour
     public GameObject myFishingRod;
 
     //Fishes
-    [UdonSynced] public bool tier1Fish = false;
+    [UdonSynced]public bool tier1Fish = false;
     [UdonSynced] public bool tier2Fish = false;
     [UdonSynced] public bool tier3Fish = false;
     private GameObject previousFish;
@@ -163,6 +163,11 @@ public class FishingCube : UdonSharpBehaviour
                         //Randomly generate a tier 1 fish
                         if (!tier1Fish)
                         {
+                            Networking.SetOwner(myFishingRod.GetComponent<ResistanceText>().player, gameObject);
+                            tier1Fish = true;
+                            tier3Fish = true;
+                            fishPulledOut = true;
+                            myCubeRenderer.material.SetColor("_Color", Color.blue);
                             //Put the Fish on the hook and parent it
                             var myNewFish = Tier1Fishes[Random.Range(0, Tier1Fishes.Length)];//VRCInstantiate(testFish);
                             myNewFish.transform.position = gameObject.transform.position;
@@ -171,7 +176,7 @@ public class FishingCube : UdonSharpBehaviour
                             myNewFish.GetComponent<Fish>().onHook = true;
                             previousFish = myNewFish;
                             //Say that we caught a tier 1 fish
-                            tier1Fish = true;
+                            
                         }
                         else if (tier1Fish && Corruption && !tier2Fish) //Randomly Generate Tier 2 Corruption Fish
                         {
@@ -266,11 +271,11 @@ public class FishingCube : UdonSharpBehaviour
                             Debug.Log("Chicken Strips with man Aise");
                         }
                         fishSpawned = true;
-                        hookBite = false;
+                        //hookBite = false;
                         //If Fish is on the hook
                         if(fishSpawned == true)
                         {
-                            collectingFish = true;
+                            //collectingFish = true;
                         }
                         
 
@@ -279,14 +284,14 @@ public class FishingCube : UdonSharpBehaviour
                     {
 
                     }
-                    myCubeRenderer.material.SetColor("_Color", Color.blue);
+                    
 
                     //Reset Variables
-                    fishExhausted = false;
+                    //fishExhausted = false;
                     myFishingRod.GetComponent<ResistanceText>().fishResistanceScore = 0;
                     myFishingRod.GetComponent<ResistanceText>().resistanceScore = 0;
                     myFishingRod.GetComponent<ResistanceText>().exhaustionScore = 0;
-                    resetEverything();
+                    //resetEverything();
                 }
                 else
                 {
@@ -418,7 +423,6 @@ public class FishingCube : UdonSharpBehaviour
         Corruption = false;
         Crimson = false;
         myFishingRod.GetComponent<ResistanceText>().resetVariables();
-        ICaughtTheFish = false;
 
     }
 
