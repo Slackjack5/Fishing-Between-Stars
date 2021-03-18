@@ -48,7 +48,7 @@ public class ResistanceText : UdonSharpBehaviour
     //Exhaustion
     [UdonSynced] public float exhaustionScore = 0;
     private float exhaustionDelay = 0;
-    [UdonSynced] public float exhaustionDelayMax = 10;
+    /*[UdonSynced]*/ public float exhaustionDelayMax = 10;
 
     //Gameobjects
     public GameObject myHook;
@@ -70,12 +70,12 @@ public class ResistanceText : UdonSharpBehaviour
     public float deltaResistanceScoreMaxRise = 4f;
     public float deltaResistanceScoreMaxFall = 4f;
      private float fishMovement = 1;
-    [UdonSynced] public float fishMovementMax = 8;
+   /*[UdonSynced]*/ public float fishMovementMax = 8;
     public GameObject velocityMeter;
     //Jerk Event
     [UdonSynced] public bool jerkEvent = false;
-    [UdonSynced] public int jerkNumber = 1000;
-    [UdonSynced] public int jerkAdder = 1000;
+    /*[UdonSynced]*/ public int jerkNumber = 1000;
+    /*[UdonSynced]*/ public int jerkAdder = 1000;
 
     public Animator myAnimator;
     //Failure Timer
@@ -249,6 +249,7 @@ public class ResistanceText : UdonSharpBehaviour
                 deltaResistanceScore = -deltaResistanceScoreMaxFall;
             }
             //Update Resistance Score
+            //Networking.SetOwner(player, gameObject);
             resistanceScore += deltaResistanceScore;
 
             //Animations
@@ -278,11 +279,12 @@ public class ResistanceText : UdonSharpBehaviour
             //Jerk Event
             if (exhaustionScore == jerkNumber)
             {
+                //Set New Instance Owner
+                Networking.SetOwner(player, gameObject);
                 whichDirection = Random.Range(0, 2);
-
-
                 //Turn on Jerk Event
                 velocityMeter.GetComponent<Velocimeter>().jerkRod = true;
+                Networking.SetOwner(player, gameObject);
                 jerkEvent = true;
                 if (whichDirection == 0)
                 {
@@ -293,7 +295,9 @@ public class ResistanceText : UdonSharpBehaviour
                     velocityMeter.GetComponent<Velocimeter>().jerkRight = true;
                 }
                 //Add one exhuastion so previous code only occurs once
+                Networking.SetOwner(player, gameObject);
                 exhaustionScore += 1;
+                //Networking.SetOwner(player, gameObject);
                 jerkNumber += jerkAdder;
             }
             //Vibration
@@ -330,6 +334,7 @@ public class ResistanceText : UdonSharpBehaviour
                 }
 
                 //Move our fish
+                //Networking.SetOwner(player, gameObject);
                 fishResistanceScore += fishMovement;
 
                 //When our resistance is close to fish resistance, give the fish exhaustion
@@ -348,6 +353,8 @@ public class ResistanceText : UdonSharpBehaviour
                             exhaustionDelay += 1;
                             if (exhaustionDelay >= exhaustionDelayMax)
                             {
+                                //Networking.SetOwner(player, gameObject);
+                                Networking.SetOwner(player, gameObject);
                                 exhaustionScore += 1;
                                 exhaustionDelay = 0;
                             }
@@ -422,7 +429,16 @@ public class ResistanceText : UdonSharpBehaviour
                 fishResistanceScore = 1000;
             }
             //If we meet our goal, the fish is exhausted!
-            
+            if (exhaustionScore >= 100)
+            {
+                Networking.SetOwner(player, gameObject);
+                myHook.GetComponent<FishingCube>().fishExhausted = true;
+                //Ui
+                exhaustionCompletetion.SetActive(true);
+                exhaustionScore = 100;
+                //Change Color on Completion
+
+            }
 
 
             //Animations
@@ -453,15 +469,6 @@ public class ResistanceText : UdonSharpBehaviour
 
             Vector3 r = player.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position - player.GetPosition();
 
-            if (exhaustionScore >= 100)
-            {
-                myHook.GetComponent<FishingCube>().fishExhausted = true;
-                //Ui
-                exhaustionCompletetion.SetActive(true);
-                exhaustionScore = 100;
-                //Change Color on Completion
-
-            }
         }
         else
         {
@@ -469,9 +476,17 @@ public class ResistanceText : UdonSharpBehaviour
         }
         //Sync
 
-  
 
-        
+
+        if (exhaustionScore >= 100)
+        {
+            //Do Not Set Owner Because it will bug out fishing rod position
+            myHook.GetComponent<FishingCube>().fishExhausted = true;
+            //Ui
+            exhaustionCompletetion.SetActive(true);
+            exhaustionScore = 100;
+        }
+
         //Failing
         if (failing == true && myHook.GetComponent<FishingCube>().hookBite == true)
         {
@@ -512,7 +527,7 @@ public class ResistanceText : UdonSharpBehaviour
         }
 
     }
-
+    
     private void Update()
     {
         //Sync Inportant Variables
@@ -528,6 +543,8 @@ public class ResistanceText : UdonSharpBehaviour
         //fishResistance.text = "Fish:" + " " + fishResistanceScore.ToString();
         //Convert Fish Resistance to a seeable string
         //fishExhaustion.text = "Goal:" + " " + exhaustionScore.ToString();
+        //Hold Fish in Place
+
     }
     public virtual void OnPickup() 
     {
@@ -560,8 +577,9 @@ public class ResistanceText : UdonSharpBehaviour
 
     public void resetVariables()
     {
+        //Networking.SetOwner(player, gameObject);
         //Player
-         resistanceScore = 0;
+        resistanceScore = 0;
          triggerHeld = false;
          reistanceRate = 0;
          reistanceDecay = 0;

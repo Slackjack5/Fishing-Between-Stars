@@ -38,9 +38,9 @@ public class Fish : UdonSharpBehaviour
         else
         {
             
-            transform.DetachChildren();
-            gameObject.transform.parent = null;
-            gameObject.transform.position = fishSpawn.transform.position;
+            //transform.DetachChildren();
+            //gameObject.transform.parent = null;
+            //gameObject.transform.position = fishSpawn.transform.position;
         }
         
         if(fishTouched)

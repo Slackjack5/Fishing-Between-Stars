@@ -44,7 +44,6 @@
     __2_intnl_UnityEngineTransform: %UnityEngineTransform, null
     __3_intnl_UnityEngineTransform: %UnityEngineTransform, null
     __4_intnl_UnityEngineTransform: %UnityEngineTransform, null
-    __5_intnl_UnityEngineTransform: %UnityEngineTransform, null
     __0_intnl_returnTarget_UInt32: %SystemUInt32, null
     __0_intnl_UnityEngineVector3: %UnityEngineVector3, null
     __1_intnl_UnityEngineVector3: %UnityEngineVector3, null
@@ -128,41 +127,15 @@
         PUSH, __0_intnl_UnityEngineTransform
         PUSH, __0_intnl_UnityEngineVector3
         EXTERN, "UnityEngineTransform.__set_position__UnityEngineVector3__SystemVoid"
-        JUMP, 0x0000013C
+        JUMP, 0x0000009C
         
          # else
         
          # {
         
-         # transform.DetachChildren();
-        PUSH, __0_this_intnl_UnityEngineTransform
-        EXTERN, "UnityEngineTransform.__DetachChildren__SystemVoid"
-        
-         # gameObject.transform.parent = null;
-        PUSH, __0_this_intnl_UnityEngineGameObject
-        PUSH, __0_intnl_UnityEngineTransform
-        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
-        PUSH, __0_intnl_UnityEngineTransform
-        PUSH, __0_const_intnl_SystemObject
-        EXTERN, "UnityEngineTransform.__set_parent__UnityEngineTransform__SystemVoid"
-        
-         # gameObject.transform.position = fishSpawn.transform.position;
-        PUSH, __0_this_intnl_UnityEngineGameObject
-        PUSH, __1_intnl_UnityEngineTransform
-        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
-        PUSH, fishSpawn
-        PUSH, __2_intnl_UnityEngineTransform
-        EXTERN, "UnityEngineTransform.__get_transform__UnityEngineTransform"
-        PUSH, __2_intnl_UnityEngineTransform
-        PUSH, __0_intnl_UnityEngineVector3
-        EXTERN, "UnityEngineTransform.__get_position__UnityEngineVector3"
-        PUSH, __1_intnl_UnityEngineTransform
-        PUSH, __0_intnl_UnityEngineVector3
-        EXTERN, "UnityEngineTransform.__set_position__UnityEngineVector3__SystemVoid"
-        
          # if(fishTouched)
         PUSH, fishTouched
-        JUMP_IF_FALSE, 0x000001A8
+        JUMP_IF_FALSE, 0x00000108
         
          # {
         
@@ -257,15 +230,15 @@
         
          # gameObject.transform.position = fishSpawn.transform.position;
         PUSH, __0_this_intnl_UnityEngineGameObject
-        PUSH, __3_intnl_UnityEngineTransform
+        PUSH, __2_intnl_UnityEngineTransform
         EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
         PUSH, fishSpawn
-        PUSH, __4_intnl_UnityEngineTransform
+        PUSH, __3_intnl_UnityEngineTransform
         EXTERN, "UnityEngineTransform.__get_transform__UnityEngineTransform"
-        PUSH, __4_intnl_UnityEngineTransform
+        PUSH, __3_intnl_UnityEngineTransform
         PUSH, __1_intnl_UnityEngineVector3
         EXTERN, "UnityEngineTransform.__get_position__UnityEngineVector3"
-        PUSH, __3_intnl_UnityEngineTransform
+        PUSH, __2_intnl_UnityEngineTransform
         PUSH, __1_intnl_UnityEngineVector3
         EXTERN, "UnityEngineTransform.__set_position__UnityEngineVector3__SystemVoid"
         
@@ -275,9 +248,9 @@
         
          # gameObject.transform.parent = null;
         PUSH, __0_this_intnl_UnityEngineGameObject
-        PUSH, __5_intnl_UnityEngineTransform
+        PUSH, __4_intnl_UnityEngineTransform
         EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
-        PUSH, __5_intnl_UnityEngineTransform
+        PUSH, __4_intnl_UnityEngineTransform
         PUSH, __0_const_intnl_SystemObject
         EXTERN, "UnityEngineTransform.__set_parent__UnityEngineTransform__SystemVoid"
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue

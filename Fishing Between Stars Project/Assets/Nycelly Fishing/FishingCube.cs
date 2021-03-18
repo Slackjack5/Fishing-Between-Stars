@@ -9,7 +9,7 @@ public class FishingCube : UdonSharpBehaviour
     //Bool
     public bool inWater = false;
     public bool hookBite = false;
-    public bool fishExhausted = false;
+    [UdonSynced] public bool fishExhausted = false;
 
     public Renderer myCubeRenderer;
     //Fishing Timer
@@ -54,7 +54,7 @@ public class FishingCube : UdonSharpBehaviour
     //Fish Out of Water Timer
     private int collectTimer=0;
     public int collectTimerMax = 1000;
-    [UdonSynced] public bool collectingFish; //Sync This?
+    public bool collectingFish; //Sync This?
     private bool TurnInFish;
     private bool ICaughtTheFish = false;
     void Start()
@@ -64,8 +64,8 @@ public class FishingCube : UdonSharpBehaviour
 
     private void Update()
     {
-        //transform.Rotate(Vector3.up, 90f * Time.deltaTime);
-        if(hardReset)
+
+        if (hardReset)
         {
             resetEverything();
             fishPulledReset();
@@ -88,8 +88,9 @@ public class FishingCube : UdonSharpBehaviour
             {
                 hookBite = true;
             }
-
-
+            //Hold Fish in Place
+            myFishingRod.GetComponent<ResistanceText>().fishResistanceScore = 500;
+            myFishingRod.GetComponent<ResistanceText>().resistanceScore = 500;
             //If the Fish Bites the Hook
             if (hookBite == true)
             {
@@ -106,12 +107,14 @@ public class FishingCube : UdonSharpBehaviour
                 myFishingRod.GetComponent<ResistanceText>().hookBite = true;
                 if(testBool==false)
                 {
+                    //Networking.SetOwner(myFishingRod.GetComponent<ResistanceText>().player, gameObject);
                     myFishingRod.GetComponent<ResistanceText>().fishResistanceScore = 500;
                     myFishingRod.GetComponent<ResistanceText>().resistanceScore = 500;
                     myFishingRod.GetComponent<ResistanceText>().fishType = Random.Range(0,1);
 
                     if(!tier1Fish)//If currently fishing for tier 1 fish
                     {
+                        //Networking.SetOwner(myFishingRod.GetComponent<ResistanceText>().player, gameObject);
                         myFishingRod.GetComponent<ResistanceText>().jerkAdder = 0;
                         myFishingRod.GetComponent<ResistanceText>().jerkNumber = 50;
                         //Generate Exhaustion Easily
@@ -121,6 +124,7 @@ public class FishingCube : UdonSharpBehaviour
                     }
                     else if (tier1Fish && !tier2Fish)//If currently fishing for tier 2 fish
                     {
+                        //Networking.SetOwner(myFishingRod.GetComponent<ResistanceText>().player, gameObject);
                         myFishingRod.GetComponent<ResistanceText>().jerkAdder = 35;
                         myFishingRod.GetComponent<ResistanceText>().jerkNumber = 35;
                         //Generate Exhaustion Moderately
@@ -130,6 +134,7 @@ public class FishingCube : UdonSharpBehaviour
                     }
                     else if (tier2Fish)//If currently fishing for tier 3 fish
                     {
+                        //Networking.SetOwner(myFishingRod.GetComponent<ResistanceText>().player, gameObject);
                         myFishingRod.GetComponent<ResistanceText>().jerkAdder = 26;
                         myFishingRod.GetComponent<ResistanceText>().jerkNumber = 25;
                         //Generate Exhaustion Moderately
@@ -165,8 +170,6 @@ public class FishingCube : UdonSharpBehaviour
                         {
                             Networking.SetOwner(myFishingRod.GetComponent<ResistanceText>().player, gameObject);
                             tier1Fish = true;
-                            tier3Fish = true;
-                            fishPulledOut = true;
                             myCubeRenderer.material.SetColor("_Color", Color.blue);
                             //Put the Fish on the hook and parent it
                             var myNewFish = Tier1Fishes[Random.Range(0, Tier1Fishes.Length)];//VRCInstantiate(testFish);
@@ -284,13 +287,12 @@ public class FishingCube : UdonSharpBehaviour
                     {
 
                     }
-                    
+
 
                     //Reset Variables
                     //fishExhausted = false;
-                    myFishingRod.GetComponent<ResistanceText>().fishResistanceScore = 0;
-                    myFishingRod.GetComponent<ResistanceText>().resistanceScore = 0;
-                    myFishingRod.GetComponent<ResistanceText>().exhaustionScore = 0;
+                    //Networking.SetOwner(myFishingRod.GetComponent<ResistanceText>().player, gameObject);
+                    myFishingRod.GetComponent<ResistanceText>().resetVariables();
                     //resetEverything();
                 }
                 else

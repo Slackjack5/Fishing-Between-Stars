@@ -56,6 +56,7 @@ public class Velocimeter : UdonSharpBehaviour
                 if (vectorAngle <= -20 && jerkLeft)
                 {
                     tetherBroken = true;
+                    Networking.SetOwner(myFishingRod.GetComponent<ResistanceText>().player, gameObject);
                     myFishingRod.GetComponent<ResistanceText>().jerkEvent = false;
                     jerkLeft = false;
                     positionRecorded = false;
@@ -63,6 +64,7 @@ public class Velocimeter : UdonSharpBehaviour
                 else if(vectorAngle >= 20 && jerkRight)
                 {
                     tetherBroken = true;
+                    Networking.SetOwner(myFishingRod.GetComponent<ResistanceText>().player, gameObject);
                     myFishingRod.GetComponent<ResistanceText>().jerkEvent = false;
                     jerkRight = false;
                     positionRecorded = false;
