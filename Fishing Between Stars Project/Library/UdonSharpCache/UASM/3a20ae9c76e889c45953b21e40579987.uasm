@@ -15,6 +15,7 @@
     .export Tier2CrimsonVariant
     .export fishSpawned
     .export resetTimerMax
+    .export testBool
     .export myFishingRod
     .export tier1Fish
     .export tier2Fish
@@ -26,14 +27,18 @@
     .export Crimson
     .export hardReset
     .export softReset
+    .export collectTimerMax
+    .export collectingFish
     .sync tier1Fish, none
     .sync tier2Fish, none
     .sync tier3Fish, none
     .sync hardReset, none
     .sync softReset, none
+    .sync collectingFish, none
 
     __refl_const_intnl_udonTypeID: %SystemInt64, null
     __refl_const_intnl_udonTypeName: %SystemString, null
+    collectingFish: %SystemBoolean, null
     Corruption: %SystemBoolean, null
     Crimson: %SystemBoolean, null
     fishExhausted: %SystemBoolean, null
@@ -45,6 +50,7 @@
     previousFishCorrupted: %SystemBoolean, null
     previousFishCrimson: %SystemBoolean, null
     softReset: %SystemBoolean, null
+    testBool: %SystemBoolean, null
     tier1Fish: %SystemBoolean, null
     tier2Fish: %SystemBoolean, null
     tier3Fish: %SystemBoolean, null
@@ -56,16 +62,19 @@
     Tier2CrimsonVariant: %UnityEngineGameObjectArray, null
     Tier3CorruptedFishes: %UnityEngineGameObjectArray, null
     Tier3CrimsonFishes: %UnityEngineGameObjectArray, null
+    collectTimerMax: %SystemInt32, null
     resetTimerMax: %SystemInt32, null
     timerMax: %SystemInt32, null
     timerMin: %SystemInt32, null
     myCubeRenderer: %UnityEngineRenderer, null
-    testBool: %SystemBoolean, null
+    ICaughtTheFish: %SystemBoolean, null
+    TurnInFish: %SystemBoolean, null
     onTriggerEnterOther: %UnityEngineCollider, null
     onTriggerExitOther: %UnityEngineCollider, null
     onCollisionEnterOther: %UnityEngineCollision, null
     onCollisionExitOther: %UnityEngineCollision, null
     previousFish: %UnityEngineGameObject, null
+    collectTimer: %SystemInt32, null
     resetTimer: %SystemInt32, null
     timer: %SystemInt32, null
     timerBig: %SystemInt32, null
@@ -126,6 +135,7 @@
     __10_const_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
     __11_const_intnl_Fish: %VRCUdonUdonBehaviour, null
     __11_const_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
+    __12_const_intnl_Fish: %VRCUdonUdonBehaviour, null
     __12_const_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
     __13_const_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
     __14_const_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
@@ -206,6 +216,9 @@
     __49_intnl_SystemBoolean: %SystemBoolean, null
     __5_intnl_SystemBoolean: %SystemBoolean, null
     __50_intnl_SystemBoolean: %SystemBoolean, null
+    __51_intnl_SystemBoolean: %SystemBoolean, null
+    __52_intnl_SystemBoolean: %SystemBoolean, null
+    __53_intnl_SystemBoolean: %SystemBoolean, null
     __6_intnl_SystemBoolean: %SystemBoolean, null
     __7_intnl_SystemBoolean: %SystemBoolean, null
     __8_intnl_SystemBoolean: %SystemBoolean, null
@@ -213,8 +226,10 @@
     __0_intnl_UnityEngineColor: %UnityEngineColor, null
     __1_intnl_UnityEngineColor: %UnityEngineColor, null
     __2_intnl_UnityEngineColor: %UnityEngineColor, null
+    __3_intnl_UnityEngineColor: %UnityEngineColor, null
     __0_intnl_UnityEngineComponent: %UnityEngineComponent, null
     __1_intnl_UnityEngineComponent: %UnityEngineComponent, null
+    __2_intnl_UnityEngineComponent: %UnityEngineComponent, null
     __0_intnl_UnityEngineComponentArray: %UnityEngineComponentArray, null
     __1_intnl_UnityEngineComponentArray: %UnityEngineComponentArray, null
     __2_intnl_UnityEngineComponentArray: %UnityEngineComponentArray, null
@@ -224,6 +239,7 @@
     __6_intnl_UnityEngineComponentArray: %UnityEngineComponentArray, null
     __7_intnl_UnityEngineComponentArray: %UnityEngineComponentArray, null
     __8_intnl_UnityEngineComponentArray: %UnityEngineComponentArray, null
+    __9_intnl_UnityEngineComponentArray: %UnityEngineComponentArray, null
     __0_intnl_UnityEngineGameObject: %UnityEngineGameObject, null
     __1_intnl_UnityEngineGameObject: %UnityEngineGameObject, null
     __2_intnl_UnityEngineGameObject: %UnityEngineGameObject, null
@@ -232,6 +248,8 @@
     __0_intnl_SystemInt32: %SystemInt32, null
     __1_intnl_SystemInt32: %SystemInt32, null
     __10_intnl_SystemInt32: %SystemInt32, null
+    __11_intnl_SystemInt32: %SystemInt32, null
+    __12_intnl_SystemInt32: %SystemInt32, null
     __2_intnl_SystemInt32: %SystemInt32, null
     __3_intnl_SystemInt32: %SystemInt32, null
     __4_intnl_SystemInt32: %SystemInt32, null
@@ -244,15 +262,19 @@
     __1_intnl_SystemInt64: %SystemInt64, null
     __2_intnl_SystemInt64: %SystemInt64, null
     __3_intnl_SystemInt64: %SystemInt64, null
+    __4_intnl_SystemInt64: %SystemInt64, null
+    __5_intnl_SystemInt64: %SystemInt64, null
     __0_intnl_UnityEngineMaterial: %UnityEngineMaterial, null
     __1_intnl_UnityEngineMaterial: %UnityEngineMaterial, null
     __2_intnl_UnityEngineMaterial: %UnityEngineMaterial, null
+    __3_intnl_UnityEngineMaterial: %UnityEngineMaterial, null
     __0_intnl_SystemObject: %SystemObject, null
     __1_intnl_SystemObject: %SystemObject, null
     __2_intnl_SystemObject: %SystemObject, null
     __3_intnl_SystemObject: %SystemObject, null
     __4_intnl_SystemObject: %SystemObject, null
     __5_intnl_SystemObject: %SystemObject, null
+    __6_intnl_SystemObject: %SystemObject, null
     __0_intnl_SystemSingle: %SystemSingle, null
     __1_intnl_SystemSingle: %SystemSingle, null
     __2_intnl_SystemSingle: %SystemSingle, null
@@ -278,7 +300,9 @@
     __4_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
     __5_intnl_Fish: %VRCUdonUdonBehaviour, null
     __5_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
+    __6_intnl_Fish: %VRCUdonUdonBehaviour, null
     __6_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
+    __7_intnl_Fish: %VRCUdonUdonBehaviour, null
     __7_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
     __8_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
     __9_intnl_ResistanceText: %VRCUdonUdonBehaviour, null
@@ -335,7 +359,7 @@
         
          # public  int resetTimerMax = 100;
         
-         # private bool testBool = false;
+         # public bool testBool = false;
         
          # public GameObject myFishingRod;
         
@@ -360,6 +384,16 @@
          # [UdonSynced]public bool hardReset = false;
         
          # [UdonSynced] public bool softReset = false;
+        
+         # private int collectTimer=0;
+        
+         # public int collectTimerMax = 1000;
+        
+         # [UdonSynced] public bool collectingFish; //Sync This?
+        
+         # private bool TurnInFish;
+        
+         # private bool ICaughtTheFish = false;
         
          # void Start()
     .export _start
@@ -389,18 +423,18 @@
         
          # {
         
+         # resetEverything();
+        PUSH, __0_const_intnl_exitJumpLoc_UInt32
+        JUMP, 0x00005F54
+        
+         # fishPulledReset();
+        PUSH, __1_const_intnl_exitJumpLoc_UInt32
+        JUMP, 0x00006358
+        
          # hardReset = false;
         PUSH, __0_const_intnl_SystemBoolean
         PUSH, hardReset
         COPY
-        
-         # resetEverything();
-        PUSH, __0_const_intnl_exitJumpLoc_UInt32
-        JUMP, 0x00005BF8
-        
-         # fishPulledReset();
-        PUSH, __1_const_intnl_exitJumpLoc_UInt32
-        JUMP, 0x00005FE8
         
          # if(softReset)
         PUSH, softReset
@@ -415,7 +449,7 @@
         
          # softResetEverything();
         PUSH, __2_const_intnl_exitJumpLoc_UInt32
-        JUMP, 0x00005F0C
+        JUMP, 0x0000627C
         
          # if (inWater==true)
         PUSH, inWater
@@ -423,9 +457,14 @@
         PUSH, __0_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
         PUSH, __0_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000024B8
+        JUMP_IF_FALSE, 0x000024CC
         
          # {
+        
+         # collectingFish = false;
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, collectingFish
+        COPY
         
          # var chosenNumber = Random.Range(timerMin, timerMax);
         PUSH, timerMin
@@ -442,7 +481,7 @@
         PUSH, __1_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_GreaterThanOrEqual__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __1_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000144
+        JUMP_IF_FALSE, 0x00000158
         
          # {
         
@@ -457,7 +496,7 @@
         PUSH, __2_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
         PUSH, __2_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002468
+        JUMP_IF_FALSE, 0x0000247C
         
          # {
         
@@ -466,7 +505,7 @@
         PUSH, __3_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_UnaryNegation__SystemBoolean__SystemBoolean"
         PUSH, __3_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000001EC
+        JUMP_IF_FALSE, 0x00000200
         
          # {
         
@@ -480,7 +519,7 @@
         PUSH, __0_const_intnl_SystemString
         PUSH, __0_intnl_UnityEngineColor
         EXTERN, "UnityEngineMaterial.__SetColor__SystemString_UnityEngineColor__SystemVoid"
-        JUMP, 0x00000234
+        JUMP, 0x00000248
         
          # else
         
@@ -516,7 +555,7 @@
         PUSH, __4_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000418
+        JUMP_IF_FALSE, 0x0000042C
         PUSH, __0_intnl_UnityEngineComponentArray
         PUSH, __2_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -533,14 +572,14 @@
         PUSH, __5_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __5_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000037C
+        JUMP_IF_FALSE, 0x00000390
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00000390
+        JUMP, 0x000003A4
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -549,11 +588,11 @@
         PUSH, __6_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __6_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000003DC
+        JUMP_IF_FALSE, 0x000003F0
         PUSH, __1_intnl_ResistanceText
         PUSH, __0_intnl_ResistanceText
         COPY
-        JUMP, 0x00000418
+        JUMP, 0x0000042C
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
@@ -561,7 +600,7 @@
         PUSH, __3_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
         COPY
-        JUMP, 0x00000294
+        JUMP, 0x000002A8
         PUSH, __0_intnl_ResistanceText
         PUSH, __2_const_intnl_SystemString
         PUSH, __1_const_intnl_SystemBoolean
@@ -573,7 +612,7 @@
         PUSH, __4_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002460
+        JUMP_IF_FALSE, 0x00002474
         
          # {
         
@@ -596,7 +635,7 @@
         PUSH, __5_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __5_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000064C
+        JUMP_IF_FALSE, 0x00000660
         PUSH, __1_intnl_UnityEngineComponentArray
         PUSH, __2_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -613,14 +652,14 @@
         PUSH, __6_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __6_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000005B0
+        JUMP_IF_FALSE, 0x000005C4
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x000005C4
+        JUMP, 0x000005D8
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -629,11 +668,11 @@
         PUSH, __7_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __7_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000610
+        JUMP_IF_FALSE, 0x00000624
         PUSH, __2_intnl_ResistanceText
         PUSH, __1_intnl_ResistanceText
         COPY
-        JUMP, 0x0000064C
+        JUMP, 0x00000660
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
@@ -641,7 +680,7 @@
         PUSH, __3_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
         COPY
-        JUMP, 0x000004C8
+        JUMP, 0x000004DC
         PUSH, __2_const_intnl_SystemInt32
         PUSH, __0_intnl_SystemSingle
         EXTERN, "SystemConvert.__ToSingle__SystemInt32__SystemSingle"
@@ -669,7 +708,7 @@
         PUSH, __5_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __5_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000868
+        JUMP_IF_FALSE, 0x0000087C
         PUSH, __2_intnl_UnityEngineComponentArray
         PUSH, __2_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -686,14 +725,14 @@
         PUSH, __6_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __6_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000007CC
+        JUMP_IF_FALSE, 0x000007E0
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x000007E0
+        JUMP, 0x000007F4
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -702,11 +741,11 @@
         PUSH, __7_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __7_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000082C
+        JUMP_IF_FALSE, 0x00000840
         PUSH, __3_intnl_ResistanceText
         PUSH, __2_intnl_ResistanceText
         COPY
-        JUMP, 0x00000868
+        JUMP, 0x0000087C
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
@@ -714,7 +753,7 @@
         PUSH, __3_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
         COPY
-        JUMP, 0x000006E4
+        JUMP, 0x000006F8
         PUSH, __2_const_intnl_SystemInt32
         PUSH, __1_intnl_SystemSingle
         EXTERN, "SystemConvert.__ToSingle__SystemInt32__SystemSingle"
@@ -742,7 +781,7 @@
         PUSH, __5_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __5_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000A84
+        JUMP_IF_FALSE, 0x00000A98
         PUSH, __3_intnl_UnityEngineComponentArray
         PUSH, __2_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -759,14 +798,14 @@
         PUSH, __6_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __6_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000009E8
+        JUMP_IF_FALSE, 0x000009FC
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x000009FC
+        JUMP, 0x00000A10
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -775,11 +814,11 @@
         PUSH, __7_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __7_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000A48
+        JUMP_IF_FALSE, 0x00000A5C
         PUSH, __4_intnl_ResistanceText
         PUSH, __3_intnl_ResistanceText
         COPY
-        JUMP, 0x00000A84
+        JUMP, 0x00000A98
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
@@ -787,7 +826,7 @@
         PUSH, __3_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
         COPY
-        JUMP, 0x00000900
+        JUMP, 0x00000914
         PUSH, __0_const_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __1_intnl_SystemInt32
@@ -802,7 +841,7 @@
         PUSH, __5_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_UnaryNegation__SystemBoolean__SystemBoolean"
         PUSH, __5_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001334
+        JUMP_IF_FALSE, 0x00001348
         
          # {
         
@@ -825,7 +864,7 @@
         PUSH, __6_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __6_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000CD0
+        JUMP_IF_FALSE, 0x00000CE4
         PUSH, __4_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -842,14 +881,14 @@
         PUSH, __7_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __7_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000C34
+        JUMP_IF_FALSE, 0x00000C48
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00000C48
+        JUMP, 0x00000C5C
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -858,11 +897,11 @@
         PUSH, __8_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __8_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000C94
+        JUMP_IF_FALSE, 0x00000CA8
         PUSH, __5_intnl_ResistanceText
         PUSH, __4_intnl_ResistanceText
         COPY
-        JUMP, 0x00000CD0
+        JUMP, 0x00000CE4
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -870,7 +909,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x00000B4C
+        JUMP, 0x00000B60
         PUSH, __4_intnl_ResistanceText
         PUSH, __6_const_intnl_SystemString
         PUSH, __0_const_intnl_SystemInt32
@@ -895,7 +934,7 @@
         PUSH, __6_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __6_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000ED4
+        JUMP_IF_FALSE, 0x00000EE8
         PUSH, __5_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -912,14 +951,14 @@
         PUSH, __7_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __7_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000E38
+        JUMP_IF_FALSE, 0x00000E4C
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00000E4C
+        JUMP, 0x00000E60
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -928,11 +967,11 @@
         PUSH, __8_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __8_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000E98
+        JUMP_IF_FALSE, 0x00000EAC
         PUSH, __6_intnl_ResistanceText
         PUSH, __5_intnl_ResistanceText
         COPY
-        JUMP, 0x00000ED4
+        JUMP, 0x00000EE8
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -940,7 +979,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x00000D50
+        JUMP, 0x00000D64
         PUSH, __5_intnl_ResistanceText
         PUSH, __7_const_intnl_SystemString
         PUSH, __3_const_intnl_SystemInt32
@@ -965,7 +1004,7 @@
         PUSH, __6_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __6_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000010D8
+        JUMP_IF_FALSE, 0x000010EC
         PUSH, __6_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -982,14 +1021,14 @@
         PUSH, __7_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __7_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000103C
+        JUMP_IF_FALSE, 0x00001050
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00001050
+        JUMP, 0x00001064
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -998,11 +1037,11 @@
         PUSH, __8_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __8_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000109C
+        JUMP_IF_FALSE, 0x000010B0
         PUSH, __7_intnl_ResistanceText
         PUSH, __6_intnl_ResistanceText
         COPY
-        JUMP, 0x000010D8
+        JUMP, 0x000010EC
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -1010,7 +1049,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x00000F54
+        JUMP, 0x00000F68
         PUSH, __4_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemSingle
         EXTERN, "SystemConvert.__ToSingle__SystemInt32__SystemSingle"
@@ -1038,7 +1077,7 @@
         PUSH, __6_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __6_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000012F4
+        JUMP_IF_FALSE, 0x00001308
         PUSH, __7_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -1055,14 +1094,14 @@
         PUSH, __7_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __7_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001258
+        JUMP_IF_FALSE, 0x0000126C
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x0000126C
+        JUMP, 0x00001280
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -1071,11 +1110,11 @@
         PUSH, __8_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __8_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000012B8
+        JUMP_IF_FALSE, 0x000012CC
         PUSH, __8_intnl_ResistanceText
         PUSH, __7_intnl_ResistanceText
         COPY
-        JUMP, 0x000012F4
+        JUMP, 0x00001308
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -1083,7 +1122,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x00001170
+        JUMP, 0x00001184
         PUSH, __5_const_intnl_SystemInt32
         PUSH, __3_intnl_SystemSingle
         EXTERN, "SystemConvert.__ToSingle__SystemInt32__SystemSingle"
@@ -1091,14 +1130,14 @@
         PUSH, __9_const_intnl_SystemString
         PUSH, __3_intnl_SystemSingle
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SetProgramVariable__SystemString_SystemObject__SystemVoid"
-        JUMP, 0x0000244C
+        JUMP, 0x00002460
         
          # else if (tier1Fish && !tier2Fish)//If currently fishing for tier 2 fish
         PUSH, tier1Fish
         PUSH, __6_intnl_SystemBoolean
         COPY
         PUSH, __6_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000013A4
+        JUMP_IF_FALSE, 0x000013B8
         PUSH, tier2Fish
         PUSH, __7_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_UnaryNegation__SystemBoolean__SystemBoolean"
@@ -1110,7 +1149,7 @@
         PUSH, __6_intnl_SystemBoolean
         COPY
         PUSH, __6_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001BFC
+        JUMP_IF_FALSE, 0x00001C10
         
          # {
         
@@ -1133,7 +1172,7 @@
         PUSH, __9_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __9_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001598
+        JUMP_IF_FALSE, 0x000015AC
         PUSH, __4_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -1150,14 +1189,14 @@
         PUSH, __10_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __10_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000014FC
+        JUMP_IF_FALSE, 0x00001510
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00001510
+        JUMP, 0x00001524
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -1166,11 +1205,11 @@
         PUSH, __11_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __11_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000155C
+        JUMP_IF_FALSE, 0x00001570
         PUSH, __5_intnl_ResistanceText
         PUSH, __4_intnl_ResistanceText
         COPY
-        JUMP, 0x00001598
+        JUMP, 0x000015AC
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -1178,7 +1217,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x00001414
+        JUMP, 0x00001428
         PUSH, __4_intnl_ResistanceText
         PUSH, __6_const_intnl_SystemString
         PUSH, __6_const_intnl_SystemInt32
@@ -1203,7 +1242,7 @@
         PUSH, __9_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __9_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000179C
+        JUMP_IF_FALSE, 0x000017B0
         PUSH, __5_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -1220,14 +1259,14 @@
         PUSH, __10_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __10_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001700
+        JUMP_IF_FALSE, 0x00001714
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00001714
+        JUMP, 0x00001728
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -1236,11 +1275,11 @@
         PUSH, __11_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __11_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001760
+        JUMP_IF_FALSE, 0x00001774
         PUSH, __6_intnl_ResistanceText
         PUSH, __5_intnl_ResistanceText
         COPY
-        JUMP, 0x0000179C
+        JUMP, 0x000017B0
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -1248,7 +1287,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x00001618
+        JUMP, 0x0000162C
         PUSH, __5_intnl_ResistanceText
         PUSH, __7_const_intnl_SystemString
         PUSH, __6_const_intnl_SystemInt32
@@ -1273,7 +1312,7 @@
         PUSH, __9_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __9_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000019A0
+        JUMP_IF_FALSE, 0x000019B4
         PUSH, __6_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -1290,14 +1329,14 @@
         PUSH, __10_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __10_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001904
+        JUMP_IF_FALSE, 0x00001918
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00001918
+        JUMP, 0x0000192C
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -1306,11 +1345,11 @@
         PUSH, __11_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __11_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001964
+        JUMP_IF_FALSE, 0x00001978
         PUSH, __7_intnl_ResistanceText
         PUSH, __6_intnl_ResistanceText
         COPY
-        JUMP, 0x000019A0
+        JUMP, 0x000019B4
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -1318,7 +1357,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x0000181C
+        JUMP, 0x00001830
         PUSH, __7_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemSingle
         EXTERN, "SystemConvert.__ToSingle__SystemInt32__SystemSingle"
@@ -1346,7 +1385,7 @@
         PUSH, __9_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __9_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001BBC
+        JUMP_IF_FALSE, 0x00001BD0
         PUSH, __7_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -1363,14 +1402,14 @@
         PUSH, __10_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __10_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001B20
+        JUMP_IF_FALSE, 0x00001B34
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00001B34
+        JUMP, 0x00001B48
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -1379,11 +1418,11 @@
         PUSH, __11_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __11_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001B80
+        JUMP_IF_FALSE, 0x00001B94
         PUSH, __8_intnl_ResistanceText
         PUSH, __7_intnl_ResistanceText
         COPY
-        JUMP, 0x00001BBC
+        JUMP, 0x00001BD0
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -1391,7 +1430,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x00001A38
+        JUMP, 0x00001A4C
         PUSH, __8_const_intnl_SystemInt32
         PUSH, __3_intnl_SystemSingle
         EXTERN, "SystemConvert.__ToSingle__SystemInt32__SystemSingle"
@@ -1399,11 +1438,11 @@
         PUSH, __9_const_intnl_SystemString
         PUSH, __3_intnl_SystemSingle
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SetProgramVariable__SystemString_SystemObject__SystemVoid"
-        JUMP, 0x0000244C
+        JUMP, 0x00002460
         
          # else if (tier2Fish)//If currently fishing for tier 3 fish
         PUSH, tier2Fish
-        JUMP_IF_FALSE, 0x0000244C
+        JUMP_IF_FALSE, 0x00002460
         
          # {
         
@@ -1426,7 +1465,7 @@
         PUSH, __9_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __9_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001DF0
+        JUMP_IF_FALSE, 0x00001E04
         PUSH, __4_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -1443,14 +1482,14 @@
         PUSH, __10_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __10_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001D54
+        JUMP_IF_FALSE, 0x00001D68
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00001D68
+        JUMP, 0x00001D7C
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -1459,11 +1498,11 @@
         PUSH, __11_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __11_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001DB4
+        JUMP_IF_FALSE, 0x00001DC8
         PUSH, __5_intnl_ResistanceText
         PUSH, __4_intnl_ResistanceText
         COPY
-        JUMP, 0x00001DF0
+        JUMP, 0x00001E04
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -1471,7 +1510,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x00001C6C
+        JUMP, 0x00001C80
         PUSH, __4_intnl_ResistanceText
         PUSH, __6_const_intnl_SystemString
         PUSH, __9_const_intnl_SystemInt32
@@ -1496,7 +1535,7 @@
         PUSH, __9_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __9_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001FF4
+        JUMP_IF_FALSE, 0x00002008
         PUSH, __5_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -1513,14 +1552,14 @@
         PUSH, __10_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __10_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001F58
+        JUMP_IF_FALSE, 0x00001F6C
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00001F6C
+        JUMP, 0x00001F80
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -1529,11 +1568,11 @@
         PUSH, __11_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __11_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00001FB8
+        JUMP_IF_FALSE, 0x00001FCC
         PUSH, __6_intnl_ResistanceText
         PUSH, __5_intnl_ResistanceText
         COPY
-        JUMP, 0x00001FF4
+        JUMP, 0x00002008
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -1541,7 +1580,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x00001E70
+        JUMP, 0x00001E84
         PUSH, __5_intnl_ResistanceText
         PUSH, __7_const_intnl_SystemString
         PUSH, __10_const_intnl_SystemInt32
@@ -1566,7 +1605,7 @@
         PUSH, __9_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __9_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000021F8
+        JUMP_IF_FALSE, 0x0000220C
         PUSH, __6_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -1583,14 +1622,14 @@
         PUSH, __10_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __10_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000215C
+        JUMP_IF_FALSE, 0x00002170
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00002170
+        JUMP, 0x00002184
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -1599,11 +1638,11 @@
         PUSH, __11_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __11_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000021BC
+        JUMP_IF_FALSE, 0x000021D0
         PUSH, __7_intnl_ResistanceText
         PUSH, __6_intnl_ResistanceText
         COPY
-        JUMP, 0x000021F8
+        JUMP, 0x0000220C
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -1611,7 +1650,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x00002074
+        JUMP, 0x00002088
         PUSH, __11_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemSingle
         EXTERN, "SystemConvert.__ToSingle__SystemInt32__SystemSingle"
@@ -1639,7 +1678,7 @@
         PUSH, __9_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __9_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002414
+        JUMP_IF_FALSE, 0x00002428
         PUSH, __7_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -1656,14 +1695,14 @@
         PUSH, __10_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __10_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002378
+        JUMP_IF_FALSE, 0x0000238C
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x0000238C
+        JUMP, 0x000023A0
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -1672,11 +1711,11 @@
         PUSH, __11_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __11_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000023D8
+        JUMP_IF_FALSE, 0x000023EC
         PUSH, __8_intnl_ResistanceText
         PUSH, __7_intnl_ResistanceText
         COPY
-        JUMP, 0x00002414
+        JUMP, 0x00002428
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -1684,7 +1723,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x00002290
+        JUMP, 0x000022A4
         PUSH, __12_const_intnl_SystemInt32
         PUSH, __3_intnl_SystemSingle
         EXTERN, "SystemConvert.__ToSingle__SystemInt32__SystemSingle"
@@ -1697,7 +1736,7 @@
         PUSH, __1_const_intnl_SystemBoolean
         PUSH, testBool
         COPY
-        JUMP, 0x000024B0
+        JUMP, 0x000024C4
         
          # else
         
@@ -1713,7 +1752,7 @@
         PUSH, __0_const_intnl_SystemString
         PUSH, __0_intnl_UnityEngineColor
         EXTERN, "UnityEngineMaterial.__SetColor__SystemString_UnityEngineColor__SystemVoid"
-        JUMP, 0x00005758
+        JUMP, 0x000057B0
         
          # else //If not in the water
         
@@ -1725,13 +1764,13 @@
         PUSH, __1_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
         PUSH, __1_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00005538
+        JUMP_IF_FALSE, 0x00005590
         
          # {
         
          # if (fishExhausted)
         PUSH, fishExhausted
-        JUMP_IF_FALSE, 0x000052A4
+        JUMP_IF_FALSE, 0x000052FC
         
          # {
         
@@ -1741,7 +1780,7 @@
         PUSH, __2_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
         PUSH, __2_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00004BCC
+        JUMP_IF_FALSE, 0x00004C24
         
          # {
         
@@ -1750,7 +1789,7 @@
         PUSH, __3_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_UnaryNegation__SystemBoolean__SystemBoolean"
         PUSH, __3_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002A9C
+        JUMP_IF_FALSE, 0x00002AB0
         
          # {
         
@@ -1814,7 +1853,7 @@
         PUSH, __4_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002848
+        JUMP_IF_FALSE, 0x0000285C
         PUSH, __0_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -1831,14 +1870,14 @@
         PUSH, __5_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __5_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000027AC
+        JUMP_IF_FALSE, 0x000027C0
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x000027C0
+        JUMP, 0x000027D4
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -1847,11 +1886,11 @@
         PUSH, __6_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __6_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000280C
+        JUMP_IF_FALSE, 0x00002820
         PUSH, __1_intnl_Fish
         PUSH, __0_intnl_Fish
         COPY
-        JUMP, 0x00002848
+        JUMP, 0x0000285C
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -1859,7 +1898,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x000026C4
+        JUMP, 0x000026D8
         PUSH, __0_intnl_Fish
         PUSH, __10_const_intnl_SystemString
         PUSH, __0_this_intnl_UnityEngineGameObject
@@ -1884,7 +1923,7 @@
         PUSH, __4_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002A4C
+        JUMP_IF_FALSE, 0x00002A60
         PUSH, __1_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -1901,14 +1940,14 @@
         PUSH, __5_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __5_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000029B0
+        JUMP_IF_FALSE, 0x000029C4
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x000029C4
+        JUMP, 0x000029D8
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -1917,11 +1956,11 @@
         PUSH, __6_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __6_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002A10
+        JUMP_IF_FALSE, 0x00002A24
         PUSH, __2_intnl_Fish
         PUSH, __1_intnl_Fish
         COPY
-        JUMP, 0x00002A4C
+        JUMP, 0x00002A60
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -1929,7 +1968,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x000028C8
+        JUMP, 0x000028DC
         PUSH, __1_intnl_Fish
         PUSH, __11_const_intnl_SystemString
         PUSH, __1_const_intnl_SystemBoolean
@@ -1944,14 +1983,14 @@
         PUSH, __1_const_intnl_SystemBoolean
         PUSH, tier1Fish
         COPY
-        JUMP, 0x00004BA4
+        JUMP, 0x00004BB8
         
          # else if (tier1Fish && Corruption && !tier2Fish) //Randomly Generate Tier 2 Corruption Fish
         PUSH, tier1Fish
         PUSH, __5_intnl_SystemBoolean
         COPY
         PUSH, __5_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002AF4
+        JUMP_IF_FALSE, 0x00002B08
         PUSH, __5_intnl_SystemBoolean
         PUSH, Corruption
         PUSH, __6_intnl_SystemBoolean
@@ -1963,7 +2002,7 @@
         PUSH, __4_intnl_SystemBoolean
         COPY
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002B64
+        JUMP_IF_FALSE, 0x00002B78
         PUSH, tier2Fish
         PUSH, __7_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_UnaryNegation__SystemBoolean__SystemBoolean"
@@ -1975,7 +2014,7 @@
         PUSH, __4_intnl_SystemBoolean
         COPY
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002F0C
+        JUMP_IF_FALSE, 0x00002F20
         
          # {
         
@@ -2052,7 +2091,7 @@
         PUSH, __9_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __9_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002EC4
+        JUMP_IF_FALSE, 0x00002ED8
         PUSH, __0_intnl_UnityEngineComponentArray
         PUSH, __5_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -2069,14 +2108,14 @@
         PUSH, __10_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __10_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002E28
+        JUMP_IF_FALSE, 0x00002E3C
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00002E3C
+        JUMP, 0x00002E50
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -2085,11 +2124,11 @@
         PUSH, __11_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __11_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002E88
+        JUMP_IF_FALSE, 0x00002E9C
         PUSH, __1_intnl_Fish
         PUSH, __0_intnl_Fish
         COPY
-        JUMP, 0x00002EC4
+        JUMP, 0x00002ED8
         PUSH, __5_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __6_intnl_SystemInt32
@@ -2097,7 +2136,7 @@
         PUSH, __6_intnl_SystemInt32
         PUSH, __5_intnl_SystemInt32
         COPY
-        JUMP, 0x00002D40
+        JUMP, 0x00002D54
         PUSH, __0_intnl_Fish
         PUSH, __12_const_intnl_SystemString
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
@@ -2111,14 +2150,14 @@
         PUSH, __1_const_intnl_SystemBoolean
         PUSH, tier2Fish
         COPY
-        JUMP, 0x00004BA4
+        JUMP, 0x00004BB8
         
          # else if (tier1Fish && Crimson && !tier2Fish) //Randomly Generate Tier 2 Crimson Fish
         PUSH, tier1Fish
         PUSH, __10_intnl_SystemBoolean
         COPY
         PUSH, __10_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002F64
+        JUMP_IF_FALSE, 0x00002F78
         PUSH, __10_intnl_SystemBoolean
         PUSH, Crimson
         PUSH, __11_intnl_SystemBoolean
@@ -2130,7 +2169,7 @@
         PUSH, __9_intnl_SystemBoolean
         COPY
         PUSH, __9_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00002FD4
+        JUMP_IF_FALSE, 0x00002FE8
         PUSH, tier2Fish
         PUSH, __12_intnl_SystemBoolean
         EXTERN, "SystemBoolean.__op_UnaryNegation__SystemBoolean__SystemBoolean"
@@ -2142,7 +2181,7 @@
         PUSH, __9_intnl_SystemBoolean
         COPY
         PUSH, __9_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000337C
+        JUMP_IF_FALSE, 0x00003390
         
          # {
         
@@ -2219,7 +2258,7 @@
         PUSH, __14_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __14_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00003334
+        JUMP_IF_FALSE, 0x00003348
         PUSH, __0_intnl_UnityEngineComponentArray
         PUSH, __5_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -2236,14 +2275,14 @@
         PUSH, __15_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __15_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00003298
+        JUMP_IF_FALSE, 0x000032AC
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x000032AC
+        JUMP, 0x000032C0
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -2252,11 +2291,11 @@
         PUSH, __16_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __16_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000032F8
+        JUMP_IF_FALSE, 0x0000330C
         PUSH, __1_intnl_Fish
         PUSH, __0_intnl_Fish
         COPY
-        JUMP, 0x00003334
+        JUMP, 0x00003348
         PUSH, __5_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __6_intnl_SystemInt32
@@ -2264,7 +2303,7 @@
         PUSH, __6_intnl_SystemInt32
         PUSH, __5_intnl_SystemInt32
         COPY
-        JUMP, 0x000031B0
+        JUMP, 0x000031C4
         PUSH, __0_intnl_Fish
         PUSH, __12_const_intnl_SystemString
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
@@ -2278,11 +2317,11 @@
         PUSH, __1_const_intnl_SystemBoolean
         PUSH, tier2Fish
         COPY
-        JUMP, 0x00004BA4
+        JUMP, 0x00004BB8
         
          # else if (tier2Fish) //If we put a tier 2 fish in the water,
         PUSH, tier2Fish
-        JUMP_IF_FALSE, 0x00004BA4
+        JUMP_IF_FALSE, 0x00004BB8
         
          # {
         
@@ -2305,7 +2344,7 @@
         PUSH, __15_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __15_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00003570
+        JUMP_IF_FALSE, 0x00003584
         PUSH, __0_intnl_UnityEngineComponentArray
         PUSH, __1_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -2322,14 +2361,14 @@
         PUSH, __16_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __16_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000034D4
+        JUMP_IF_FALSE, 0x000034E8
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x000034E8
+        JUMP, 0x000034FC
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -2338,11 +2377,11 @@
         PUSH, __17_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __17_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00003534
+        JUMP_IF_FALSE, 0x00003548
         PUSH, __1_intnl_Fish
         PUSH, __0_intnl_Fish
         COPY
-        JUMP, 0x00003570
+        JUMP, 0x00003584
         PUSH, __1_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
@@ -2350,7 +2389,7 @@
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_intnl_SystemInt32
         COPY
-        JUMP, 0x000033EC
+        JUMP, 0x00003400
         PUSH, __0_intnl_Fish
         PUSH, __13_const_intnl_SystemString
         PUSH, __0_intnl_SystemObject
@@ -2366,7 +2405,7 @@
         PUSH, __14_intnl_SystemBoolean
         COPY
         PUSH, __14_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00003620
+        JUMP_IF_FALSE, 0x00003634
         PUSH, __14_intnl_SystemBoolean
         PUSH, Crimson
         PUSH, __18_intnl_SystemBoolean
@@ -2375,7 +2414,7 @@
         PUSH, __14_intnl_SystemBoolean
         COPY
         PUSH, __14_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00003980
+        JUMP_IF_FALSE, 0x00003994
         
          # {
         
@@ -2439,7 +2478,7 @@
         PUSH, __19_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __19_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00003928
+        JUMP_IF_FALSE, 0x0000393C
         PUSH, __1_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -2456,14 +2495,14 @@
         PUSH, __20_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __20_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000388C
+        JUMP_IF_FALSE, 0x000038A0
         PUSH, __1_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x000038A0
+        JUMP, 0x000038B4
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -2472,11 +2511,11 @@
         PUSH, __21_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __21_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000038EC
+        JUMP_IF_FALSE, 0x00003900
         PUSH, __2_intnl_Fish
         PUSH, __1_intnl_Fish
         COPY
-        JUMP, 0x00003928
+        JUMP, 0x0000393C
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -2484,7 +2523,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x000037A4
+        JUMP, 0x000037B8
         PUSH, __1_intnl_Fish
         PUSH, __12_const_intnl_SystemString
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
@@ -2502,7 +2541,7 @@
          # Debug.Log("Spawning Variant");
         PUSH, __14_const_intnl_SystemString
         EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
-        JUMP, 0x00004B94
+        JUMP, 0x00004BA8
         
          # else if (previousFish.GetComponent<Fish>().corruptedFish == true && Corruption == true) //Else Generate Tier 3 Corrupted Fish
         PUSH, previousFish
@@ -2523,7 +2562,7 @@
         PUSH, __20_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __20_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00003B64
+        JUMP_IF_FALSE, 0x00003B78
         PUSH, __1_intnl_UnityEngineComponentArray
         PUSH, __1_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -2540,14 +2579,14 @@
         PUSH, __21_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __21_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00003AC8
+        JUMP_IF_FALSE, 0x00003ADC
         PUSH, __1_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00003ADC
+        JUMP, 0x00003AF0
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -2556,11 +2595,11 @@
         PUSH, __22_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __22_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00003B28
+        JUMP_IF_FALSE, 0x00003B3C
         PUSH, __2_intnl_Fish
         PUSH, __1_intnl_Fish
         COPY
-        JUMP, 0x00003B64
+        JUMP, 0x00003B78
         PUSH, __1_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
@@ -2568,7 +2607,7 @@
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_intnl_SystemInt32
         COPY
-        JUMP, 0x000039E0
+        JUMP, 0x000039F4
         PUSH, __1_intnl_Fish
         PUSH, __13_const_intnl_SystemString
         PUSH, __1_intnl_SystemObject
@@ -2584,7 +2623,7 @@
         PUSH, __19_intnl_SystemBoolean
         COPY
         PUSH, __19_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00003C34
+        JUMP_IF_FALSE, 0x00003C48
         PUSH, Corruption
         PUSH, __1_const_intnl_SystemBoolean
         PUSH, __23_intnl_SystemBoolean
@@ -2597,7 +2636,7 @@
         PUSH, __19_intnl_SystemBoolean
         COPY
         PUSH, __19_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00003F94
+        JUMP_IF_FALSE, 0x00003FA8
         
          # {
         
@@ -2661,7 +2700,7 @@
         PUSH, __25_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __25_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00003F3C
+        JUMP_IF_FALSE, 0x00003F50
         PUSH, __2_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -2678,14 +2717,14 @@
         PUSH, __26_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __26_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00003EA0
+        JUMP_IF_FALSE, 0x00003EB4
         PUSH, __2_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00003EB4
+        JUMP, 0x00003EC8
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -2694,11 +2733,11 @@
         PUSH, __27_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __27_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00003F00
+        JUMP_IF_FALSE, 0x00003F14
         PUSH, __3_intnl_Fish
         PUSH, __2_intnl_Fish
         COPY
-        JUMP, 0x00003F3C
+        JUMP, 0x00003F50
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -2706,7 +2745,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x00003DB8
+        JUMP, 0x00003DCC
         PUSH, __2_intnl_Fish
         PUSH, __12_const_intnl_SystemString
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
@@ -2724,7 +2763,7 @@
          # Debug.Log("Spawning Tier 3");
         PUSH, __15_const_intnl_SystemString
         EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
-        JUMP, 0x00004B94
+        JUMP, 0x00004BA8
         
          # else if (previousFish.GetComponent<Fish>().corruptedFish == false && Corruption == false) //Else Generate Tier 3 Crimson Fish
         PUSH, previousFish
@@ -2745,7 +2784,7 @@
         PUSH, __26_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __26_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00004178
+        JUMP_IF_FALSE, 0x0000418C
         PUSH, __2_intnl_UnityEngineComponentArray
         PUSH, __1_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -2762,14 +2801,14 @@
         PUSH, __27_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __27_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000040DC
+        JUMP_IF_FALSE, 0x000040F0
         PUSH, __2_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x000040F0
+        JUMP, 0x00004104
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -2778,11 +2817,11 @@
         PUSH, __28_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __28_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000413C
+        JUMP_IF_FALSE, 0x00004150
         PUSH, __3_intnl_Fish
         PUSH, __2_intnl_Fish
         COPY
-        JUMP, 0x00004178
+        JUMP, 0x0000418C
         PUSH, __1_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
@@ -2790,7 +2829,7 @@
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_intnl_SystemInt32
         COPY
-        JUMP, 0x00003FF4
+        JUMP, 0x00004008
         PUSH, __2_intnl_Fish
         PUSH, __13_const_intnl_SystemString
         PUSH, __2_intnl_SystemObject
@@ -2806,7 +2845,7 @@
         PUSH, __25_intnl_SystemBoolean
         COPY
         PUSH, __25_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00004248
+        JUMP_IF_FALSE, 0x0000425C
         PUSH, Corruption
         PUSH, __0_const_intnl_SystemBoolean
         PUSH, __29_intnl_SystemBoolean
@@ -2819,7 +2858,7 @@
         PUSH, __25_intnl_SystemBoolean
         COPY
         PUSH, __25_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000045A8
+        JUMP_IF_FALSE, 0x000045BC
         
          # {
         
@@ -2883,7 +2922,7 @@
         PUSH, __31_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __31_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00004550
+        JUMP_IF_FALSE, 0x00004564
         PUSH, __3_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -2900,14 +2939,14 @@
         PUSH, __32_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __32_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000044B4
+        JUMP_IF_FALSE, 0x000044C8
         PUSH, __3_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x000044C8
+        JUMP, 0x000044DC
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -2916,11 +2955,11 @@
         PUSH, __33_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __33_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00004514
+        JUMP_IF_FALSE, 0x00004528
         PUSH, __4_intnl_Fish
         PUSH, __3_intnl_Fish
         COPY
-        JUMP, 0x00004550
+        JUMP, 0x00004564
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -2928,7 +2967,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x000043CC
+        JUMP, 0x000043E0
         PUSH, __3_intnl_Fish
         PUSH, __12_const_intnl_SystemString
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
@@ -2946,7 +2985,7 @@
          # Debug.Log("Spawning Tier 3");
         PUSH, __15_const_intnl_SystemString
         EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
-        JUMP, 0x00004B94
+        JUMP, 0x00004BA8
         
          # else if (previousFish.GetComponent<Fish>().corruptedFish == false && Corruption) //Generate Variant
         PUSH, previousFish
@@ -2967,7 +3006,7 @@
         PUSH, __32_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __32_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000478C
+        JUMP_IF_FALSE, 0x000047A0
         PUSH, __3_intnl_UnityEngineComponentArray
         PUSH, __1_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -2984,14 +3023,14 @@
         PUSH, __33_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __33_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000046F0
+        JUMP_IF_FALSE, 0x00004704
         PUSH, __3_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00004704
+        JUMP, 0x00004718
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -3000,11 +3039,11 @@
         PUSH, __34_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __34_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00004750
+        JUMP_IF_FALSE, 0x00004764
         PUSH, __4_intnl_Fish
         PUSH, __3_intnl_Fish
         COPY
-        JUMP, 0x0000478C
+        JUMP, 0x000047A0
         PUSH, __1_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
@@ -3012,7 +3051,7 @@
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_intnl_SystemInt32
         COPY
-        JUMP, 0x00004608
+        JUMP, 0x0000461C
         PUSH, __3_intnl_Fish
         PUSH, __13_const_intnl_SystemString
         PUSH, __3_intnl_SystemObject
@@ -3028,7 +3067,7 @@
         PUSH, __31_intnl_SystemBoolean
         COPY
         PUSH, __31_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000483C
+        JUMP_IF_FALSE, 0x00004850
         PUSH, __31_intnl_SystemBoolean
         PUSH, Corruption
         PUSH, __35_intnl_SystemBoolean
@@ -3037,7 +3076,7 @@
         PUSH, __31_intnl_SystemBoolean
         COPY
         PUSH, __31_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00004B94
+        JUMP_IF_FALSE, 0x00004BA8
         
          # {
         
@@ -3101,7 +3140,7 @@
         PUSH, __36_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __36_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00004B44
+        JUMP_IF_FALSE, 0x00004B58
         PUSH, __4_intnl_UnityEngineComponentArray
         PUSH, __3_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -3118,14 +3157,14 @@
         PUSH, __37_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __37_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00004AA8
+        JUMP_IF_FALSE, 0x00004ABC
         PUSH, __4_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00004ABC
+        JUMP, 0x00004AD0
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -3134,11 +3173,11 @@
         PUSH, __38_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __38_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00004B08
+        JUMP_IF_FALSE, 0x00004B1C
         PUSH, __5_intnl_Fish
         PUSH, __4_intnl_Fish
         COPY
-        JUMP, 0x00004B44
+        JUMP, 0x00004B58
         PUSH, __3_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __4_intnl_SystemInt32
@@ -3146,7 +3185,7 @@
         PUSH, __4_intnl_SystemInt32
         PUSH, __3_intnl_SystemInt32
         COPY
-        JUMP, 0x000049C0
+        JUMP, 0x000049D4
         PUSH, __4_intnl_Fish
         PUSH, __12_const_intnl_SystemString
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
@@ -3179,9 +3218,24 @@
         PUSH, hookBite
         COPY
         
+         # if(fishSpawned == true)
+        PUSH, fishSpawned
+        PUSH, __1_const_intnl_SystemBoolean
+        PUSH, __14_intnl_SystemBoolean
+        EXTERN, "SystemBoolean.__op_Equality__SystemBoolean_SystemBoolean__SystemBoolean"
+        PUSH, __14_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00004C24
+        
+         # {
+        
+         # collectingFish = true;
+        PUSH, __1_const_intnl_SystemBoolean
+        PUSH, collectingFish
+        COPY
+        
          # if(fishSpawned)
         PUSH, fishSpawned
-        JUMP_IF_FALSE, 0x00004BDC
+        JUMP_IF_FALSE, 0x00004C34
         
          # {
         
@@ -3220,7 +3274,7 @@
         PUSH, __3_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __3_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00004E1C
+        JUMP_IF_FALSE, 0x00004E74
         PUSH, __0_intnl_UnityEngineComponentArray
         PUSH, __1_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -3237,14 +3291,14 @@
         PUSH, __4_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00004D80
+        JUMP_IF_FALSE, 0x00004DD8
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00004D94
+        JUMP, 0x00004DEC
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -3253,11 +3307,11 @@
         PUSH, __5_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __5_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00004DE0
+        JUMP_IF_FALSE, 0x00004E38
         PUSH, __1_intnl_ResistanceText
         PUSH, __0_intnl_ResistanceText
         COPY
-        JUMP, 0x00004E1C
+        JUMP, 0x00004E74
         PUSH, __1_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
@@ -3265,7 +3319,7 @@
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_intnl_SystemInt32
         COPY
-        JUMP, 0x00004C98
+        JUMP, 0x00004CF0
         PUSH, __0_const_intnl_SystemInt32
         PUSH, __0_intnl_SystemSingle
         EXTERN, "SystemConvert.__ToSingle__SystemInt32__SystemSingle"
@@ -3293,7 +3347,7 @@
         PUSH, __3_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __3_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00005038
+        JUMP_IF_FALSE, 0x00005090
         PUSH, __1_intnl_UnityEngineComponentArray
         PUSH, __1_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -3310,14 +3364,14 @@
         PUSH, __4_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00004F9C
+        JUMP_IF_FALSE, 0x00004FF4
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00004FB0
+        JUMP, 0x00005008
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -3326,11 +3380,11 @@
         PUSH, __5_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __5_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00004FFC
+        JUMP_IF_FALSE, 0x00005054
         PUSH, __2_intnl_ResistanceText
         PUSH, __1_intnl_ResistanceText
         COPY
-        JUMP, 0x00005038
+        JUMP, 0x00005090
         PUSH, __1_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
@@ -3338,7 +3392,7 @@
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_intnl_SystemInt32
         COPY
-        JUMP, 0x00004EB4
+        JUMP, 0x00004F0C
         PUSH, __0_const_intnl_SystemInt32
         PUSH, __1_intnl_SystemSingle
         EXTERN, "SystemConvert.__ToSingle__SystemInt32__SystemSingle"
@@ -3366,7 +3420,7 @@
         PUSH, __3_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __3_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00005254
+        JUMP_IF_FALSE, 0x000052AC
         PUSH, __2_intnl_UnityEngineComponentArray
         PUSH, __1_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -3383,14 +3437,14 @@
         PUSH, __4_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000051B8
+        JUMP_IF_FALSE, 0x00005210
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x000051CC
+        JUMP, 0x00005224
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -3399,11 +3453,11 @@
         PUSH, __5_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __5_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00005218
+        JUMP_IF_FALSE, 0x00005270
         PUSH, __3_intnl_ResistanceText
         PUSH, __2_intnl_ResistanceText
         COPY
-        JUMP, 0x00005254
+        JUMP, 0x000052AC
         PUSH, __1_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
@@ -3411,7 +3465,7 @@
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_intnl_SystemInt32
         COPY
-        JUMP, 0x000050D0
+        JUMP, 0x00005128
         PUSH, __0_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemSingle
         EXTERN, "SystemConvert.__ToSingle__SystemInt32__SystemSingle"
@@ -3422,8 +3476,8 @@
         
          # resetEverything();
         PUSH, __3_const_intnl_exitJumpLoc_UInt32
-        JUMP, 0x00005BF8
-        JUMP, 0x00005530
+        JUMP, 0x00005F54
+        JUMP, 0x00005588
         
          # else
         
@@ -3435,7 +3489,7 @@
         PUSH, __2_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_GreaterThanOrEqual__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __2_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000054FC
+        JUMP_IF_FALSE, 0x00005554
         
          # {
         
@@ -3446,7 +3500,7 @@
         
          # resetEverything();
         PUSH, __4_const_intnl_exitJumpLoc_UInt32
-        JUMP, 0x00005BF8
+        JUMP, 0x00005F54
         
          # myFishingRod.GetComponent<ResistanceText>().resetVariables();
         PUSH, myFishingRod
@@ -3467,7 +3521,7 @@
         PUSH, __3_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __3_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000054DC
+        JUMP_IF_FALSE, 0x00005534
         PUSH, __0_intnl_UnityEngineComponentArray
         PUSH, __1_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -3484,14 +3538,14 @@
         PUSH, __4_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00005440
+        JUMP_IF_FALSE, 0x00005498
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x00005454
+        JUMP, 0x000054AC
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -3500,11 +3554,11 @@
         PUSH, __5_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __5_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000054A0
+        JUMP_IF_FALSE, 0x000054F8
         PUSH, __1_intnl_ResistanceText
         PUSH, __0_intnl_ResistanceText
         COPY
-        JUMP, 0x000054DC
+        JUMP, 0x00005534
         PUSH, __1_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
@@ -3512,11 +3566,11 @@
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_intnl_SystemInt32
         COPY
-        JUMP, 0x00005358
+        JUMP, 0x000053B0
         PUSH, __0_intnl_ResistanceText
         PUSH, __18_const_intnl_SystemString
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
-        JUMP, 0x00005530
+        JUMP, 0x00005588
         
          # else
         
@@ -3530,7 +3584,7 @@
         PUSH, __0_intnl_SystemInt32
         PUSH, resetTimer
         COPY
-        JUMP, 0x00005758
+        JUMP, 0x000057B0
         
          # else
         
@@ -3543,7 +3597,7 @@
         
          # resetEverything();
         PUSH, __5_const_intnl_exitJumpLoc_UInt32
-        JUMP, 0x00005BF8
+        JUMP, 0x00005F54
         
          # myFishingRod.GetComponent<ResistanceText>().resetVariables();
         PUSH, myFishingRod
@@ -3564,7 +3618,7 @@
         PUSH, __2_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __2_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00005740
+        JUMP_IF_FALSE, 0x00005798
         PUSH, __0_intnl_UnityEngineComponentArray
         PUSH, __1_intnl_SystemInt32
         PUSH, __0_intnl_UnityEngineComponent
@@ -3581,14 +3635,14 @@
         PUSH, __3_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
         PUSH, __3_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000056A4
+        JUMP_IF_FALSE, 0x000056FC
         PUSH, __0_intnl_SystemObject
         PUSH, __1_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
         PUSH, __1_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
-        JUMP, 0x000056B8
+        JUMP, 0x00005710
         PUSH, __1_const_intnl_SystemInt64
         PUSH, __0_intnl_SystemInt64
         COPY
@@ -3597,11 +3651,11 @@
         PUSH, __4_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
         PUSH, __4_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00005704
+        JUMP_IF_FALSE, 0x0000575C
         PUSH, __1_intnl_ResistanceText
         PUSH, __0_intnl_ResistanceText
         COPY
-        JUMP, 0x00005740
+        JUMP, 0x00005798
         PUSH, __1_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
         PUSH, __2_intnl_SystemInt32
@@ -3609,7 +3663,7 @@
         PUSH, __2_intnl_SystemInt32
         PUSH, __1_intnl_SystemInt32
         COPY
-        JUMP, 0x000055BC
+        JUMP, 0x00005614
         PUSH, __0_intnl_ResistanceText
         PUSH, __18_const_intnl_SystemString
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
@@ -3649,7 +3703,7 @@
         PUSH, __39_intnl_SystemBoolean
         COPY
         PUSH, __39_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00005828
+        JUMP_IF_FALSE, 0x00005880
         PUSH, inWater
         PUSH, __1_const_intnl_SystemBoolean
         PUSH, __41_intnl_SystemBoolean
@@ -3662,7 +3716,7 @@
         PUSH, __39_intnl_SystemBoolean
         COPY
         PUSH, __39_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000058EC
+        JUMP_IF_FALSE, 0x00005944
         
          # {
         
@@ -3672,7 +3726,7 @@
         PUSH, __43_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThanOrEqual__SystemInt32_SystemInt32__SystemBoolean"
         PUSH, __43_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000058A4
+        JUMP_IF_FALSE, 0x000058FC
         
          # {
         
@@ -3684,7 +3738,7 @@
         PUSH, __7_intnl_SystemInt32
         PUSH, timer
         COPY
-        JUMP, 0x000058EC
+        JUMP, 0x00005944
         
          # else
         
@@ -3703,6 +3757,132 @@
         PUSH, __0_const_intnl_SystemInt32
         PUSH, timer
         COPY
+        
+         # if (collectingFish)
+        PUSH, collectingFish
+        JUMP_IF_FALSE, 0x00005C48
+        
+         # {
+        
+         # if(collectTimer>=collectTimerMax)
+        PUSH, collectTimer
+        PUSH, collectTimerMax
+        PUSH, __43_intnl_SystemBoolean
+        EXTERN, "SystemInt32.__op_GreaterThanOrEqual__SystemInt32_SystemInt32__SystemBoolean"
+        PUSH, __43_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00005BCC
+        
+         # {
+        
+         # collectTimer = 0;
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, collectTimer
+        COPY
+        
+         # previousFish.GetComponent<Fish>().onHook = false;
+        PUSH, previousFish
+        PUSH, __0_const_intnl_SystemType
+        PUSH, __8_intnl_UnityEngineComponentArray
+        EXTERN, "UnityEngineGameObject.__GetComponents__SystemType__UnityEngineComponentArray"
+        PUSH, __12_const_intnl_Fish
+        PUSH, __6_intnl_Fish
+        COPY
+        PUSH, __8_intnl_UnityEngineComponentArray
+        PUSH, __7_intnl_SystemInt32
+        EXTERN, "UnityEngineComponentArray.__get_Length__SystemInt32"
+        PUSH, __0_const_intnl_SystemInt32
+        PUSH, __8_intnl_SystemInt32
+        COPY
+        PUSH, __8_intnl_SystemInt32
+        PUSH, __7_intnl_SystemInt32
+        PUSH, __44_intnl_SystemBoolean
+        EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
+        PUSH, __44_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00005B7C
+        PUSH, __8_intnl_UnityEngineComponentArray
+        PUSH, __8_intnl_SystemInt32
+        PUSH, __1_intnl_UnityEngineComponent
+        EXTERN, "UnityEngineComponentArray.__Get__SystemInt32__UnityEngineComponent"
+        PUSH, __1_intnl_UnityEngineComponent
+        PUSH, __7_intnl_Fish
+        COPY
+        PUSH, __7_intnl_Fish
+        PUSH, __1_const_intnl_SystemString
+        PUSH, __5_intnl_SystemObject
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
+        PUSH, __5_intnl_SystemObject
+        PUSH, __0_const_intnl_SystemObject
+        PUSH, __45_intnl_SystemBoolean
+        EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
+        PUSH, __45_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00005AE0
+        PUSH, __5_intnl_SystemObject
+        PUSH, __3_intnl_SystemInt64
+        EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
+        PUSH, __3_intnl_SystemInt64
+        PUSH, __2_intnl_SystemInt64
+        COPY
+        JUMP, 0x00005AF4
+        PUSH, __1_const_intnl_SystemInt64
+        PUSH, __2_intnl_SystemInt64
+        COPY
+        PUSH, __2_intnl_SystemInt64
+        PUSH, __2_const_intnl_SystemInt64
+        PUSH, __46_intnl_SystemBoolean
+        EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
+        PUSH, __46_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00005B40
+        PUSH, __7_intnl_Fish
+        PUSH, __6_intnl_Fish
+        COPY
+        JUMP, 0x00005B7C
+        PUSH, __8_intnl_SystemInt32
+        PUSH, __1_const_intnl_SystemInt32
+        PUSH, __9_intnl_SystemInt32
+        EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, __9_intnl_SystemInt32
+        PUSH, __8_intnl_SystemInt32
+        COPY
+        JUMP, 0x000059F8
+        PUSH, __6_intnl_Fish
+        PUSH, __11_const_intnl_SystemString
+        PUSH, __0_const_intnl_SystemBoolean
+        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SetProgramVariable__SystemString_SystemObject__SystemVoid"
+        
+         # hardReset = true;
+        PUSH, __1_const_intnl_SystemBoolean
+        PUSH, hardReset
+        COPY
+        
+         # collectingFish = false;
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, collectingFish
+        COPY
+        JUMP, 0x00005C00
+        
+         # else
+        
+         # {
+        
+         # collectTimer += 1;
+        PUSH, collectTimer
+        PUSH, __1_const_intnl_SystemInt32
+        PUSH, __7_intnl_SystemInt32
+        EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
+        PUSH, __7_intnl_SystemInt32
+        PUSH, collectTimer
+        COPY
+        
+         # myCubeRenderer.material.SetColor("_Color", Color.black);
+        PUSH, myCubeRenderer
+        PUSH, __1_intnl_UnityEngineMaterial
+        EXTERN, "UnityEngineRenderer.__get_material__UnityEngineMaterial"
+        PUSH, __1_intnl_UnityEngineColor
+        EXTERN, "UnityEngineColor.__get_black__UnityEngineColor"
+        PUSH, __1_intnl_UnityEngineMaterial
+        PUSH, __0_const_intnl_SystemString
+        PUSH, __1_intnl_UnityEngineColor
+        EXTERN, "UnityEngineMaterial.__SetColor__SystemString_UnityEngineColor__SystemVoid"
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
         COPY
         JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
@@ -3745,10 +3925,10 @@
         EXTERN, "UnityEngineGameObject.__get_name__SystemString"
         PUSH, __0_intnl_SystemString
         PUSH, __19_const_intnl_SystemString
-        PUSH, __44_intnl_SystemBoolean
+        PUSH, __47_intnl_SystemBoolean
         EXTERN, "SystemString.__op_Equality__SystemString_SystemString__SystemBoolean"
-        PUSH, __44_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000059F0
+        PUSH, __47_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00005D4C
         
          # {
         
@@ -3766,7 +3946,7 @@
         PUSH, __0_const_intnl_SystemBoolean
         PUSH, Crimson
         COPY
-        JUMP, 0x00005A8C
+        JUMP, 0x00005DE8
         
          # else if(other.gameObject.name == "CrimsonWater")
         PUSH, __0_other_Collider
@@ -3777,10 +3957,10 @@
         EXTERN, "UnityEngineGameObject.__get_name__SystemString"
         PUSH, __1_intnl_SystemString
         PUSH, __20_const_intnl_SystemString
-        PUSH, __45_intnl_SystemBoolean
+        PUSH, __48_intnl_SystemBoolean
         EXTERN, "SystemString.__op_Equality__SystemString_SystemString__SystemBoolean"
-        PUSH, __45_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00005A8C
+        PUSH, __48_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00005DE8
         
          # {
         
@@ -3824,10 +4004,10 @@
         EXTERN, "UnityEngineGameObject.__get_name__SystemString"
         PUSH, __2_intnl_SystemString
         PUSH, __19_const_intnl_SystemString
-        PUSH, __46_intnl_SystemBoolean
+        PUSH, __49_intnl_SystemBoolean
         EXTERN, "SystemString.__op_Equality__SystemString_SystemString__SystemBoolean"
-        PUSH, __46_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00005B38
+        PUSH, __49_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00005E94
         
          # {
         
@@ -3835,7 +4015,7 @@
         PUSH, __0_const_intnl_SystemBoolean
         PUSH, inWater
         COPY
-        JUMP, 0x00005BAC
+        JUMP, 0x00005F08
         
          # else if(other.gameObject.name == "CrimsonWater")
         PUSH, __1_other_Collider
@@ -3846,10 +4026,10 @@
         EXTERN, "UnityEngineGameObject.__get_name__SystemString"
         PUSH, __3_intnl_SystemString
         PUSH, __20_const_intnl_SystemString
-        PUSH, __47_intnl_SystemBoolean
+        PUSH, __50_intnl_SystemBoolean
         EXTERN, "SystemString.__op_Equality__SystemString_SystemString__SystemBoolean"
-        PUSH, __47_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00005BAC
+        PUSH, __50_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00005F08
         
          # {
         
@@ -3889,13 +4069,13 @@
         
          # myCubeRenderer.material.SetColor("_Color", Color.white);
         PUSH, myCubeRenderer
-        PUSH, __1_intnl_UnityEngineMaterial
+        PUSH, __2_intnl_UnityEngineMaterial
         EXTERN, "UnityEngineRenderer.__get_material__UnityEngineMaterial"
-        PUSH, __1_intnl_UnityEngineColor
+        PUSH, __2_intnl_UnityEngineColor
         EXTERN, "UnityEngineColor.__get_white__UnityEngineColor"
-        PUSH, __1_intnl_UnityEngineMaterial
+        PUSH, __2_intnl_UnityEngineMaterial
         PUSH, __0_const_intnl_SystemString
-        PUSH, __1_intnl_UnityEngineColor
+        PUSH, __2_intnl_UnityEngineColor
         EXTERN, "UnityEngineMaterial.__SetColor__SystemString_UnityEngineColor__SystemVoid"
         
          # inWater = false;
@@ -3946,71 +4126,76 @@
          # myFishingRod.GetComponent<ResistanceText>().resetVariables();
         PUSH, myFishingRod
         PUSH, __0_const_intnl_SystemType
-        PUSH, __8_intnl_UnityEngineComponentArray
+        PUSH, __9_intnl_UnityEngineComponentArray
         EXTERN, "UnityEngineGameObject.__GetComponents__SystemType__UnityEngineComponentArray"
         PUSH, __21_const_intnl_ResistanceText
         PUSH, __9_intnl_ResistanceText
         COPY
-        PUSH, __8_intnl_UnityEngineComponentArray
-        PUSH, __8_intnl_SystemInt32
+        PUSH, __9_intnl_UnityEngineComponentArray
+        PUSH, __10_intnl_SystemInt32
         EXTERN, "UnityEngineComponentArray.__get_Length__SystemInt32"
         PUSH, __0_const_intnl_SystemInt32
-        PUSH, __9_intnl_SystemInt32
+        PUSH, __11_intnl_SystemInt32
         COPY
-        PUSH, __9_intnl_SystemInt32
-        PUSH, __8_intnl_SystemInt32
-        PUSH, __48_intnl_SystemBoolean
+        PUSH, __11_intnl_SystemInt32
+        PUSH, __10_intnl_SystemInt32
+        PUSH, __51_intnl_SystemBoolean
         EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
-        PUSH, __48_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00005ED8
-        PUSH, __8_intnl_UnityEngineComponentArray
-        PUSH, __9_intnl_SystemInt32
-        PUSH, __1_intnl_UnityEngineComponent
+        PUSH, __51_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00006234
+        PUSH, __9_intnl_UnityEngineComponentArray
+        PUSH, __11_intnl_SystemInt32
+        PUSH, __2_intnl_UnityEngineComponent
         EXTERN, "UnityEngineComponentArray.__Get__SystemInt32__UnityEngineComponent"
-        PUSH, __1_intnl_UnityEngineComponent
+        PUSH, __2_intnl_UnityEngineComponent
         PUSH, __10_intnl_ResistanceText
         COPY
         PUSH, __10_intnl_ResistanceText
         PUSH, __1_const_intnl_SystemString
-        PUSH, __5_intnl_SystemObject
+        PUSH, __6_intnl_SystemObject
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
-        PUSH, __5_intnl_SystemObject
+        PUSH, __6_intnl_SystemObject
         PUSH, __0_const_intnl_SystemObject
-        PUSH, __49_intnl_SystemBoolean
+        PUSH, __52_intnl_SystemBoolean
         EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
-        PUSH, __49_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00005E3C
-        PUSH, __5_intnl_SystemObject
-        PUSH, __3_intnl_SystemInt64
+        PUSH, __52_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x00006198
+        PUSH, __6_intnl_SystemObject
+        PUSH, __5_intnl_SystemInt64
         EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
-        PUSH, __3_intnl_SystemInt64
-        PUSH, __2_intnl_SystemInt64
+        PUSH, __5_intnl_SystemInt64
+        PUSH, __4_intnl_SystemInt64
         COPY
-        JUMP, 0x00005E50
+        JUMP, 0x000061AC
         PUSH, __1_const_intnl_SystemInt64
-        PUSH, __2_intnl_SystemInt64
+        PUSH, __4_intnl_SystemInt64
         COPY
-        PUSH, __2_intnl_SystemInt64
+        PUSH, __4_intnl_SystemInt64
         PUSH, __0_const_intnl_SystemInt64
-        PUSH, __50_intnl_SystemBoolean
+        PUSH, __53_intnl_SystemBoolean
         EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
-        PUSH, __50_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00005E9C
+        PUSH, __53_intnl_SystemBoolean
+        JUMP_IF_FALSE, 0x000061F8
         PUSH, __10_intnl_ResistanceText
         PUSH, __9_intnl_ResistanceText
         COPY
-        JUMP, 0x00005ED8
-        PUSH, __9_intnl_SystemInt32
+        JUMP, 0x00006234
+        PUSH, __11_intnl_SystemInt32
         PUSH, __1_const_intnl_SystemInt32
-        PUSH, __10_intnl_SystemInt32
+        PUSH, __12_intnl_SystemInt32
         EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
-        PUSH, __10_intnl_SystemInt32
-        PUSH, __9_intnl_SystemInt32
+        PUSH, __12_intnl_SystemInt32
+        PUSH, __11_intnl_SystemInt32
         COPY
-        JUMP, 0x00005D54
+        JUMP, 0x000060B0
         PUSH, __9_intnl_ResistanceText
         PUSH, __18_const_intnl_SystemString
         EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SendCustomEvent__SystemString__SystemVoid"
+        
+         # ICaughtTheFish = false;
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, ICaughtTheFish
+        COPY
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
         COPY
         JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
@@ -4027,13 +4212,13 @@
         
          # myCubeRenderer.material.SetColor("_Color", Color.white);
         PUSH, myCubeRenderer
-        PUSH, __2_intnl_UnityEngineMaterial
+        PUSH, __3_intnl_UnityEngineMaterial
         EXTERN, "UnityEngineRenderer.__get_material__UnityEngineMaterial"
-        PUSH, __2_intnl_UnityEngineColor
+        PUSH, __3_intnl_UnityEngineColor
         EXTERN, "UnityEngineColor.__get_white__UnityEngineColor"
-        PUSH, __2_intnl_UnityEngineMaterial
+        PUSH, __3_intnl_UnityEngineMaterial
         PUSH, __0_const_intnl_SystemString
-        PUSH, __2_intnl_UnityEngineColor
+        PUSH, __3_intnl_UnityEngineColor
         EXTERN, "UnityEngineMaterial.__SetColor__SystemString_UnityEngineColor__SystemVoid"
         
          # hookBite = false;

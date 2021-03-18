@@ -20,6 +20,7 @@ public class Fish : UdonSharpBehaviour
     //Game Object
     public GameObject myHook;
     [UdonSynced] public bool onHook = false;
+    [UdonSynced] public bool fishTouched = false;
     
     void Start()
     {
@@ -29,6 +30,7 @@ public class Fish : UdonSharpBehaviour
 
     private void Update()
     {
+        
         if(onHook)
         {
             gameObject.transform.position = myHook.transform.position;
@@ -38,7 +40,17 @@ public class Fish : UdonSharpBehaviour
             
             transform.DetachChildren();
             gameObject.transform.parent = null;
-            
+            gameObject.transform.position = fishSpawn.transform.position;
+        }
+        
+        if(fishTouched)
+        {
+            myFishRenderer.material.SetColor("_Color", Color.green);
+            //gameObject.GetComponentInParent<FishingCube>().tier1Fish = false;
+            //gameObject.GetComponentInParent<FishingCube>().tier2Fish = false;
+            //gameObject.GetComponentInParent<FishingCube>().hardReset = true;
+            fishTouched = false;
+            //gameObject.SetActive(false);
         }
     }
 
@@ -46,19 +58,23 @@ public class Fish : UdonSharpBehaviour
     public virtual void OnPickup() 
     {
         //If your a fish , then reset the fishing rod if taken off the hook.
-        onHook = false;
-        gameObject.transform.parent.gameObject.GetComponent<FishingCube>().tier1Fish = false;
-        gameObject.transform.parent.gameObject.GetComponent<FishingCube>().hardReset=true;
-    }
+        //fishTouched = true;
 
+    }
+    /*
+    public virtual void Interact() 
+    {
+        
+    }
+    */
     public virtual void OnPickupUseDown() 
     {
-        myFishRenderer.material.SetColor("_Color", Color.green);
+        //myFishRenderer.material.SetColor("_Color", Color.green);
     }
 
     public virtual void OnPickupUseUp() 
     {
-        myFishRenderer.material.SetColor("_Color", Color.blue);
+       // myFishRenderer.material.SetColor("_Color", Color.blue);
     }
 
     public void detach()
@@ -69,6 +85,7 @@ public class Fish : UdonSharpBehaviour
 
     public void SendtoSpawn()
     {
+        Debug.Log("Send to Spawn");
         gameObject.transform.position = fishSpawn.transform.position;
         transform.DetachChildren();
         gameObject.transform.parent = null;

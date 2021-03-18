@@ -11,12 +11,15 @@
     .export fishSpawn
     .export myHook
     .export onHook
+    .export fishTouched
     .sync onHook, none
+    .sync fishTouched, none
 
     __refl_const_intnl_udonTypeID: %SystemInt64, null
     __refl_const_intnl_udonTypeName: %SystemString, null
     corruptedFish: %SystemBoolean, null
     crimsonFish: %SystemBoolean, null
+    fishTouched: %SystemBoolean, null
     onHook: %SystemBoolean, null
     tier1Fishy: %SystemBoolean, null
     tier2Fishy: %SystemBoolean, null
@@ -29,51 +32,19 @@
     __0_this_intnl_UnityEngineGameObject: %UnityEngineGameObject, this
     __0_this_intnl_UnityEngineTransform: %UnityEngineTransform, this
     __0_const_intnl_SystemBoolean: %SystemBoolean, null
-    __1_const_intnl_SystemBoolean: %SystemBoolean, null
-    __0_const_intnl_SystemInt32: %SystemInt32, null
-    __1_const_intnl_SystemInt32: %SystemInt32, null
-    __0_const_intnl_SystemInt64: %SystemInt64, null
-    __1_const_intnl_SystemInt64: %SystemInt64, null
     __0_const_intnl_SystemObject: %SystemObject, null
     __0_const_intnl_SystemString: %SystemString, null
     __1_const_intnl_SystemString: %SystemString, null
     __2_const_intnl_SystemString: %SystemString, null
-    __3_const_intnl_SystemString: %SystemString, null
-    __4_const_intnl_SystemString: %SystemString, null
-    __0_const_intnl_SystemType: %SystemType, null
-    __0_const_intnl_FishingCube: %VRCUdonUdonBehaviour, null
-    __1_const_intnl_FishingCube: %VRCUdonUdonBehaviour, null
     __0_const_intnl_SystemUInt32: %SystemUInt32, null
-    __0_intnl_SystemBoolean: %SystemBoolean, null
-    __1_intnl_SystemBoolean: %SystemBoolean, null
-    __2_intnl_SystemBoolean: %SystemBoolean, null
     __0_intnl_UnityEngineColor: %UnityEngineColor, null
-    __1_intnl_UnityEngineColor: %UnityEngineColor, null
-    __0_intnl_UnityEngineComponent: %UnityEngineComponent, null
-    __0_intnl_UnityEngineComponentArray: %UnityEngineComponentArray, null
-    __1_intnl_UnityEngineComponentArray: %UnityEngineComponentArray, null
-    __0_intnl_UnityEngineGameObject: %UnityEngineGameObject, null
-    __1_intnl_UnityEngineGameObject: %UnityEngineGameObject, null
-    __0_intnl_SystemInt32: %SystemInt32, null
-    __1_intnl_SystemInt32: %SystemInt32, null
-    __2_intnl_SystemInt32: %SystemInt32, null
-    __0_intnl_SystemInt64: %SystemInt64, null
-    __1_intnl_SystemInt64: %SystemInt64, null
     __0_intnl_UnityEngineMaterial: %UnityEngineMaterial, null
-    __1_intnl_UnityEngineMaterial: %UnityEngineMaterial, null
-    __0_intnl_SystemObject: %SystemObject, null
     __0_intnl_UnityEngineTransform: %UnityEngineTransform, null
     __1_intnl_UnityEngineTransform: %UnityEngineTransform, null
     __2_intnl_UnityEngineTransform: %UnityEngineTransform, null
     __3_intnl_UnityEngineTransform: %UnityEngineTransform, null
     __4_intnl_UnityEngineTransform: %UnityEngineTransform, null
     __5_intnl_UnityEngineTransform: %UnityEngineTransform, null
-    __6_intnl_UnityEngineTransform: %UnityEngineTransform, null
-    __7_intnl_UnityEngineTransform: %UnityEngineTransform, null
-    __8_intnl_UnityEngineTransform: %UnityEngineTransform, null
-    __0_intnl_FishingCube: %VRCUdonUdonBehaviour, null
-    __1_intnl_FishingCube: %VRCUdonUdonBehaviour, null
-    __2_intnl_FishingCube: %VRCUdonUdonBehaviour, null
     __0_intnl_returnTarget_UInt32: %SystemUInt32, null
     __0_intnl_UnityEngineVector3: %UnityEngineVector3, null
     __1_intnl_UnityEngineVector3: %UnityEngineVector3, null
@@ -113,6 +84,8 @@
          # public GameObject myHook;
         
          # [UdonSynced] public bool onHook = false;
+        
+         # [UdonSynced] public bool fishTouched = false;
         
          # void Start()
     .export _start
@@ -155,7 +128,7 @@
         PUSH, __0_intnl_UnityEngineTransform
         PUSH, __0_intnl_UnityEngineVector3
         EXTERN, "UnityEngineTransform.__set_position__UnityEngineVector3__SystemVoid"
-        JUMP, 0x000000DC
+        JUMP, 0x0000013C
         
          # else
         
@@ -172,6 +145,42 @@
         PUSH, __0_intnl_UnityEngineTransform
         PUSH, __0_const_intnl_SystemObject
         EXTERN, "UnityEngineTransform.__set_parent__UnityEngineTransform__SystemVoid"
+        
+         # gameObject.transform.position = fishSpawn.transform.position;
+        PUSH, __0_this_intnl_UnityEngineGameObject
+        PUSH, __1_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
+        PUSH, fishSpawn
+        PUSH, __2_intnl_UnityEngineTransform
+        EXTERN, "UnityEngineTransform.__get_transform__UnityEngineTransform"
+        PUSH, __2_intnl_UnityEngineTransform
+        PUSH, __0_intnl_UnityEngineVector3
+        EXTERN, "UnityEngineTransform.__get_position__UnityEngineVector3"
+        PUSH, __1_intnl_UnityEngineTransform
+        PUSH, __0_intnl_UnityEngineVector3
+        EXTERN, "UnityEngineTransform.__set_position__UnityEngineVector3__SystemVoid"
+        
+         # if(fishTouched)
+        PUSH, fishTouched
+        JUMP_IF_FALSE, 0x000001A8
+        
+         # {
+        
+         # myFishRenderer.material.SetColor("_Color", Color.green);
+        PUSH, myFishRenderer
+        PUSH, __0_intnl_UnityEngineMaterial
+        EXTERN, "UnityEngineRenderer.__get_material__UnityEngineMaterial"
+        PUSH, __0_intnl_UnityEngineColor
+        EXTERN, "UnityEngineColor.__get_green__UnityEngineColor"
+        PUSH, __0_intnl_UnityEngineMaterial
+        PUSH, __0_const_intnl_SystemString
+        PUSH, __0_intnl_UnityEngineColor
+        EXTERN, "UnityEngineMaterial.__SetColor__SystemString_UnityEngineColor__SystemVoid"
+        
+         # fishTouched = false;
+        PUSH, __0_const_intnl_SystemBoolean
+        PUSH, fishTouched
+        COPY
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
         COPY
         JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
@@ -185,169 +194,6 @@
         PUSH, __0_const_intnl_SystemUInt32
         
          # {
-        
-         # onHook = false;
-        PUSH, __0_const_intnl_SystemBoolean
-        PUSH, onHook
-        COPY
-        
-         # gameObject.transform.parent.gameObject.GetComponent<FishingCube>().tier1Fish = false;
-        PUSH, __0_this_intnl_UnityEngineGameObject
-        PUSH, __2_intnl_UnityEngineTransform
-        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
-        PUSH, __2_intnl_UnityEngineTransform
-        PUSH, __3_intnl_UnityEngineTransform
-        EXTERN, "UnityEngineTransform.__get_parent__UnityEngineTransform"
-        PUSH, __3_intnl_UnityEngineTransform
-        PUSH, __0_intnl_UnityEngineGameObject
-        EXTERN, "UnityEngineTransform.__get_gameObject__UnityEngineGameObject"
-        PUSH, __0_intnl_UnityEngineGameObject
-        PUSH, __0_const_intnl_SystemType
-        PUSH, __0_intnl_UnityEngineComponentArray
-        EXTERN, "UnityEngineGameObject.__GetComponents__SystemType__UnityEngineComponentArray"
-        PUSH, __0_const_intnl_FishingCube
-        PUSH, __0_intnl_FishingCube
-        COPY
-        PUSH, __0_intnl_UnityEngineComponentArray
-        PUSH, __0_intnl_SystemInt32
-        EXTERN, "UnityEngineComponentArray.__get_Length__SystemInt32"
-        PUSH, __0_const_intnl_SystemInt32
-        PUSH, __1_intnl_SystemInt32
-        COPY
-        PUSH, __1_intnl_SystemInt32
-        PUSH, __0_intnl_SystemInt32
-        PUSH, __0_intnl_SystemBoolean
-        EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
-        PUSH, __0_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000338
-        PUSH, __0_intnl_UnityEngineComponentArray
-        PUSH, __1_intnl_SystemInt32
-        PUSH, __0_intnl_UnityEngineComponent
-        EXTERN, "UnityEngineComponentArray.__Get__SystemInt32__UnityEngineComponent"
-        PUSH, __0_intnl_UnityEngineComponent
-        PUSH, __1_intnl_FishingCube
-        COPY
-        PUSH, __1_intnl_FishingCube
-        PUSH, __0_const_intnl_SystemString
-        PUSH, __0_intnl_SystemObject
-        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
-        PUSH, __0_intnl_SystemObject
-        PUSH, __0_const_intnl_SystemObject
-        PUSH, __1_intnl_SystemBoolean
-        EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
-        PUSH, __1_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x0000029C
-        PUSH, __0_intnl_SystemObject
-        PUSH, __1_intnl_SystemInt64
-        EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
-        PUSH, __1_intnl_SystemInt64
-        PUSH, __0_intnl_SystemInt64
-        COPY
-        JUMP, 0x000002B0
-        PUSH, __1_const_intnl_SystemInt64
-        PUSH, __0_intnl_SystemInt64
-        COPY
-        PUSH, __0_intnl_SystemInt64
-        PUSH, __0_const_intnl_SystemInt64
-        PUSH, __2_intnl_SystemBoolean
-        EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
-        PUSH, __2_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000002FC
-        PUSH, __1_intnl_FishingCube
-        PUSH, __0_intnl_FishingCube
-        COPY
-        JUMP, 0x00000338
-        PUSH, __1_intnl_SystemInt32
-        PUSH, __1_const_intnl_SystemInt32
-        PUSH, __2_intnl_SystemInt32
-        EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
-        PUSH, __2_intnl_SystemInt32
-        PUSH, __1_intnl_SystemInt32
-        COPY
-        JUMP, 0x000001B4
-        PUSH, __0_intnl_FishingCube
-        PUSH, __1_const_intnl_SystemString
-        PUSH, __0_const_intnl_SystemBoolean
-        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SetProgramVariable__SystemString_SystemObject__SystemVoid"
-        
-         # gameObject.transform.parent.gameObject.GetComponent<FishingCube>().hardReset=true;
-        PUSH, __0_this_intnl_UnityEngineGameObject
-        PUSH, __4_intnl_UnityEngineTransform
-        EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
-        PUSH, __4_intnl_UnityEngineTransform
-        PUSH, __5_intnl_UnityEngineTransform
-        EXTERN, "UnityEngineTransform.__get_parent__UnityEngineTransform"
-        PUSH, __5_intnl_UnityEngineTransform
-        PUSH, __1_intnl_UnityEngineGameObject
-        EXTERN, "UnityEngineTransform.__get_gameObject__UnityEngineGameObject"
-        PUSH, __1_intnl_UnityEngineGameObject
-        PUSH, __0_const_intnl_SystemType
-        PUSH, __1_intnl_UnityEngineComponentArray
-        EXTERN, "UnityEngineGameObject.__GetComponents__SystemType__UnityEngineComponentArray"
-        PUSH, __1_const_intnl_FishingCube
-        PUSH, __1_intnl_FishingCube
-        COPY
-        PUSH, __1_intnl_UnityEngineComponentArray
-        PUSH, __0_intnl_SystemInt32
-        EXTERN, "UnityEngineComponentArray.__get_Length__SystemInt32"
-        PUSH, __0_const_intnl_SystemInt32
-        PUSH, __1_intnl_SystemInt32
-        COPY
-        PUSH, __1_intnl_SystemInt32
-        PUSH, __0_intnl_SystemInt32
-        PUSH, __0_intnl_SystemBoolean
-        EXTERN, "SystemInt32.__op_LessThan__SystemInt32_SystemInt32__SystemBoolean"
-        PUSH, __0_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000584
-        PUSH, __1_intnl_UnityEngineComponentArray
-        PUSH, __1_intnl_SystemInt32
-        PUSH, __0_intnl_UnityEngineComponent
-        EXTERN, "UnityEngineComponentArray.__Get__SystemInt32__UnityEngineComponent"
-        PUSH, __0_intnl_UnityEngineComponent
-        PUSH, __2_intnl_FishingCube
-        COPY
-        PUSH, __2_intnl_FishingCube
-        PUSH, __0_const_intnl_SystemString
-        PUSH, __0_intnl_SystemObject
-        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__GetProgramVariable__SystemString__SystemObject"
-        PUSH, __0_intnl_SystemObject
-        PUSH, __0_const_intnl_SystemObject
-        PUSH, __1_intnl_SystemBoolean
-        EXTERN, "SystemObject.__op_Inequality__SystemObject_SystemObject__SystemBoolean"
-        PUSH, __1_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x000004E8
-        PUSH, __0_intnl_SystemObject
-        PUSH, __1_intnl_SystemInt64
-        EXTERN, "SystemConvert.__ToInt64__SystemObject__SystemInt64"
-        PUSH, __1_intnl_SystemInt64
-        PUSH, __0_intnl_SystemInt64
-        COPY
-        JUMP, 0x000004FC
-        PUSH, __1_const_intnl_SystemInt64
-        PUSH, __0_intnl_SystemInt64
-        COPY
-        PUSH, __0_intnl_SystemInt64
-        PUSH, __0_const_intnl_SystemInt64
-        PUSH, __2_intnl_SystemBoolean
-        EXTERN, "SystemInt64.__op_Equality__SystemInt64_SystemInt64__SystemBoolean"
-        PUSH, __2_intnl_SystemBoolean
-        JUMP_IF_FALSE, 0x00000548
-        PUSH, __2_intnl_FishingCube
-        PUSH, __1_intnl_FishingCube
-        COPY
-        JUMP, 0x00000584
-        PUSH, __1_intnl_SystemInt32
-        PUSH, __1_const_intnl_SystemInt32
-        PUSH, __2_intnl_SystemInt32
-        EXTERN, "SystemInt32.__op_Addition__SystemInt32_SystemInt32__SystemInt32"
-        PUSH, __2_intnl_SystemInt32
-        PUSH, __1_intnl_SystemInt32
-        COPY
-        JUMP, 0x00000400
-        PUSH, __1_intnl_FishingCube
-        PUSH, __2_const_intnl_SystemString
-        PUSH, __1_const_intnl_SystemBoolean
-        EXTERN, "VRCUdonCommonInterfacesIUdonEventReceiver.__SetProgramVariable__SystemString_SystemObject__SystemVoid"
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
         COPY
         JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
@@ -361,17 +207,6 @@
         PUSH, __0_const_intnl_SystemUInt32
         
          # {
-        
-         # myFishRenderer.material.SetColor("_Color", Color.green);
-        PUSH, myFishRenderer
-        PUSH, __0_intnl_UnityEngineMaterial
-        EXTERN, "UnityEngineRenderer.__get_material__UnityEngineMaterial"
-        PUSH, __0_intnl_UnityEngineColor
-        EXTERN, "UnityEngineColor.__get_green__UnityEngineColor"
-        PUSH, __0_intnl_UnityEngineMaterial
-        PUSH, __3_const_intnl_SystemString
-        PUSH, __0_intnl_UnityEngineColor
-        EXTERN, "UnityEngineMaterial.__SetColor__SystemString_UnityEngineColor__SystemVoid"
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
         COPY
         JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
@@ -385,17 +220,6 @@
         PUSH, __0_const_intnl_SystemUInt32
         
          # {
-        
-         # myFishRenderer.material.SetColor("_Color", Color.blue);
-        PUSH, myFishRenderer
-        PUSH, __1_intnl_UnityEngineMaterial
-        EXTERN, "UnityEngineRenderer.__get_material__UnityEngineMaterial"
-        PUSH, __1_intnl_UnityEngineColor
-        EXTERN, "UnityEngineColor.__get_blue__UnityEngineColor"
-        PUSH, __1_intnl_UnityEngineMaterial
-        PUSH, __3_const_intnl_SystemString
-        PUSH, __1_intnl_UnityEngineColor
-        EXTERN, "UnityEngineMaterial.__SetColor__SystemString_UnityEngineColor__SystemVoid"
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
         COPY
         JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
@@ -411,7 +235,7 @@
          # {
         
          # Debug.Log("Detached Fish");
-        PUSH, __4_const_intnl_SystemString
+        PUSH, __1_const_intnl_SystemString
         EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
         COPY
@@ -427,17 +251,21 @@
         
          # {
         
+         # Debug.Log("Send to Spawn");
+        PUSH, __2_const_intnl_SystemString
+        EXTERN, "UnityEngineDebug.__Log__SystemObject__SystemVoid"
+        
          # gameObject.transform.position = fishSpawn.transform.position;
         PUSH, __0_this_intnl_UnityEngineGameObject
-        PUSH, __6_intnl_UnityEngineTransform
+        PUSH, __3_intnl_UnityEngineTransform
         EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
         PUSH, fishSpawn
-        PUSH, __7_intnl_UnityEngineTransform
+        PUSH, __4_intnl_UnityEngineTransform
         EXTERN, "UnityEngineTransform.__get_transform__UnityEngineTransform"
-        PUSH, __7_intnl_UnityEngineTransform
+        PUSH, __4_intnl_UnityEngineTransform
         PUSH, __1_intnl_UnityEngineVector3
         EXTERN, "UnityEngineTransform.__get_position__UnityEngineVector3"
-        PUSH, __6_intnl_UnityEngineTransform
+        PUSH, __3_intnl_UnityEngineTransform
         PUSH, __1_intnl_UnityEngineVector3
         EXTERN, "UnityEngineTransform.__set_position__UnityEngineVector3__SystemVoid"
         
@@ -447,9 +275,9 @@
         
          # gameObject.transform.parent = null;
         PUSH, __0_this_intnl_UnityEngineGameObject
-        PUSH, __8_intnl_UnityEngineTransform
+        PUSH, __5_intnl_UnityEngineTransform
         EXTERN, "UnityEngineGameObject.__get_transform__UnityEngineTransform"
-        PUSH, __8_intnl_UnityEngineTransform
+        PUSH, __5_intnl_UnityEngineTransform
         PUSH, __0_const_intnl_SystemObject
         EXTERN, "UnityEngineTransform.__set_parent__UnityEngineTransform__SystemVoid"
         PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue

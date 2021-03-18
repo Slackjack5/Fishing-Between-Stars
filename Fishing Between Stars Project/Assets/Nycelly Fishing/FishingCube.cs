@@ -31,7 +31,7 @@ public class FishingCube : UdonSharpBehaviour
     private int resetTimer = 0;
     public  int resetTimerMax = 100;
     //Test
-    private bool testBool = false;
+    public bool testBool = false;
 
     //Fishing Rod
     public GameObject myFishingRod;
@@ -51,7 +51,12 @@ public class FishingCube : UdonSharpBehaviour
 
     [UdonSynced]public bool hardReset = false;
     [UdonSynced] public bool softReset = false;
-
+    //Fish Out of Water Timer
+    private int collectTimer=0;
+    public int collectTimerMax = 1000;
+    [UdonSynced] public bool collectingFish; //Sync This?
+    private bool TurnInFish;
+    private bool ICaughtTheFish = false;
     void Start()
     {
        
@@ -62,9 +67,9 @@ public class FishingCube : UdonSharpBehaviour
         //transform.Rotate(Vector3.up, 90f * Time.deltaTime);
         if(hardReset)
         {
-            hardReset = false;
             resetEverything();
             fishPulledReset();
+            hardReset = false;
         }
 
         if(softReset)
@@ -75,7 +80,8 @@ public class FishingCube : UdonSharpBehaviour
         //If the hook is in the water , Run the Code for Catching a Fish
         if (inWater==true)
         {
-
+            //Disable Collecting Fish
+            collectingFish = false;
             //Set a random number for how long it will take to catch this fish
             var chosenNumber = Random.Range(timerMin, timerMax);
             if (timerBig >= chosenNumber)
@@ -261,7 +267,13 @@ public class FishingCube : UdonSharpBehaviour
                         }
                         fishSpawned = true;
                         hookBite = false;
+                        //If Fish is on the hook
+                        if(fishSpawned == true)
+                        {
+                            collectingFish = true;
+                        }
                         
+
                     }
                     if(fishSpawned)
                     {
@@ -305,6 +317,7 @@ public class FishingCube : UdonSharpBehaviour
             
         }
 
+
     }
     
     public void biteHook()
@@ -327,7 +340,26 @@ public class FishingCube : UdonSharpBehaviour
                 timer = 0;
             }
         }
-       
+
+
+        //If Collecting Fish
+        if (collectingFish)
+        {
+            if(collectTimer>=collectTimerMax)
+            {
+                collectTimer = 0;
+                previousFish.GetComponent<Fish>().onHook = false;
+                hardReset = true;
+                collectingFish = false;
+            }
+            else
+            {
+               collectTimer += 1;
+            }
+
+
+            myCubeRenderer.material.SetColor("_Color", Color.black);
+        }
     }
 
     void OnCollisionEnter(Collision other)
@@ -386,7 +418,7 @@ public class FishingCube : UdonSharpBehaviour
         Corruption = false;
         Crimson = false;
         myFishingRod.GetComponent<ResistanceText>().resetVariables();
-
+        ICaughtTheFish = false;
 
     }
 

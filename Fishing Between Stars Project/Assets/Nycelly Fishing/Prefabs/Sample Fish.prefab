@@ -140,7 +140,7 @@ MonoBehaviour:
   ThrowVelocityBoostMinSpeed: 1
   ThrowVelocityBoostScale: 1
   currentlyHeldBy: {fileID: 0}
-  pickupable: 1
+  pickupable: 0
   proximity: 2
 --- !u!114 &114052880642068024
 MonoBehaviour:

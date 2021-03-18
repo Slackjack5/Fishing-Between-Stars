@@ -109,6 +109,7 @@ public class ResistanceText : UdonSharpBehaviour
     //Vibration
     private int vibrationTimer=0;
     private int vibrationTimerMax = 15;
+
     void Start()
     {
         resistanceTarget = resistanceTarget.GetComponent<RectTransform>();
@@ -450,6 +451,16 @@ public class ResistanceText : UdonSharpBehaviour
             }
 
             Vector3 r = player.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position - player.GetPosition();
+
+            if (exhaustionScore >= 100)
+            {
+                myHook.GetComponent<FishingCube>().fishExhausted = true;
+                //Ui
+                exhaustionCompletetion.SetActive(true);
+                exhaustionScore = 100;
+                //Change Color on Completion
+
+            }
         }
         else
         {
@@ -457,15 +468,7 @@ public class ResistanceText : UdonSharpBehaviour
         }
         //Sync
 
-        if (exhaustionScore >= 100)
-        {
-            myHook.GetComponent<FishingCube>().fishExhausted = true;
-            //Ui
-            exhaustionCompletetion.SetActive(true);
-            exhaustionScore = 100;
-            //Change Color on Completion
-
-        }
+  
 
         
         //Failing
@@ -512,9 +515,14 @@ public class ResistanceText : UdonSharpBehaviour
     private void Update()
     {
         //Sync Inportant Variables
-        
+
         //Convert Player Resistance to a seeable string
-        //playerResistance.text = "Me:" + " " + resistanceScore.ToString();
+        playerResistance.text = "Resistance Score:" + " " + resistanceScore.ToString() + " Exhaustion Score:" + " " + exhaustionScore.ToString() + " FishMovement Max:" + " " + fishMovementMax.ToString() + " jerkEvent" + " " + jerkEvent.ToString() + " jerkNumber" + " " + jerkNumber.ToString() + " jerkAdder" + " " + jerkAdder.ToString() + " VR" + " " + VR.ToString()
+            + " whichDirection" + " " + whichDirection.ToString() + " playerHolding" + " " + playerHolding.ToString();
+        fishResistance.text = "In Water:" + " " + myHook.GetComponent<FishingCube>().inWater.ToString() + " hookBite:" + " " + myHook.GetComponent<FishingCube>().hookBite.ToString() + " fishExhausted:" + " " + myHook.GetComponent<FishingCube>().fishExhausted.ToString()
+            + " fishSpawned:" + " " + myHook.GetComponent<FishingCube>().fishSpawned.ToString() + " testBool:" + " " + myHook.GetComponent<FishingCube>().testBool.ToString() + " tier1Fish:" + " " + myHook.GetComponent<FishingCube>().tier1Fish.ToString()
+            + " tier2Fish:" + " " + myHook.GetComponent<FishingCube>().tier2Fish.ToString() + " tier3Fish:" + " " + myHook.GetComponent<FishingCube>().tier3Fish.ToString() + " fishPulledOut:" + " " + myHook.GetComponent<FishingCube>().fishPulledOut.ToString()
+            + " HardReset:" + " " + myHook.GetComponent<FishingCube>().hardReset.ToString() + " SoftReset:" + " " + myHook.GetComponent<FishingCube>().softReset.ToString() + " Collecting Fish:" + " " + myHook.GetComponent<FishingCube>().collectingFish.ToString();
         //Convert Fish Resistance to a seeable string
         //fishResistance.text = "Fish:" + " " + fishResistanceScore.ToString();
         //Convert Fish Resistance to a seeable string
@@ -527,6 +535,7 @@ public class ResistanceText : UdonSharpBehaviour
 
         //Set this as the player
         rodLever.GetComponent<LeverRotation>().player = Networking.LocalPlayer;
+        player = Networking.LocalPlayer;
         playerHolding = true;
     }
 
