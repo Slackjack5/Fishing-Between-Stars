@@ -25,7 +25,7 @@ bad0f5a58d4b55ed1442379677ba2587 VRC.Udon.dll:VRC.Udon.ProgramSources.Serialized
 98802acfe9980994b612b48375d6584f VRC.Udon.dll:VRC.Udon.UdonBehaviour
 d6fc8d3165070298511ec776ea575626 Unity.Postprocessing.Runtime.dll:UnityEngine.Rendering.PostProcessing.PostProcessResources
 a53651ee3996fbba20dfe0fce02f0b23 Unity.Postprocessing.Runtime.dll:UnityEngine.Rendering.PostProcessing.AutoExposure
-afab61e28fca87a9970959e3bd41bd5e Assembly-CSharp.dll:.Fish
+b156095d8b753a591db464f147e3b1df Assembly-CSharp.dll:.Fish
 2faf8f843e9a90b7bd5360d205148b95 Assembly-CSharp.dll:.Water
 0c42704ac838f08fd4d77a3eadac1957 Assembly-CSharp.dll:.Velocimeter
 4b6043126f64bf5a6aebb4ccc39137ba Assembly-CSharp.dll:.Handle

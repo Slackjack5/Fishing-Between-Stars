@@ -184,13 +184,12 @@ public class FishingCube : UdonSharpBehaviour
                         else if (tier1Fish && Corruption && !tier2Fish) //Randomly Generate Tier 2 Corruption Fish
                         {
                             //Put the Fish on the hook and parent it
-                            var myNewFish2 = Tier2CorruptedFishes[Random.Range(0, Tier2CorruptedFishes.Length)];//VRCInstantiate(testFish);
-                                //If Not a Crimson Fish, try again
-                                myNewFish2 = Tier2CorruptedFishes[Random.Range(0, Tier2CorruptedFishes.Length)];
-
+                            Networking.SetOwner(myFishingRod.GetComponent<ResistanceText>().player, gameObject);
+                            var myNewFish2 = Tier2CorruptedFishes[Random.Range(0, Tier2CorruptedFishes.Length)];
                             myNewFish2.transform.position = gameObject.transform.position;
                             myNewFish2.transform.parent = gameObject.transform;
-
+                            myNewFish2.GetComponent<Fish>().myHook = gameObject;
+                            myNewFish2.GetComponent<Fish>().onHook = true;
                             //Send the Tier 1 Fish back to Spawn
                             previousFish.GetComponent<Fish>().SendtoSpawn();
                             previousFish = myNewFish2;
@@ -200,15 +199,13 @@ public class FishingCube : UdonSharpBehaviour
                         }
                         else if (tier1Fish && Crimson && !tier2Fish) //Randomly Generate Tier 2 Crimson Fish
                         {
-                            //Put the Fish on the hook and parent it
-                            var myNewFish2 = Tier2CrimsonFishes[Random.Range(0, Tier2CrimsonFishes.Length)];//VRCInstantiate(testFish);
-
+                            Networking.SetOwner(myFishingRod.GetComponent<ResistanceText>().player, gameObject);
                             //If Not a Crimson Fish, try again
-                            myNewFish2 = Tier2CrimsonFishes[Random.Range(0, Tier2CrimsonFishes.Length)];
-
+                            var myNewFish2 = Tier2CrimsonFishes[Random.Range(0, Tier2CrimsonFishes.Length)];
                             myNewFish2.transform.position = gameObject.transform.position;
                             myNewFish2.transform.parent = gameObject.transform;
-
+                            myNewFish2.GetComponent<Fish>().myHook = gameObject;
+                            myNewFish2.GetComponent<Fish>().onHook = true;
                             //Send the Tier 1 Fish back to Spawn
                             previousFish.GetComponent<Fish>().SendtoSpawn();
                             previousFish = myNewFish2;
@@ -273,10 +270,13 @@ public class FishingCube : UdonSharpBehaviour
                             }
                             Debug.Log("Chicken Strips with man Aise");
                         }
+                        Networking.SetOwner(myFishingRod.GetComponent<ResistanceText>().player, gameObject);
                         fishSpawned = true;
+                        //Soft Reset
+                        softReset = true;
                         //hookBite = false;
                         //If Fish is on the hook
-                        if(fishSpawned == true)
+                        if (fishSpawned == true)
                         {
                             //collectingFish = true;
                         }
