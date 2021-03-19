@@ -17,7 +17,7 @@ e6baf3ef68d60bd0901dfb91c02bc1c3 UnityEngine.UI.dll:UnityEngine.UI.Image
 72712369a7c681ad84fc255a5ec0b333 UnityEngine.UI.dll:UnityEngine.UI.Text
 38bcb4d3f9a1812fd650f92e87a4cf64 Unity.Postprocessing.Runtime.dll:UnityEngine.Rendering.PostProcessing.PostProcessProfile
 104813ec978f73bb52132459be6ace88 Assembly-CSharp.dll:.FishingCube
-a420ce6930e94c037b4ae83f4d5132f7 Assembly-CSharp.dll:.ResistanceText
+d0031b6747e7e051a3a6cfa58338904d Assembly-CSharp.dll:.ResistanceText
 107d1a0b4d3ff3c7ac72054037850273 Assembly-CSharp.dll:.TouchTest
 bad0f5a58d4b55ed1442379677ba2587 VRC.Udon.dll:VRC.Udon.ProgramSources.SerializedUdonProgramAsset
 3614bae5f2ee7232eea55e930d1eb42d VRCSDK3.dll:VRC.SDK3.Components.VRCPickup

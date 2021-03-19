@@ -110,6 +110,9 @@ public class ResistanceText : UdonSharpBehaviour
     private int vibrationTimer=0;
     private int vibrationTimerMax = 15;
 
+    //All Players Synced?
+    public int syncTimer = 0;
+    public int syncTimerMax = 100;
     void Start()
     {
         resistanceTarget = resistanceTarget.GetComponent<RectTransform>();
@@ -432,12 +435,20 @@ public class ResistanceText : UdonSharpBehaviour
             if (exhaustionScore >= 100)
             {
                 Networking.SetOwner(player, gameObject);
-                myHook.GetComponent<FishingCube>().fishExhausted = true;
-                //Ui
-                exhaustionCompletetion.SetActive(true);
-                exhaustionScore = 100;
-                //Change Color on Completion
+                //Do Not Set Owner Because it will bug out fishing rod position
+                if (syncTimer >= syncTimerMax)
+                {
+                    myHook.GetComponent<FishingCube>().fishExhausted = true;
+                    //Ui
+                    exhaustionCompletetion.SetActive(true);
+                    syncTimer = 0;
 
+                }
+                else
+                {
+                    syncTimer += 1;
+                }
+                exhaustionScore = 100;
             }
 
 
@@ -476,17 +487,19 @@ public class ResistanceText : UdonSharpBehaviour
         }
         //Sync
 
-
-
+        
         if (exhaustionScore >= 100)
         {
-            //Do Not Set Owner Because it will bug out fishing rod position
-            myHook.GetComponent<FishingCube>().fishExhausted = true;
-            //Ui
-            exhaustionCompletetion.SetActive(true);
-            exhaustionScore = 100;
+            if(playerHolding==false)
+            {
+                myHook.GetComponent<FishingCube>().fishExhausted = true;
+                //Ui
+                exhaustionCompletetion.SetActive(true);
+                exhaustionScore = 100;
+                syncTimer = 0;
+            }
         }
-
+        
         //Failing
         if (failing == true && myHook.GetComponent<FishingCube>().hookBite == true)
         {
@@ -616,7 +629,8 @@ public class ResistanceText : UdonSharpBehaviour
         //Failing
         failing = false;
 
-
+        //Sync
+        syncTimer = 0;
     }
 
 
