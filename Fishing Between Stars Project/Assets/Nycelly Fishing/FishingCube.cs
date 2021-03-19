@@ -88,9 +88,9 @@ public class FishingCube : UdonSharpBehaviour
             {
                 hookBite = true;
             }
-            //Hold Fish in Place
-            myFishingRod.GetComponent<ResistanceText>().fishResistanceScore = 500;
-            myFishingRod.GetComponent<ResistanceText>().resistanceScore = 500;
+            //Hold Fish in Place Debugging
+           // myFishingRod.GetComponent<ResistanceText>().fishResistanceScore = 500;
+            //myFishingRod.GetComponent<ResistanceText>().resistanceScore = 500;
             //If the Fish Bites the Hook
             if (hookBite == true)
             {

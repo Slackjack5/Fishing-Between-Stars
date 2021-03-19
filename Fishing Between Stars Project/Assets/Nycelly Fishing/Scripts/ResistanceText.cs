@@ -258,20 +258,20 @@ public class ResistanceText : UdonSharpBehaviour
             //Animations
             if (triggerHeld)
             {
-                /*
+                
                 myAnimator.enabled = true;
                 myAnimator.SetBool("Reeling", true);
                 myAnimator.SetFloat("AnimSpeed", 1.5f);
-                */
+                
 
             }
             else
             {
-                /*
+                
                 myAnimator.enabled = true;
                 myAnimator.SetFloat("AnimSpeed", .5f);
                 myAnimator.SetBool("Reeling", true);
-                */
+                
 
             }
 
@@ -453,6 +453,7 @@ public class ResistanceText : UdonSharpBehaviour
 
 
             //Animations
+            
             if (wasTouched)
             {
 
@@ -477,6 +478,7 @@ public class ResistanceText : UdonSharpBehaviour
                 //Animation["Reeling"].time = 5.0;
 
             }
+            
 
             Vector3 r = player.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position - player.GetPosition();
 
@@ -580,6 +582,7 @@ public class ResistanceText : UdonSharpBehaviour
     public virtual void OnPickupUseDown()
     {
         triggerHeld = true;
+        //wasTouched = true;
     }
 
     public virtual void OnPickupUseUp()

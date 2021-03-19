@@ -13,6 +13,9 @@ public class LeverRotation : UdonSharpBehaviour
     //values for internal use
     private Quaternion _lookRotation;
     private Vector3 _direction;
+
+    //My Fishing Rod
+    public GameObject myFishingRod;
     void Start()
     {
         player = null;
@@ -20,7 +23,7 @@ public class LeverRotation : UdonSharpBehaviour
 
     void FixedUpdate()
     {
-        if(player!=null)
+        if (player != null && myFishingRod.GetComponent<ResistanceText>().VR == true)
         {
             Vector3 r = player.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;// - player.GetPosition();
             //public static Action<VRCPlayerApi, VRC_Pickup.PickupHand, float, float, float> _PlayHapticEventInHand;
