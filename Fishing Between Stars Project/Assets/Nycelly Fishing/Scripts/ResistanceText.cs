@@ -169,6 +169,7 @@ public class ResistanceText : UdonSharpBehaviour
                     }
 
                     //For Desktop
+
                 }
                 else
                 {
@@ -199,10 +200,32 @@ public class ResistanceText : UdonSharpBehaviour
                 }
 
 
+                //Animations
+                if (triggerHeld)
+                {
+
+                    myAnimator.enabled = true;
+                    myAnimator.SetBool("Reeling", true);
+                    myAnimator.SetFloat("AnimSpeed", 1.5f);
+
+
+                }
+                else
+                {
+
+                    myAnimator.enabled = true;
+                    myAnimator.SetFloat("AnimSpeed", .5f);
+                    myAnimator.SetBool("Reeling", true);
+
+
+                }
 
             }
             else //If in VR
             {
+                //Disable Animations for VR
+                myAnimator.enabled = false;
+
                 if (handleBeingHeld == false)
                 {
                     //Slow down how fast we decay player resistance
@@ -255,25 +278,6 @@ public class ResistanceText : UdonSharpBehaviour
             //Networking.SetOwner(player, gameObject);
             resistanceScore += deltaResistanceScore;
 
-            //Animations
-            if (triggerHeld)
-            {
-                
-                myAnimator.enabled = true;
-                myAnimator.SetBool("Reeling", true);
-                myAnimator.SetFloat("AnimSpeed", 1.5f);
-                
-
-            }
-            else
-            {
-                
-                myAnimator.enabled = true;
-                myAnimator.SetFloat("AnimSpeed", .5f);
-                myAnimator.SetBool("Reeling", true);
-                
-
-            }
 
             //Resistance Calculator
 
@@ -452,32 +456,7 @@ public class ResistanceText : UdonSharpBehaviour
             }
 
 
-            //Animations
-            
-            if (wasTouched)
-            {
 
-                myAnimator.enabled = true;
-                myAnimator.SetBool("Reeling", true);
-                myAnimator.SetFloat("AnimSpeed", 1.5f);
-
-                if (animStopTimer >= animStopTimerMax)
-                {
-                    //Stop Animations
-                    myAnimator.enabled = false;
-                    myAnimator.SetBool("Reeling", false);
-                    wasTouched = false;
-                    Debug.Log("Animations Stopped");
-                    animStopTimer = 0;
-
-                }
-                else
-                {
-                    animStopTimer += 1;
-                }
-                //Animation["Reeling"].time = 5.0;
-
-            }
             
 
             Vector3 r = player.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position - player.GetPosition();
@@ -501,7 +480,33 @@ public class ResistanceText : UdonSharpBehaviour
                 syncTimer = 0;
             }
         }
-        
+
+        //Animations
+
+        if (wasTouched)
+        {
+
+            myAnimator.enabled = true;
+            myAnimator.SetBool("Reeling", true);
+            myAnimator.SetFloat("AnimSpeed", 1.5f);
+
+            if (animStopTimer >= animStopTimerMax)
+            {
+                //Stop Animations
+                myAnimator.enabled = false;
+                myAnimator.SetBool("Reeling", false);
+                wasTouched = false;
+                Debug.Log("Animations Stopped");
+                animStopTimer = 0;
+
+            }
+            else
+            {
+                animStopTimer += 1;
+            }
+            //Animation["Reeling"].time = 5.0;
+
+        }
         //Failing
         if (failing == true && myHook.GetComponent<FishingCube>().hookBite == true)
         {

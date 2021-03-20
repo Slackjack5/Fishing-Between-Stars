@@ -32,7 +32,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionTexture:
-        m_Texture: {fileID: 2800000, guid: 91dc767e9a428f944851bc5c18f0a431, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1067ef2c5a18c0b498c07ad7113b46cc, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FirstWaveHeightmap:
@@ -108,9 +108,9 @@ Material:
     - _OverallMetallic: 1
     - _OverallNormalStrength: 0.577
     - _OverallWaveHeight: 5.1
-    - _SSRefractionDecaydistance: 61.8
+    - _SSRefractionDecaydistance: 100
     - _SSRefractionRefractionFresnel: 5
-    - _SSRefractionStrength: 0.212
+    - _SSRefractionStrength: 0.3
     - _SecondWaveEnableThis: 1
     - _SecondWaveHeightStrength: 0.367
     - _SecondWaveNormalStrength: 0.427
@@ -128,7 +128,7 @@ Material:
     - _BlendColor: {r: 1, g: 1, b: 1, a: 1}
     - _BlendTextureUandVspeedZWNotused: {r: -0.05, g: -0.075, b: 0, a: 0}
     - _CubemapBaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0.6913667, g: 0, b: 1, a: 1}
+    - _EmissionColor: {r: 0.754717, g: 0, b: 0.58776927, a: 1}
     - _FirstWaveUandVspeed: {r: 0.01, g: 0.01, b: 0, a: 0}
     - _FourthWaveUandVspeed: {r: -0.05, g: -0.075, b: 0, a: 0}
     - _SecondWaveUandVspeed: {r: 0.01, g: -0.01, b: 0, a: 0}

@@ -53,6 +53,7 @@ public class TouchTest : UdonSharpBehaviour
                     Networking.LocalPlayer.PlayHapticEventInHand(VRC_Pickup.PickupHand.Right, 0.1f, 50, 50);
                     //myFishingRod.GetComponent<ResistanceText>().triggerHeld = true;
                     myFishingRod.GetComponent<ResistanceText>().resistanceScore += 100;
+                    myFishingRod.GetComponent<ResistanceText>().wasTouched = true;
                     myFishingRod.GetComponent<ResistanceText>().deltaResistanceScore = 16;
                     myCircles[arrayPos].GetComponent<TouchTest>().resistanceAdded = true;
                     //Debug.Log("Player in Range");

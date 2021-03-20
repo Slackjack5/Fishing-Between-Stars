@@ -18,14 +18,14 @@ public class LeverRotation : UdonSharpBehaviour
     public GameObject myFishingRod;
     void Start()
     {
-        player = null;
+        
     }
 
     void FixedUpdate()
     {
-        if (player != null && myFishingRod.GetComponent<ResistanceText>().VR == true)
-        {
-            Vector3 r = player.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;// - player.GetPosition();
+        /*
+        player = Networking.LocalPlayer;
+        Vector3 r = Networking.LocalPlayer.GetTrackingData(VRCPlayerApi.TrackingDataType.RightHand).position;// - player.GetPosition();
             //public static Action<VRCPlayerApi, VRC_Pickup.PickupHand, float, float, float> _PlayHapticEventInHand;
             
 
@@ -39,7 +39,7 @@ public class LeverRotation : UdonSharpBehaviour
 
             //rotate us over time according to speed until we are in the required rotation
             transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * RotationSpeed);
-        }
+        */
        
     }
 }
