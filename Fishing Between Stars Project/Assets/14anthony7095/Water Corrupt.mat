@@ -124,11 +124,11 @@ Material:
     - _ThirdWaveNormalStrength: 0.5
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 0.78431374}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 0.8039216}
     - _BlendColor: {r: 1, g: 1, b: 1, a: 1}
     - _BlendTextureUandVspeedZWNotused: {r: -0.05, g: -0.075, b: 0, a: 0}
     - _CubemapBaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0.754717, g: 0, b: 0.58776927, a: 1}
+    - _EmissionColor: {r: 0, g: 0.9607843, b: 1, a: 1}
     - _FirstWaveUandVspeed: {r: 0.01, g: 0.01, b: 0, a: 0}
     - _FourthWaveUandVspeed: {r: -0.05, g: -0.075, b: 0, a: 0}
     - _SecondWaveUandVspeed: {r: 0.01, g: -0.01, b: 0, a: 0}

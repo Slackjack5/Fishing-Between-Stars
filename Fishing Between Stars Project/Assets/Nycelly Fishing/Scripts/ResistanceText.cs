@@ -91,7 +91,7 @@ public class ResistanceText : UdonSharpBehaviour
 
     //
     private int animStopTimer = 0;
-    public int animStopTimerMax = 8;
+    public int animStopTimerMax = 60;
 
     //Mode
     [UdonSynced] public bool VR = false;
@@ -262,8 +262,10 @@ public class ResistanceText : UdonSharpBehaviour
 
             }
 
-
-
+            //Animations
+            myAnimator.enabled = true;
+            myAnimator.SetFloat("AnimSpeed", .5f);
+            myAnimator.SetBool("Reeling", true);
 
             //Set Maximum Values
             if (deltaResistanceScore >= deltaResistanceScoreMaxRise)

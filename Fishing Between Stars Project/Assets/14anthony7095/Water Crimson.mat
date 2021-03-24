@@ -128,7 +128,7 @@ Material:
     - _BlendColor: {r: 1, g: 1, b: 1, a: 1}
     - _BlendTextureUandVspeedZWNotused: {r: -0.05, g: -0.075, b: 0, a: 0}
     - _CubemapBaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0.7176471, g: 0, b: 0.23850164, a: 1}
+    - _EmissionColor: {r: 0, g: 0.96078444, b: 1, a: 1}
     - _FirstWaveUandVspeed: {r: 0.01, g: 0.01, b: 0, a: 0}
     - _FourthWaveUandVspeed: {r: -0.05, g: -0.075, b: 0, a: 0}
     - _SecondWaveUandVspeed: {r: 0.01, g: -0.01, b: 0, a: 0}
