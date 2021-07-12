@@ -9,7 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Water Crimson
   m_Shader: {fileID: 4800000, guid: 58f047517fd799149bfc42cb67a78e41, type: 3}
-  m_ShaderKeywords: SECOND_ENABLED _BLENDENABLETHIS_ON _CULL_BACK _SECONDWAVEENABLETHIS_ON
+  m_ShaderKeywords: BLEND_ADDITIVE BLEND_COLOR_ENABLED SECOND_ENABLED _BLENDENABLETHIS_ON
+    _CULL_BACK _SECONDWAVEENABLETHIS_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -32,7 +33,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionTexture:
-        m_Texture: {fileID: 2800000, guid: af23949081b38d84ab7f89249894b351, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8e66d72b8ee78934bb5a80c4a4af59b2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FirstWaveHeightmap:
@@ -88,12 +89,12 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _BlendBlendAlpha: 0.5400593
-    - _BlendBlendDistance: 0.6824926
-    - _BlendEmissionFactor: 0
-    - _BlendEnableColor: 0
+    - _BlendBlendAlpha: 1
+    - _BlendBlendDistance: 10
+    - _BlendEmissionFactor: 1
+    - _BlendEnableColor: 1
     - _BlendEnableThis: 0
-    - _BlendIsAdditive: 0
+    - _BlendIsAdditive: 1
     - _CubemapFresnel: 0
     - _CubemapGlossiness: 0
     - _CubemapStrength: 0
@@ -125,10 +126,10 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 0.78431374}
-    - _BlendColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BlendColor: {r: 0.6731477, g: 0, b: 1, a: 1}
     - _BlendTextureUandVspeedZWNotused: {r: -0.05, g: -0.075, b: 0, a: 0}
     - _CubemapBaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0, g: 0.96078444, b: 1, a: 1}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _FirstWaveUandVspeed: {r: 0.01, g: 0.01, b: 0, a: 0}
     - _FourthWaveUandVspeed: {r: -0.05, g: -0.075, b: 0, a: 0}
     - _SecondWaveUandVspeed: {r: 0.01, g: -0.01, b: 0, a: 0}
