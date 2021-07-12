@@ -9,6 +9,7 @@
     playerApi: %VRCSDKBaseVRCPlayerApi, null
     __0_this_intnl_UnityEngineTransform: %UnityEngineTransform, this
     __0_const_intnl_SystemObject: %SystemObject, null
+    __0_const_intnl_SystemString: %SystemString, null
     __0_const_intnl_SystemUInt32: %SystemUInt32, null
     __0_const_intnl_VRCSDKBaseVRCPlayerApi: %VRCSDKBaseVRCPlayerApi, null
     __0_intnl_UnityEngineQuaternion: %UnityEngineQuaternion, null
@@ -18,69 +19,71 @@
 .data_end
 
         
-         # using UnityEngine;
+         #  using UnityEngine;
         
-         # using VRC.SDK3.Components;
+         #  using VRC.SDK3.Components;
         
-         # using VRC.SDKBase;
+         #  using VRC.SDKBase;
         
-         # using VRC.Udon;
+         #  using VRC.Udon;
         
-         # namespace UdonSharp.Examples.Utilities
+         #  namespace UdonSharp.Examples.Utilities
         
-         # [AddComponentMenu("Udon Sharp/Utilities/Bone Follower")]
+         #  [AddComponentMenu("Udon Sharp/Utilities/Bone Follower")]
         
-         # public class BoneFollower : UdonSharpBehaviour
+         #  [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
+        
+         #  public class BoneFollower : UdonSharpBehaviour
 .code_start
         
-         # public HumanBodyBones trackedBone;
+         #  public HumanBodyBones trackedBone;
         
-         # VRCPlayerApi playerApi;
+         #  VRCPlayerApi playerApi;
         
-         # bool isInEditor;
+         #  bool isInEditor;
         
-         # void Start()
+         #  void Start()
     .export _start
         
     _start:
         
         PUSH, __0_const_intnl_SystemUInt32
         
-         # {
+         #  {
         
-         # playerApi = Networking.LocalPlayer;
+         #  playerApi = Networking.LocalPlayer;
         PUSH, playerApi
         EXTERN, "VRCSDKBaseNetworking.__get_LocalPlayer__VRCSDKBaseVRCPlayerApi"
         
-         # isInEditor = playerApi == null;
+         #  isInEditor = playerApi == null;
         PUSH, playerApi
         PUSH, __0_const_intnl_VRCSDKBaseVRCPlayerApi
         PUSH, isInEditor
         EXTERN, "SystemObject.__op_Equality__SystemObject_SystemObject__SystemBoolean"
-        PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
+        PUSH, __0_intnl_returnTarget_UInt32 # Function epilogue
         COPY
         JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
         
         
-         # void Update()
+         #  void Update()
     .export _update
         
     _update:
         
         PUSH, __0_const_intnl_SystemUInt32
         
-         # {
+         #  {
         
-         # if (isInEditor)
+         #  if (isInEditor)
         PUSH, isInEditor
         JUMP_IF_FALSE, 0x00000078
         
-         # return;
-        PUSH, __0_intnl_returnTarget_UInt32 #Explicit return sequence
+         #  return;
+        PUSH, __0_intnl_returnTarget_UInt32 # Explicit return sequence
         COPY
         JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
         
-         # transform.SetPositionAndRotation(playerApi.GetBonePosition(trackedBone), playerApi.GetBoneRotation(trackedBone));
+         #  transform.SetPositionAndRotation(playerApi.GetBonePosition(trackedBone), playerApi.GetBoneRotation(trackedBone));
         PUSH, playerApi
         PUSH, trackedBone
         PUSH, __0_intnl_UnityEngineVector3
@@ -93,7 +96,7 @@
         PUSH, __0_intnl_UnityEngineVector3
         PUSH, __0_intnl_UnityEngineQuaternion
         EXTERN, "UnityEngineTransform.__SetPositionAndRotation__UnityEngineVector3_UnityEngineQuaternion__SystemVoid"
-        PUSH, __0_intnl_returnTarget_UInt32 #Function epilogue
+        PUSH, __0_intnl_returnTarget_UInt32 # Function epilogue
         COPY
         JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
         

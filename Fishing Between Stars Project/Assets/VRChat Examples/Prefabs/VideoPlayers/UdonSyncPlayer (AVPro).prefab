@@ -362,7 +362,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Enter URL... (Master Only)
+  m_Text: Enter URL... (Owner Only)
 --- !u!1 &5699767619954407556
 GameObject:
   m_ObjectHideFlags: 0
@@ -638,6 +638,7 @@ MonoBehaviour:
   autoPlay: 1
   loop: 0
   maximumResolution: 720
+  useLowLatency: 0
 --- !u!114 &5699767620698802764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -656,6 +657,7 @@ MonoBehaviour:
   proximity: 2
   SynchronizePosition: 0
   AllowCollisionOwnershipTransfer: 0
+  Reliable: 0
   serializedProgramAsset: {fileID: 11400000, guid: c8d8f491a2ad7664daa05c1d3b195819,
     type: 2}
   programSource: {fileID: 11400000, guid: db6380e7c98d9e94bb856b1e1b1cf56c, type: 2}

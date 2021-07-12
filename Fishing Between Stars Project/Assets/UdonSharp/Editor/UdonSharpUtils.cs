@@ -201,6 +201,10 @@ namespace UdonSharp
             if (IsNumericImplicitCastValid(targetType, assignee))
                 return true;
 
+            // We use void as a placeholder for a null constant value getting passed in, if null is passed in and the target type is a reference type then we assume they are compatible
+            if (assignee == typeof(void) && !targetType.IsValueType)
+                return true;
+
             // Handle user-defined implicit conversion operators defined on both sides
             // Roughly follows https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/conversions#processing-of-user-defined-implicit-conversions
 
@@ -348,29 +352,6 @@ namespace UdonSharp
             return first == second;
         }
 
-#if !UDON_BETA_SDK
-        private static readonly HashSet<System.Type> udonSyncTypes = new HashSet<System.Type>()
-        {
-            typeof(bool),
-            typeof(char),
-            typeof(byte), typeof(sbyte),
-            typeof(int), typeof(uint),
-            typeof(long), typeof(ulong),
-            typeof(float), typeof(double),
-            typeof(short), typeof(ushort),
-            typeof(string),
-            typeof(UnityEngine.Vector2), typeof(UnityEngine.Vector3), typeof(UnityEngine.Vector4),
-            typeof(UnityEngine.Quaternion),
-            typeof(UnityEngine.Color32), typeof(UnityEngine.Color),
-            typeof(VRC.SDKBase.VRCUrl),
-        };
-
-        public static bool IsUdonSyncedType(System.Type type)
-        {
-            return udonSyncTypes.Contains(type);
-        }
-#endif
-
         private static readonly HashSet<System.Type> builtinTypes = new HashSet<System.Type>
         {
             typeof(string),
@@ -481,6 +462,11 @@ namespace UdonSharp
                    IsUserJaggedArray(type);
         }
 
+        public static bool IsUdonWorkaroundType(System.Type type)
+        {
+            return type == typeof(VRC.SDK3.Video.Components.VRCUnityVideoPlayer) || type == typeof(VRC.SDK3.Video.Components.AVPro.VRCAVProVideoPlayer);
+        }
+
         public static System.Type GetRootElementType(System.Type type)
         {
             while (type.IsArray)
@@ -488,39 +474,105 @@ namespace UdonSharp
 
             return type;
         }
+        
+        private static Dictionary<System.Type, System.Type> inheritedTypeMap = null;
+        private readonly static object inheritedTypeMapLock = new object();
 
-        // Doesn't work in a multi threaded context, todo: consider making this a concurrent collection or making one for each thread.
-        //private static Dictionary<System.Type, System.Type> userTypeToUdonTypeCache = new Dictionary<System.Type, System.Type>();
-
-        public static System.Type UserTypeToUdonType(System.Type type)
+        private static Dictionary<System.Type, System.Type> GetInheritedTypeMap()
         {
-            System.Type udonType = null;
-            //if (!userTypeToUdonTypeCache.TryGetValue(type, out udonType))
+            if (inheritedTypeMap != null)
+                return inheritedTypeMap;
+            
+            lock (inheritedTypeMapLock)
             {
-                if (IsUserDefinedType(type))
+                if (inheritedTypeMap != null)
+                    return inheritedTypeMap;
+                
+                Dictionary<System.Type, System.Type> typeMap = new Dictionary<System.Type, System.Type>();
+
+                IEnumerable<System.Type> typeList = System.AppDomain.CurrentDomain.GetAssemblies().First(a => a.GetName().Name == "VRCSDK3").GetTypes().Where(t => t != null && t.Namespace != null && t.Namespace.StartsWith("VRC.SDK3.Components"));
+
+                foreach (System.Type childType in typeList)
                 {
-                    if (type.IsArray)
+                    if (childType.BaseType != null && childType.BaseType.Namespace.StartsWith("VRC.SDKBase"))
                     {
-                        if (!type.GetElementType().IsArray)
-                        {
-                            udonType = typeof(UnityEngine.Component[]);// Hack because VRC doesn't expose the array type of UdonBehaviour
-                        }
-                        else // Jagged arrays
-                        {
-                            udonType = typeof(object[]);
-                        }
-                    }
-                    else
-                    {
-                        udonType = typeof(VRC.Udon.UdonBehaviour);
+                        typeMap.Add(childType.BaseType, childType);
                     }
                 }
 
-                if (udonType == null)
-                    udonType = type;
+                typeMap.Add(typeof(VRC.SDK3.Video.Components.VRCUnityVideoPlayer), typeof(VRC.SDK3.Video.Components.Base.BaseVRCVideoPlayer));
+                typeMap.Add(typeof(VRC.SDK3.Video.Components.AVPro.VRCAVProVideoPlayer), typeof(VRC.SDK3.Video.Components.Base.BaseVRCVideoPlayer));
 
-                //userTypeToUdonTypeCache.Add(type, udonType);
+                inheritedTypeMap = typeMap;
             }
+
+            return inheritedTypeMap;
+        }
+
+        internal static System.Type RemapBaseType(System.Type type)
+        {
+            var typeMap = GetInheritedTypeMap();
+
+            int arrayDepth = 0;
+            System.Type currentType = type;
+            while (currentType.IsArray)
+            {
+                currentType = currentType.GetElementType();
+                ++arrayDepth;
+            }
+
+            if (typeMap.ContainsKey(currentType))
+            {
+                type = typeMap[currentType];
+
+                while (arrayDepth-- > 0)
+                    type = type.MakeArrayType();
+            }
+
+            return type;
+        }
+        
+        [ThreadStatic]
+        private static Dictionary<System.Type, System.Type> userTypeToUdonTypeCache;
+
+        public static System.Type UserTypeToUdonType(System.Type type)
+        {
+            if (type == null)
+                return null;
+
+            if (userTypeToUdonTypeCache == null)
+                userTypeToUdonTypeCache = new Dictionary<Type, Type>();
+
+            if (userTypeToUdonTypeCache.TryGetValue(type, out System.Type foundType))
+                return foundType;
+            
+            System.Type udonType = null;
+
+            if (IsUserDefinedType(type))
+            {
+                if (type.IsArray)
+                {
+                    if (!type.GetElementType().IsArray)
+                    {
+                        udonType = typeof(UnityEngine.Component[]);// Hack because VRC doesn't expose the array type of UdonBehaviour
+                    }
+                    else // Jagged arrays
+                    {
+                        udonType = typeof(object[]);
+                    }
+                }
+                else
+                {
+                    udonType = typeof(VRC.Udon.UdonBehaviour);
+                }
+            }
+
+            if (udonType == null)
+                udonType = type;
+
+            udonType = RemapBaseType(udonType);
+            
+            userTypeToUdonTypeCache.Add(type, udonType);
 
             return udonType;
         }
@@ -664,6 +716,38 @@ namespace UdonSharp
             }
 
             return (Assembly[])getLoadedAssembliesProp.GetValue(null);
+        }
+
+        /// <summary>
+        /// Used to prevent Odin's DefaultSerializationBinder from getting a callback to register an assembly in specific cases where it will explode due to https://github.com/mono/mono/issues/20968
+        /// </summary>
+        internal class UdonSharpAssemblyLoadStripScope : IDisposable
+        {
+            Delegate[] originalDelegates;
+
+            public UdonSharpAssemblyLoadStripScope()
+            {
+                FieldInfo info = AppDomain.CurrentDomain.GetType().GetField("AssemblyLoad", BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
+
+                AssemblyLoadEventHandler handler = info.GetValue(AppDomain.CurrentDomain) as AssemblyLoadEventHandler;
+
+                originalDelegates = handler?.GetInvocationList();
+
+                if (originalDelegates != null)
+                {
+                    foreach (Delegate del in originalDelegates)
+                        AppDomain.CurrentDomain.AssemblyLoad -= (AssemblyLoadEventHandler)del;
+                }
+            }
+
+            public void Dispose()
+            {
+                if (originalDelegates != null)
+                {
+                    foreach (Delegate del in originalDelegates)
+                        AppDomain.CurrentDomain.AssemblyLoad += (AssemblyLoadEventHandler)del;
+                }
+            }
         }
     }
 }

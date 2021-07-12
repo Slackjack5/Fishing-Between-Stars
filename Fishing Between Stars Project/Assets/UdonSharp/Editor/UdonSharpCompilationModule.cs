@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
@@ -73,19 +74,37 @@ namespace UdonSharp.Compiler
 
         public CompileTaskResult Compile(List<ClassDefinition> classDefinitions, Microsoft.CodeAnalysis.SyntaxTree syntaxTree, string sourceCode, bool isEditorBuild)
         {
-            programAsset.compileErrors.Clear();
-
             CompileTaskResult result = new CompileTaskResult();
             result.programAsset = programAsset;
 
             moduleSymbols.OpenSymbolTable();
+
+            ClassDebugInfo debugInfo = null;
+
+            if (settings == null || settings.buildDebugInfo)
+            {
+                debugInfo = new ClassDebugInfo(sourceCode, settings == null || settings.includeInlineCode);
+            }
+
+            UdonSharpFieldVisitor fieldVisitor = new UdonSharpFieldVisitor(fieldsWithInitializers, resolver, moduleSymbols, moduleLabels, classDefinitions, debugInfo);
             
-            UdonSharpFieldVisitor fieldVisitor = new UdonSharpFieldVisitor(fieldsWithInitializers);
-            fieldVisitor.Visit(syntaxTree.GetRoot());
+            try
+            {
+                fieldVisitor.Visit(syntaxTree.GetRoot());
+            }
+            catch (System.Exception e)
+            {
+                LogException(result, e, fieldVisitor.visitorContext.currentNode, out string logMessage);
+
+                programAsset.compileErrors.Add(logMessage);
+
+                ErrorCount++;
+            }
+
+            if (ErrorCount > 0)
+                return result;
 
             MethodVisitor methodVisitor = new MethodVisitor(resolver, moduleSymbols, moduleLabels);
-
-            int errorCount = 0;
 
             try
             {
@@ -97,18 +116,11 @@ namespace UdonSharp.Compiler
 
                 programAsset.compileErrors.Add(logMessage);
 
-                errorCount++;
+                ErrorCount++;
             }
 
             if (ErrorCount > 0)
                 return result;
-
-            ClassDebugInfo debugInfo = null;
-
-            if (settings == null || settings.buildDebugInfo)
-            {
-                debugInfo = new ClassDebugInfo(sourceCode, settings == null || settings.includeInlineCode);
-            }
 
             ASTVisitor visitor = new ASTVisitor(resolver, moduleSymbols, moduleLabels, methodVisitor.definedMethods, classDefinitions, debugInfo);
 
@@ -123,17 +135,17 @@ namespace UdonSharp.Compiler
                 
                 programAsset.compileErrors.Add(logMessage);
 
-                errorCount++;
+                ErrorCount++;
             }
 
-            if (errorCount > 0)
+            if (ErrorCount > 0)
             {
                 return result;
             }
 
             moduleSymbols.CloseSymbolTable();
 
-            if (errorCount == 0)
+            if (ErrorCount == 0)
             {
                 compiledClassDefinition = classDefinitions.Find(e => e.userClassType == visitor.visitorContext.behaviourUserType);
 
@@ -145,16 +157,13 @@ namespace UdonSharp.Compiler
 
                 programAsset.behaviourIDHeapVarName = visitor.GetIDHeapVarName();
 
-                programAsset.fieldDefinitions = visitor.visitorContext.localFieldDefinitions;
-#if UDON_BETA_SDK
+                programAsset.fieldDefinitions = fieldVisitor.visitorContext.localFieldDefinitions;
                 programAsset.behaviourSyncMode = visitor.visitorContext.behaviourSyncMode;
-#endif
 
                 if (debugInfo != null)
                     debugInfo.FinalizeDebugInfo();
 
                 UdonSharpEditorCache.Instance.SetDebugInfo(programAsset, isEditorBuild ? UdonSharpEditorCache.DebugInfoType.Editor : UdonSharpEditorCache.DebugInfoType.Client, debugInfo);
-                //programAsset.debugInfo = debugInfo;
             }
 
             return result;
@@ -187,16 +196,18 @@ namespace UdonSharp.Compiler
             // Prettify the symbol order in the data block
             // Reflection info goes first so that we can use it for knowing what script threw an error from in game logs
             foreach (SymbolDefinition symbol in moduleSymbols.GetAllUniqueChildSymbols()
-                .OrderBy(e => e.declarationType.HasFlag(SymbolDeclTypeFlags.Reflection))
-                .ThenBy(e => e.declarationType.HasFlag(SymbolDeclTypeFlags.Public))
-                .ThenBy(e => e.declarationType.HasFlag(SymbolDeclTypeFlags.Private))
-                .ThenBy(e => e.declarationType.HasFlag(SymbolDeclTypeFlags.This))
-                .ThenBy(e => !e.declarationType.HasFlag(SymbolDeclTypeFlags.Internal))
-                .ThenBy(e => e.declarationType.HasFlag(SymbolDeclTypeFlags.Constant))
+                .OrderBy(e => (e.declarationType & SymbolDeclTypeFlags.Reflection) != 0)
+                .ThenBy(e => (e.declarationType & SymbolDeclTypeFlags.Public) != 0)
+                .ThenBy(e => (e.declarationType & SymbolDeclTypeFlags.Private) != 0)
+                .ThenBy(e => (e.declarationType & SymbolDeclTypeFlags.This) != 0)
+                .ThenBy(e => (e.declarationType & SymbolDeclTypeFlags.Internal) == 0)
+                .ThenBy(e => (e.declarationType &SymbolDeclTypeFlags.Constant) != 0)
                 .ThenByDescending(e => e.symbolCsType.Name)
-                .ThenByDescending(e => e.symbolUniqueName).Reverse())
+                //.ThenByDescending(e => e.symbolUniqueName)
+                .Reverse()
+            )
             {
-                if (symbol.declarationType.HasFlag(SymbolDeclTypeFlags.This))
+                if ((symbol.declarationType & SymbolDeclTypeFlags.This) != 0)
                     builder.AppendLine($"{symbol.symbolUniqueName}: %{symbol.symbolResolvedTypeName}, this", 1);
                 else
                     builder.AppendLine($"{symbol.symbolUniqueName}: %{symbol.symbolResolvedTypeName}, null", 1);

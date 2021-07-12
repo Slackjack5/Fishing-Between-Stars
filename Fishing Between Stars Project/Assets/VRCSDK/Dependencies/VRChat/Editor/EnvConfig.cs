@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine.Rendering;
-using VRCSDK2.Validation.Performance.Stats;
+using VRC.SDKBase.Validation.Performance.Stats;
 
 /// <summary>
 /// Setup up SDK env on editor launch
@@ -18,7 +18,7 @@ public class EnvConfig
 {
     static BuildTarget[] relevantBuildTargets = new BuildTarget[] {
         BuildTarget.Android, BuildTarget.iOS,
-        BuildTarget.StandaloneLinux, BuildTarget.StandaloneLinux64, BuildTarget.StandaloneLinuxUniversal,
+        BuildTarget.StandaloneLinux64,
         BuildTarget.StandaloneWindows, BuildTarget.StandaloneWindows64,
         BuildTarget.StandaloneOSX
     };
@@ -35,9 +35,7 @@ public class EnvConfig
     {
         { BuildTarget.Android, new [] { GraphicsDeviceType.OpenGLES3, /* GraphicsDeviceType.Vulkan */ }},
         { BuildTarget.iOS, null },
-        { BuildTarget.StandaloneLinux, null },
         { BuildTarget.StandaloneLinux64, null },
-        { BuildTarget.StandaloneLinuxUniversal, null },
         { BuildTarget.StandaloneWindows, new UnityEngine.Rendering.GraphicsDeviceType[] { UnityEngine.Rendering.GraphicsDeviceType.Direct3D11 } },
         { BuildTarget.StandaloneWindows64, new UnityEngine.Rendering.GraphicsDeviceType[] { UnityEngine.Rendering.GraphicsDeviceType.Direct3D11 } },
         { BuildTarget.StandaloneOSX, null }
@@ -180,10 +178,10 @@ public class EnvConfig
 
         ConfigurePlayerSettings();
 
-        if (!VRC.Core.RemoteConfig.IsInitialized())
+        if (!VRC.Core.ConfigManager.RemoteConfig.IsInitialized())
         {
             VRC.Core.API.SetOnlineMode(true, "vrchat");
-            VRC.Core.RemoteConfig.Init();
+            VRC.Core.ConfigManager.RemoteConfig.Init();
         }
 
         LoadEditorResources();
@@ -238,9 +236,7 @@ public class EnvConfig
                     importer.SetExcludeFromAnyPlatform(BuildTarget.Android, false);
                     importer.SetExcludeFromAnyPlatform(BuildTarget.StandaloneWindows, false);
                     importer.SetExcludeFromAnyPlatform(BuildTarget.StandaloneWindows64, false);
-                    importer.SetExcludeFromAnyPlatform(BuildTarget.StandaloneLinux, false);
                     importer.SetExcludeFromAnyPlatform(BuildTarget.StandaloneLinux64, false);
-                    importer.SetExcludeFromAnyPlatform(BuildTarget.StandaloneOSX, false);
                 }
                 else
                 {
@@ -249,9 +245,7 @@ public class EnvConfig
                     importer.SetCompatibleWithPlatform(BuildTarget.Android, false);
                     importer.SetCompatibleWithPlatform(BuildTarget.StandaloneWindows, false);
                     importer.SetCompatibleWithPlatform(BuildTarget.StandaloneWindows64, false);
-                    importer.SetCompatibleWithPlatform(BuildTarget.StandaloneLinux, false);
                     importer.SetCompatibleWithPlatform(BuildTarget.StandaloneLinux64, false);
-                    importer.SetCompatibleWithPlatform(BuildTarget.StandaloneOSX, false);
                 }
                 importer.SaveAndReimport();
             }
@@ -284,10 +278,10 @@ public class EnvConfig
         SetPlayerSettings();
 
 #if VRC_CLIENT
-        PlatformSwitcher.RefreshRequiredPackages(EditorUserBuildSettings.selectedBuildTargetGroup);
-
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
+
+        PlatformSwitcher.RefreshRequiredPackages(EditorUserBuildSettings.selectedBuildTargetGroup);
 #else
         // SDK
 
@@ -383,7 +377,10 @@ public class EnvConfig
                 VRC.Core.Logger.Log("- " + s, VRC.Core.DebugLevel.All);
         }
 
-        PlayerSettings.SetVirtualRealitySDKs(buildTargetGroup, sdkNames);
+        if (!EditorApplication.isPlaying)
+        {
+            PlayerSettings.SetVirtualRealitySDKs(buildTargetGroup, sdkNames);
+        }
     }
 
     public static bool CheckForFirstInit()
@@ -639,10 +636,13 @@ public class EnvConfig
         #endif
 
         #if !VRC_CLIENT // In client rely on platform-switcher
-        PlayerSettings.SetVirtualRealitySupported(EditorUserBuildSettings.selectedBuildTargetGroup, true);
+        if (!EditorApplication.isPlaying)
+        {
+            PlayerSettings.SetVirtualRealitySupported(EditorUserBuildSettings.selectedBuildTargetGroup, true);
+        }
         #endif
 
-        PlayerSettings.graphicsJobs = false; // else we get occasional crashing
+        PlayerSettings.graphicsJobs = true;
 
         PlayerSettings.gpuSkinning = true;
 
@@ -652,13 +652,9 @@ public class EnvConfig
         PlayerSettings.scriptingRuntimeVersion = ScriptingRuntimeVersion.Latest;
         #endif
 
-        #if VRC_VR_OCULUS_QUEST
-        PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
-        #elif VRC_VR_FOCUS
-        PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARMv7;
-        #endif
-
         #if UNITY_ANDROID
+        PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
+
         if(PlayerSettings.Android.targetArchitectures.HasFlag(AndroidArchitecture.ARM64))
         {
             // Since we need different IL2CPP args we can't build ARM64 with other Architectures.

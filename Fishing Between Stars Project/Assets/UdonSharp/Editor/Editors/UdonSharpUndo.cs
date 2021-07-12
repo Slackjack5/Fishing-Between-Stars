@@ -17,7 +17,16 @@ namespace UdonSharpEditor
             if (udonBehaviour)
                 Undo.DestroyObjectImmediate(udonBehaviour);
 
-            Undo.DestroyObjectImmediate(behaviour);
+            UdonSharpEditorUtility.SetIgnoreEvents(true);
+
+            try
+            {
+                Undo.DestroyObjectImmediate(behaviour);
+            }
+            finally
+            {
+                UdonSharpEditorUtility.SetIgnoreEvents(false);
+            }
         }
 
         /// <summary>
@@ -40,6 +49,9 @@ namespace UdonSharpEditor
             UdonSharpProgramAsset programAsset = UdonSharpProgramAsset.GetProgramAssetForClass(type);
 
             udonBehaviour.programSource = programAsset;
+#pragma warning disable CS0618 // Type or member is obsolete
+            udonBehaviour.AllowCollisionOwnershipTransfer = false;
+#pragma warning restore CS0618 // Type or member is obsolete
 
             SerializedObject componentAsset = new SerializedObject(udonBehaviour);
             SerializedProperty serializedProgramAssetProperty = componentAsset.FindProperty("serializedProgramAsset");
@@ -47,7 +59,7 @@ namespace UdonSharpEditor
             serializedProgramAssetProperty.objectReferenceValue = programAsset.SerializedProgramAsset;
             componentAsset.ApplyModifiedProperties();
 
-            System.Type scriptType = programAsset.sourceCsScript.GetClass();
+            System.Type scriptType = programAsset.GetClass();
 
             UdonSharpBehaviour proxyComponent = (UdonSharpBehaviour)Undo.AddComponent(udonBehaviour.gameObject, scriptType);
             proxyComponent.hideFlags = HideFlags.DontSaveInBuild |

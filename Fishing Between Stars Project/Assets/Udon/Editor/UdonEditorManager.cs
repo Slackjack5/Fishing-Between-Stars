@@ -190,12 +190,19 @@ namespace VRC.Udon.Editor
                     return;
                 }
 
+                bool dirty = false;
                 foreach(UdonBehaviour udonBehaviour in udonBehaviours)
                 {
-                    PopulateSerializedProgramAssetReference(udonBehaviour);
+                    if(PopulateSerializedProgramAssetReference(udonBehaviour))
+                    {
+                        dirty = true;
+                    }
                 }
 
-                editScope.MarkDirty();
+                if(dirty)
+                {
+                    editScope.MarkDirty();
+                }
             }
         }
 
@@ -219,14 +226,15 @@ namespace VRC.Udon.Editor
         {
             foreach(GameObject sceneGameObject in scene.GetRootGameObjects())
             {
-                foreach(UdonBehaviour udonBehaviour in sceneGameObject.GetComponentsInChildren<UdonBehaviour>())
+                foreach(UdonBehaviour udonBehaviour in sceneGameObject.GetComponentsInChildren<UdonBehaviour>(true))
                 {
                     PopulateSerializedProgramAssetReference(udonBehaviour);
                 }
             }
         }
 
-        private static void PopulateSerializedProgramAssetReference(UdonBehaviour udonBehaviour)
+        // Returns true if the serializedProgramProperty was changed, false otherwise.
+        private static bool PopulateSerializedProgramAssetReference(UdonBehaviour udonBehaviour)
         {
             SerializedObject serializedUdonBehaviour = new SerializedObject(udonBehaviour);
             SerializedProperty programSourceSerializedProperty = serializedUdonBehaviour.FindProperty("programSource");
@@ -234,16 +242,23 @@ namespace VRC.Udon.Editor
 
             if(!(programSourceSerializedProperty.objectReferenceValue is AbstractUdonProgramSource abstractUdonProgramSource))
             {
-                return;
+                return false;
             }
 
             if(abstractUdonProgramSource == null)
             {
-                return;
+                return false;
+            }
+
+            if(serializedProgramAssetSerializedProperty.objectReferenceValue == abstractUdonProgramSource.SerializedProgramAsset)
+            {
+                return false;
             }
 
             serializedProgramAssetSerializedProperty.objectReferenceValue = abstractUdonProgramSource.SerializedProgramAsset;
             serializedUdonBehaviour.ApplyModifiedPropertiesWithoutUndo();
+            return true;
+
         }
 
         #endregion
@@ -369,9 +384,18 @@ namespace VRC.Udon.Editor
                 {
                     topRegistries["UnityEngine"].Add(nodeRegistry);
                 }
+                else if (nodeRegistry.Key.StartsWith("Cinemachine"))
+                {
+                    topRegistries["UnityEngine"].Add(nodeRegistry);
+                }
+                else if (nodeRegistry.Key.StartsWith("TMPro"))
+                {
+                    topRegistries["UnityEngine"].Add(nodeRegistry);
+                }
                 else
                 {
-                    Debug.Log(nodeRegistry.Key);
+                    // Todo: note and handle these
+                    Debug.Log($"The Registry {nodeRegistry.Key} needs to be Added Somewhere");
                 }
             }
 

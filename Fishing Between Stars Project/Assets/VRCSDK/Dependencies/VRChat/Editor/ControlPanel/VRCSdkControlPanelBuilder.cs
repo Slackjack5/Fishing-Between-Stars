@@ -5,9 +5,8 @@ using System.Reflection;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using VRCSDK2.Validation.Performance;
+using VRC.SDKBase.Validation.Performance;
 using Object = UnityEngine.Object;
-using VRC.SDK3.Editor;
 using VRC.SDKBase.Editor;
 
 public partial class VRCSdkControlPanel : EditorWindow
@@ -78,6 +77,11 @@ public partial class VRCSdkControlPanel : EditorWindow
     Dictionary<Object, List<Issue>> GUIInfos = new Dictionary<Object, List<Issue>>();
     Dictionary<Object, List<Issue>> GUILinks = new Dictionary<Object, List<Issue>>();
     Dictionary<Object, List<Issue>> GUIStats = new Dictionary<Object, List<Issue>>();
+
+    public bool NoGuiErrors()
+    {
+        return GUIErrors.Count == 0;
+    }
 
     public bool NoGuiErrorsOrIssues()
     {
@@ -169,7 +173,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             VRCSdkControlPanelBuilderAttribute[] sdkBuilderAttributes;
             try
             {
-                sdkBuilderAttributes = (VRCSdkControlPanelBuilderAttribute[])assembly.GetCustomAttributes(sdkBuilderAttributeType, false);
+                sdkBuilderAttributes = (VRCSdkControlPanelBuilderAttribute[])assembly.GetCustomAttributes(sdkBuilderAttributeType, true);
             }
             catch
             {
@@ -217,9 +221,9 @@ public partial class VRCSdkControlPanel : EditorWindow
         GUILayout.FlexibleSpace();
         GUILayout.BeginVertical();
         
-        if (VRC.Core.RemoteConfig.IsInitialized())
+        if (VRC.Core.ConfigManager.RemoteConfig.IsInitialized())
         {
-            string sdkUnityVersion = VRC.Core.RemoteConfig.GetString("sdkUnityVersion");
+            string sdkUnityVersion = VRC.Core.ConfigManager.RemoteConfig.GetString("sdkUnityVersion");
             if (Application.unityVersion != sdkUnityVersion)
             {
                 OnGUIWarning(null, "You are not using the recommended Unity version for the VRChat SDK. Content built with this version may not work correctly. Please use Unity " + sdkUnityVersion,
@@ -552,12 +556,18 @@ public partial class VRCSdkControlPanel : EditorWindow
         if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows || EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows64 && GUILayout.Button("Switch Build Target to Android"))
         {
             if (EditorUtility.DisplayDialog("Build Target Switcher", "Are you sure you want to switch your build target to Android? This could take a while.", "Confirm", "Cancel"))
+            {
+                EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.Android;
                 EditorUserBuildSettings.SwitchActiveBuildTargetAsync(BuildTargetGroup.Android, BuildTarget.Android);
+            }
         }
         if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android && GUILayout.Button("Switch Build Target to Windows"))
         {
             if (EditorUtility.DisplayDialog("Build Target Switcher", "Are you sure you want to switch your build target to Windows? This could take a while.", "Confirm", "Cancel"))
+            {
+                EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.Standalone;
                 EditorUserBuildSettings.SwitchActiveBuildTargetAsync(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
+            }
         }
     }
 
@@ -619,13 +629,13 @@ public partial class VRCSdkControlPanel : EditorWindow
 
     public static void ShowContentPublishPermissionsDialog()
     {
-        if (!VRC.Core.RemoteConfig.IsInitialized())
+        if (!VRC.Core.ConfigManager.RemoteConfig.IsInitialized())
         {
-            VRC.Core.RemoteConfig.Init(() => ShowContentPublishPermissionsDialog());
+            VRC.Core.ConfigManager.RemoteConfig.Init(() => ShowContentPublishPermissionsDialog());
             return;
         }
 
-        string message = VRC.Core.RemoteConfig.GetString("sdkNotAllowedToPublishMessage");
+        string message = VRC.Core.ConfigManager.RemoteConfig.GetString("sdkNotAllowedToPublishMessage");
         int result = UnityEditor.EditorUtility.DisplayDialogComplex("VRChat SDK", message, "Developer FAQ", "VRChat Discord", "OK");
         if (result == 0)
         {

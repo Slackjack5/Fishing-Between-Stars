@@ -1,9 +1,11 @@
 ﻿
 using JetBrains.Annotations;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using UdonSharp;
 using UdonSharp.Serialization;
 using UnityEditor;
@@ -12,6 +14,7 @@ using UnityEngine.Profiling;
 using VRC.Udon;
 using VRC.Udon.Common.Interfaces;
 using VRC.Udon.Editor.ProgramSources;
+using VRC.Udon.EditorBindings;
 
 namespace UdonSharpEditor
 {
@@ -38,20 +41,58 @@ namespace UdonSharpEditor
 
             udonSharpProgramAsset.CompileCsProgram();
 
-            FieldInfo assemblyField = typeof(UdonAssemblyProgramAsset).GetField("udonAssembly", BindingFlags.NonPublic | BindingFlags.Instance);
-            assemblyField.SetValue(newProgramAsset, UdonSharpEditorCache.Instance.GetUASMStr(udonSharpProgramAsset));
+            string programAssembly = UdonSharpEditorCache.Instance.GetUASMStr(udonSharpProgramAsset);
 
-            MethodInfo assembleMethod = typeof(UdonAssemblyProgramAsset).GetMethod("AssembleProgram", BindingFlags.NonPublic | BindingFlags.Instance);
-            assembleMethod.Invoke(newProgramAsset, new object[] { });
+            // Strip comments/inline code
+            StringBuilder asmBuilder = new StringBuilder();
+
+            using (StringReader reader = new StringReader(programAssembly))
+            {
+                string line = reader.ReadLine();
+
+                while (line != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(line) &&
+                        !line.TrimStart().StartsWith("#", System.StringComparison.Ordinal))
+                        asmBuilder.AppendFormat("{0}\n", line);
+
+                    line = reader.ReadLine();
+                }
+            }
+
+            programAssembly = asmBuilder.ToString();
+
+            FieldInfo assemblyField = typeof(UdonAssemblyProgramAsset).GetField("udonAssembly", BindingFlags.NonPublic | BindingFlags.Instance);
+            assemblyField.SetValue(newProgramAsset, programAssembly);
+
+            IUdonProgram program = null;
+
+            try
+            {
+                UdonSharp.HeapFactory heapFactory = new UdonSharp.HeapFactory();
+
+                UdonEditorInterface editorInterface = new UdonEditorInterface(null, heapFactory, null, null, null, null, null, null, null);
+                heapFactory.FactoryHeapSize = udonSharpProgramAsset.GetSerializedUdonProgramAsset().RetrieveProgram().Heap.GetHeapCapacity();
+
+                program = editorInterface.Assemble(programAssembly);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError(e);
+
+                return null;
+            }
+
+            FieldInfo assemblyProgramField = typeof(UdonProgramAsset).GetField("program", BindingFlags.NonPublic | BindingFlags.Instance);
+            assemblyProgramField.SetValue(newProgramAsset, program);
 
             IUdonProgram uSharpProgram = udonSharpProgramAsset.GetRealProgram();
-            FieldInfo assemblyProgramGetter = typeof(UdonProgramAsset).GetField("program", BindingFlags.NonPublic | BindingFlags.Instance);
-            IUdonProgram assemblyProgram = (IUdonProgram)assemblyProgramGetter.GetValue(newProgramAsset);
+            IUdonProgram assemblyProgram = (IUdonProgram)assemblyProgramField.GetValue(newProgramAsset);
 
             if (uSharpProgram == null || assemblyProgram == null)
                 return null;
 
-            string[] symbols = uSharpProgram.SymbolTable.GetSymbols();
+            ImmutableArray<string> symbols = uSharpProgram.SymbolTable.GetSymbols();
 
             foreach (string symbol in symbols)
             {
@@ -115,9 +156,9 @@ namespace UdonSharpEditor
         /// <param name="components"></param>
         /// <returns></returns>
         [PublicAPI]
-        public static UdonBehaviour[] ConvertToUdonBehaviours(UdonSharpBehaviour[] components)
+        public static UdonBehaviour[] ConvertToUdonBehaviours(UdonSharpBehaviour[] components, bool convertChildren = false)
         {
-            return ConvertToUdonBehavioursInternal(components, false, false);
+            return ConvertToUdonBehavioursInternal(components, false, false, convertChildren);
         }
 
         /// <summary>
@@ -127,9 +168,9 @@ namespace UdonSharpEditor
         /// <param name="components"></param>
         /// <returns></returns>
         [PublicAPI]
-        public static UdonBehaviour[] ConvertToUdonBehavioursWithUndo(UdonSharpBehaviour[] components)
+        public static UdonBehaviour[] ConvertToUdonBehavioursWithUndo(UdonSharpBehaviour[] components, bool convertChildren = false)
         {
-            return ConvertToUdonBehavioursInternal(components, true, false);
+            return ConvertToUdonBehavioursInternal(components, true, false, convertChildren);
         }
 
         static internal Dictionary<MonoScript, UdonSharpProgramAsset> _programAssetLookup;
@@ -148,8 +189,8 @@ namespace UdonSharpEditor
                     if (programAsset && programAsset.sourceCsScript != null && !_programAssetLookup.ContainsKey(programAsset.sourceCsScript))
                     {
                         _programAssetLookup.Add(programAsset.sourceCsScript, programAsset);
-                        if (programAsset.sourceCsScript.GetClass() != null)
-                            _programAssetTypeLookup.Add(programAsset.sourceCsScript.GetClass(), programAsset);
+                        if (programAsset.GetClass() != null)
+                            _programAssetTypeLookup.Add(programAsset.GetClass(), programAsset);
                     }
                 }
             }
@@ -242,7 +283,16 @@ namespace UdonSharpEditor
                 {
                     CopyUdonToProxy(proxyBehaviour, proxySerializationPolicy);
 
-                    proxyBehaviour.enabled = false;
+                    SetIgnoreEvents(true);
+
+                    try
+                    {
+                        proxyBehaviour.enabled = false;
+                    }
+                    finally
+                    {
+                        SetIgnoreEvents(false);
+                    }
 
                     return proxyBehaviour;
                 }
@@ -253,7 +303,7 @@ namespace UdonSharpEditor
             }
 
             UdonSharpBehaviour[] behaviours = udonBehaviour.GetComponents<UdonSharpBehaviour>();
-
+            
             foreach (UdonSharpBehaviour udonSharpBehaviour in behaviours)
             {
                 IUdonBehaviour backingBehaviour = GetBackingUdonBehaviour(udonSharpBehaviour);
@@ -263,7 +313,16 @@ namespace UdonSharpEditor
 
                     CopyUdonToProxy(udonSharpBehaviour, proxySerializationPolicy);
 
-                    udonSharpBehaviour.enabled = false;
+                    SetIgnoreEvents(true);
+
+                    try
+                    {
+                        udonSharpBehaviour.enabled = false;
+                    }
+                    finally
+                    {
+                        SetIgnoreEvents(false);
+                    }
 
                     return udonSharpBehaviour;
                 }
@@ -308,7 +367,21 @@ namespace UdonSharpEditor
             if (!IsUdonSharpBehaviour(udonBehaviour))
                 return null;
 
-            return ((UdonSharpProgramAsset)udonBehaviour.programSource).sourceCsScript.GetClass();
+            return ((UdonSharpProgramAsset)udonBehaviour.programSource).GetClass();
+        }
+
+        static FieldInfo _skipEventsField = null;
+
+        /// <summary>
+        /// Used to disable sending events to UdonSharpBehaviours for OnEnable, OnDisable, and OnDestroy since they are not always in a valid state to be recognized as proxies during these events.
+        /// </summary>
+        /// <param name="ignore"></param>
+        internal static void SetIgnoreEvents(bool ignore)
+        {
+            if (_skipEventsField == null)
+                _skipEventsField = typeof(UdonSharpBehaviour).GetField("_skipEvents", BindingFlags.Static | BindingFlags.NonPublic);
+
+            _skipEventsField.SetValue(null, ignore);
         }
 
         /// <summary>
@@ -337,18 +410,27 @@ namespace UdonSharpEditor
                 return proxyBehaviour;
 
             // We've failed to find an existing proxy behaviour so we need to create one
-            System.Type scriptType = udonSharpProgram.sourceCsScript.GetClass();
+            System.Type scriptType = udonSharpProgram.GetClass();
 
             if (scriptType == null)
                 return null;
 
-            proxyBehaviour = (UdonSharpBehaviour)udonBehaviour.gameObject.AddComponent(scriptType);
-            proxyBehaviour.hideFlags = HideFlags.DontSaveInBuild |
+            SetIgnoreEvents(true);
+
+            try
+            {
+                proxyBehaviour = (UdonSharpBehaviour)udonBehaviour.gameObject.AddComponent(scriptType);
+                proxyBehaviour.hideFlags = HideFlags.DontSaveInBuild |
 #if !UDONSHARP_DEBUG
                                        HideFlags.HideInInspector |
 #endif
                                        HideFlags.DontSaveInEditor;
-            proxyBehaviour.enabled = false;
+                proxyBehaviour.enabled = false;
+            }
+            finally
+            {
+                SetIgnoreEvents(false);
+            }
 
             SetBackingUdonBehaviour(proxyBehaviour, udonBehaviour);
 
@@ -460,7 +542,17 @@ namespace UdonSharpEditor
             if (backingBehaviour)
             {
                 _proxyBehaviourLookup.Remove(backingBehaviour);
-                Object.DestroyImmediate(backingBehaviour);
+
+                SetIgnoreEvents(true);
+
+                try
+                {
+                    Object.DestroyImmediate(backingBehaviour);
+                }
+                finally
+                {
+                    SetIgnoreEvents(false);
+                }
             }
         }
 
@@ -515,11 +607,9 @@ namespace UdonSharpEditor
             }
         }
 
-        internal static UdonBehaviour[] ConvertToUdonBehavioursInternal(UdonSharpBehaviour[] components, bool shouldUndo, bool showPrompts)
+        internal static UdonBehaviour[] ConvertToUdonBehavioursInternal(UdonSharpBehaviour[] components, bool shouldUndo, bool showPrompts, bool convertChildren)
         {
             components = components.Distinct().ToArray();
-
-            bool convertChildren = true;
 
             if (showPrompts)
             {
@@ -629,6 +719,13 @@ namespace UdonSharpEditor
                     udonBehaviour = targetGameObject.AddComponent<UdonBehaviour>();
 
                 udonBehaviour.programSource = programAsset;
+#pragma warning disable CS0618 // Type or member is obsolete
+                udonBehaviour.SynchronizePosition = false;
+                udonBehaviour.AllowCollisionOwnershipTransfer = false;
+#pragma warning restore CS0618 // Type or member is obsolete
+
+                udonBehaviour.Reliable = programAsset.behaviourSyncMode == BehaviourSyncMode.Manual;
+                
 
                 //if (shouldUndo)
                 //    Undo.RegisterCompleteObjectUndo(targetObject, "Convert C# to U# behaviour");
@@ -638,7 +735,7 @@ namespace UdonSharpEditor
                 try
                 {
                     if (convertChildren)
-                        UdonSharpEditorUtility.CopyProxyToUdon(targetObject, shouldUndo ? ProxySerializationPolicy.AllWithCreateUndo : ProxySerializationPolicy.All);
+                        UdonSharpEditorUtility.CopyProxyToUdon(targetObject, shouldUndo ? ProxySerializationPolicy.AllWithCreateUndo : ProxySerializationPolicy.AllWithCreate);
                     else
                         UdonSharpEditorUtility.CopyProxyToUdon(targetObject, ProxySerializationPolicy.RootOnly);
                 }
@@ -653,33 +750,42 @@ namespace UdonSharpEditor
 
                 UdonSharpBehaviour newProxy;
 
-                if (shouldUndo)
-                    newProxy = (UdonSharpBehaviour)Undo.AddComponent(targetObject.gameObject, behaviourType);
-                else
-                    newProxy = (UdonSharpBehaviour)targetObject.gameObject.AddComponent(behaviourType);
+                SetIgnoreEvents(true);
 
-                UdonSharpEditorUtility.SetBackingUdonBehaviour(newProxy, udonBehaviour);
                 try
                 {
-                    UdonSharpEditorUtility.CopyUdonToProxy(newProxy);
-                }
-                catch (System.Exception e)
-                {
-                    Debug.LogError(e);
-                }
-                
-                if (shouldUndo)
-                    Undo.DestroyObjectImmediate(targetObject);
-                else
-                    Object.DestroyImmediate(targetObject);
+                    if (shouldUndo)
+                        newProxy = (UdonSharpBehaviour)Undo.AddComponent(targetObject.gameObject, behaviourType);
+                    else
+                        newProxy = (UdonSharpBehaviour)targetObject.gameObject.AddComponent(behaviourType);
 
-                newProxy.hideFlags = HideFlags.DontSaveInBuild |
+                    UdonSharpEditorUtility.SetBackingUdonBehaviour(newProxy, udonBehaviour);
+                    try
+                    {
+                        UdonSharpEditorUtility.CopyUdonToProxy(newProxy);
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.LogError(e);
+                    }
+
+                    if (shouldUndo)
+                        Undo.DestroyObjectImmediate(targetObject);
+                    else
+                        Object.DestroyImmediate(targetObject);
+
+                    newProxy.hideFlags = HideFlags.DontSaveInBuild |
 #if !UDONSHARP_DEBUG
                                      HideFlags.HideInInspector |
 #endif
                                      HideFlags.DontSaveInEditor;
 
-                newProxy.enabled = false;
+                    newProxy.enabled = false;
+                }
+                finally
+                {
+                    SetIgnoreEvents(false);
+                }
 
                 createdComponents.Add(udonBehaviour);
             }

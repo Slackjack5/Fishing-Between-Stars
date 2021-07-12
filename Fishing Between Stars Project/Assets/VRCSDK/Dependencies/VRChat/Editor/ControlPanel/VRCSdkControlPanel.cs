@@ -1,6 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using VRC.Core;
+using VRC.SDKBase.Editor;
 
 [ExecuteInEditMode]
 public partial class VRCSdkControlPanel : EditorWindow
@@ -10,10 +11,10 @@ public partial class VRCSdkControlPanel : EditorWindow
     [MenuItem("VRChat SDK/Show Control Panel", false, 600)]
     static void ShowControlPanel()
     {
-        if (!RemoteConfig.IsInitialized())
+        if (!ConfigManager.RemoteConfig.IsInitialized())
         {
             VRC.Core.API.SetOnlineMode(true, "vrchat");
-            RemoteConfig.Init(() => ShowControlPanel());
+            ConfigManager.RemoteConfig.Init(() => ShowControlPanel());
             return;
         }
 
@@ -183,21 +184,14 @@ public partial class VRCSdkControlPanel : EditorWindow
 
         EnvConfig.SetActiveSDKDefines();
 
-        #if VRC_SDK_VRCSDK2
-            VRCSettings.Get().activeWindowPanel = GUILayout.Toolbar(VRCSettings.Get().activeWindowPanel, new string[] { "Authentication", "Builder", "Content Manager", "Settings" }, GUILayout.Width(SdkWindowWidth));
-            int showPanel = VRCSettings.Get().activeWindowPanel;
-        #elif VRC_SDK_VRCSDK3
-            VRC.SDK3.Editor.VRCSettings.Get().activeWindowPanel = GUILayout.Toolbar(VRC.SDK3.Editor.VRCSettings.Get().activeWindowPanel, new string[] { "Authentication", "Builder", "Content Manager", "Settings" }, GUILayout.Width(SdkWindowWidth));
-            int showPanel = VRC.SDK3.Editor.VRCSettings.Get().activeWindowPanel;
-        #else
-            int showPanel = 0;
-        #endif
+            VRCSettings.ActiveWindowPanel = GUILayout.Toolbar(VRCSettings.ActiveWindowPanel, new string[] { "Authentication", "Builder", "Content Manager", "Settings" }, GUILayout.Width(SdkWindowWidth));
+            int showPanel = VRCSettings.ActiveWindowPanel;
 
         GUILayout.EndVertical();
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
 
-        if (APIUser.IsLoggedInWithCredentials == false && showPanel != 3)
+        if (APIUser.IsLoggedIn == false && showPanel != 3)
             showPanel = 0;
 
         switch (showPanel)
