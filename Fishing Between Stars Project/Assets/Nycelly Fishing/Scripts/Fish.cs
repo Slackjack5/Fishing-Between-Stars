@@ -34,7 +34,7 @@ public class Fish : UdonSharpBehaviour
 
     private void Update()
     {
-        
+        /*
         if(onHook)
         {
             gameObject.transform.position = myHook.transform.position;
@@ -46,7 +46,7 @@ public class Fish : UdonSharpBehaviour
             gameObject.transform.parent = null;
             //gameObject.transform.position = fishSpawn.transform.position;
         }
-        
+        */
         if(toSpawn)
         {
             SendtoSpawn();
@@ -77,10 +77,13 @@ public class Fish : UdonSharpBehaviour
         Networking.SetOwner(Networking.LocalPlayer, myHook);
         myHook.GetComponentInParent<FishingCube>().hardReset = true;
         onHook = false;
-
+        myFishRenderer.material.SetColor("_Color", Color.white);
+        gameObject.SetActive(false);
     }
     public virtual void OnDrop() 
     {
+        myFishRenderer.material.SetColor("_Color", Color.white);
+        gameObject.SetActive(false);
         if (fishCharge >= 100)
         {
             Networking.SetOwner(Networking.LocalPlayer, gameObject);

@@ -364,7 +364,8 @@ public class ResistanceText : UdonSharpBehaviour
                             {
                                 //Networking.SetOwner(player, gameObject);
                                 Networking.SetOwner(player, gameObject);
-                                exhaustionScore += 1;
+                                //Variable that gives exhaustion when within range
+                                exhaustionScore += 15;
                                 exhaustionDelay = 0;
                             }
                         }
