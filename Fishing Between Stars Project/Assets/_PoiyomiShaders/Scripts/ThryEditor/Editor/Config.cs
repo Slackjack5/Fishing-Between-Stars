@@ -1,8 +1,6 @@
 ﻿// Material/Shader Inspector for Unity 2017/2018
 // Copyright (C) 2019 Thryrallo
 
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -13,7 +11,7 @@ namespace Thry
     {
         // consts
         private const string PATH_CONFIG_FILE = "Thry/Config.json";
-        private const string VERSION = "2.3.5";
+        private const string VERSION = "2.51.7";
 
         // static
         private static Config config;
@@ -26,13 +24,13 @@ namespace Thry
             }
             else
             {
-                string prevVersion = Get().verion;
+                string prevVersion = Singleton.verion;
                 string installedVersion = VERSION;
-                int versionComparision = Helper.compareVersions(installedVersion, prevVersion);
+                int versionComparision = Helper.CompareVersions(installedVersion, prevVersion);
                 if (versionComparision != 0)
                 {
                     config.verion = VERSION;
-                    config.save();
+                    config.Save();
                 }
                 if (versionComparision == 1)
                 {
@@ -46,44 +44,151 @@ namespace Thry
             }
         }
 
-        //load the config from file
-        private static Config LoadConfig()
+        public static Config Singleton
         {
-            if (File.Exists(PATH_CONFIG_FILE))
-                return JsonUtility.FromJson<Config>(FileHelper.ReadFileIntoString(PATH_CONFIG_FILE));
-            new Config().save();
-            return new Config();
-        }
-
-        public static Config Get()
-        {
-            if (config == null) config = LoadConfig();
-            return config;
+            get
+            {
+                if (config == null)
+                {
+                    if (File.Exists(PATH_CONFIG_FILE))
+                        config = JsonUtility.FromJson<Config>(FileHelper.ReadFileIntoString(PATH_CONFIG_FILE));
+                    else
+                        config = new Config().Save();
+                }
+                return config;
+            }
         }
 
         //actual config class
         public TextureDisplayType default_texture_type = TextureDisplayType.small;
         public bool showRenderQueue = true;
-        public bool renameAnimatedProps = true;
+        public bool showManualReloadButton = false;
+        public bool allowCustomLockingRenaming = false;
+        public bool autoMarkPropertiesAnimated = true;
+        public TextureImporterFormat texturePackerCompressionWithAlphaOverwrite = TextureImporterFormat.Automatic;
+        public TextureImporterFormat texturePackerCompressionNoAlphaOverwrite = TextureImporterFormat.Automatic;
+        public TextureImporterFormat gradientEditorCompressionOverwrite = TextureImporterFormat.Automatic;
 
         public string locale = "English";
 
         public string gradient_name = "gradient_<hash>.png";
+        
+        public bool autoSetAnchorOverride = true;
+        public HumanBodyBones humanBoneAnchor = HumanBodyBones.Spine;
+        public string anchorOverrideObjectName = "AutoAnchorObject";
+        public bool autoSetAnchorAskedOnce = false;
+        public bool enableDeveloperMode = false;
+        public bool disableUnlockedShaderStrippingOnBuild = false;
+        public bool forceAsyncCompilationPreview = true;
+        public bool fixKeywordsWhenLocking = true;
+        public bool saveAfterLockUnlock = true;
 
         public string verion = VERSION;
 
-        public void save()
+        public Config Save()
         {
-            FileHelper.WriteStringToFile(JsonUtility.ToJson(this), PATH_CONFIG_FILE);
+            FileHelper.WriteStringToFile(JsonUtility.ToJson(this, true), PATH_CONFIG_FILE);
+            return this;
         }
 
-        private void OnUpgrade(string oldVersion)
+        private void OnUpgrade(string oldVersionString)
         {
-            if (Helper.compareVersions(oldVersion, "1.4.0") < 1)
+            Version newVersion = new Version(VERSION);
+            Version oldVersion = new Version(oldVersionString);
+
+            //Upgrade locking valuesd from Animated property to tags
+            if (newVersion >= "2.11.0" && oldVersion > "2.0" && oldVersion < "2.11.0")
             {
-                //renderQueueShaders = false;
-                save();
+                ShaderOptimizer.UpgradeAnimatedPropertiesToTagsOnAllMaterials();
             }
+        }
+    }
+
+    public class Version
+    {
+        private string value;
+
+        public Version(string s)
+        {
+            if (string.IsNullOrEmpty(s)) s = "0";
+            this.value = s;
+        }
+
+        public static bool operator ==(Version x, Version y)
+        {
+            return Helper.CompareVersions(x.value, y.value) == 0;
+        }
+
+        public static bool operator !=(Version x, Version y)
+        {
+            return Helper.CompareVersions(x.value, y.value) != 0;
+        }
+
+        public static bool operator >(Version x, Version y)
+        {
+            return Helper.CompareVersions(x.value, y.value) == -1;
+        }
+
+        public static bool operator <(Version x, Version y)
+        {
+            return Helper.CompareVersions(x.value, y.value) == 1;
+        }
+
+        public static bool operator >=(Version x, Version y)
+        {
+            return Helper.CompareVersions(x.value, y.value) < 1;
+        }
+
+        public static bool operator <=(Version x, Version y)
+        {
+            return Helper.CompareVersions(x.value, y.value) > -1;
+        }
+
+        public static bool operator ==(Version x, string y)
+        {
+            return Helper.CompareVersions(x.value, y) == 0;
+        }
+
+        public static bool operator !=(Version x, string y)
+        {
+            return Helper.CompareVersions(x.value, y) != 0;
+        }
+
+        public static bool operator >(Version x, string y)
+        {
+            return Helper.CompareVersions(x.value, y) == -1;
+        }
+
+        public static bool operator <(Version x, string y)
+        {
+            return Helper.CompareVersions(x.value, y) == 1;
+        }
+
+        public static bool operator >=(Version x, string y)
+        {
+            return Helper.CompareVersions(x.value, y) < 1;
+        }
+
+        public static bool operator <=(Version x, string y)
+        {
+            return Helper.CompareVersions(x.value, y) > -1;
+        }
+
+        public override bool Equals(object o)
+        {
+            if (o is Version) return this == (o as Version);
+            if (o is string) return this == (o as string);
+            return false;
+        }
+
+        public override string ToString()
+        {
+            return value;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

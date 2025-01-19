@@ -60,6 +60,54 @@ namespace Thry
             }
         }
 
+        private static Dictionary<string, string> fileCache = new Dictionary<string, string>();
+        public static string GetCachedString(string url)
+        {
+            if (fileCache.ContainsKey(url) == false) fileCache[url] = DownloadString(url);
+            return fileCache[url];
+        }
+
+        public static string Translate(string text, string targetLanguage)
+        {
+            string sourceLang = "auto";
+            string url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=" 
+                + sourceLang + "&tl=" + targetLanguage + "&dt=t&q=" + UnityWebRequest.EscapeURL(text);
+            string resp = DownloadAsString(url);
+
+            // parse response. it is a json array with the first elements being the translation. but not good json that my existing parser can parse
+            List<string> parts = new List<string>();
+            int indent = 0;
+            bool inString = false;
+            for(int i = 0; i< resp.Length; i++)
+            {
+                if (resp[i] == '[') indent++;
+                if (resp[i] == ']') indent--;
+                if (resp[i] == '"' && resp[i - 1] != '\\')
+                {
+                    inString = !inString;
+                    if(inString && indent == 3)
+                        parts.Add("");
+                    if(!inString && indent == 3 && resp[i+1] != ',')
+                        parts.RemoveAt(parts.Count - 1);
+                }else 
+                if (inString && indent == 3)
+                {
+                    parts[parts.Count - 1] += resp[i];
+                }
+            }
+            string result = "";
+            for(int i = 0; i< parts.Count; i++)
+            {
+                if (i % 2 == 0)
+                    result += parts[i];
+            }
+
+            // double unescape to fix some weird characters
+            result = System.Text.RegularExpressions.Regex.Unescape(result);
+            result = UnityWebRequest.UnEscapeURL(result, System.Text.Encoding.UTF8);
+            return result;
+        }
+
         //-------------------Downloaders-----------------------------
 
         [InitializeOnLoad]
@@ -67,7 +115,7 @@ namespace Thry
         {
             private struct CallData
             {
-                public Action<string> action;
+                public object action;
                 public object[] arguments;
             }
             static List<CallData> queue;
@@ -78,7 +126,7 @@ namespace Thry
                 EditorApplication.update += Update;
             }
 
-            public static void Call(Action<string> action, params object[] args)
+            public static void Call(object action, params object[] args)
             {
                 if (action == null)
                     return;
@@ -98,9 +146,12 @@ namespace Thry
                 {
                     try
                     {
-                        queue[0].action.DynamicInvoke(queue[0].arguments);
+                        if(queue[0].action is Action<string>) ((Action<string>)queue[0].action).DynamicInvoke(queue[0].arguments);
+                        if(queue[0].action is Action<byte[]>) ((Action<byte[]>)queue[0].action).DynamicInvoke(queue[0].arguments);
                     }
-                    catch { }
+                    catch(Exception e) {
+                        Debug.LogWarning("[Thry] Error during WebRequest: " + e.ToString());
+                    }
                     queue.RemoveAt(0);
                 }
             }
@@ -119,7 +170,7 @@ namespace Thry
                     MainThreader.Call(callback, null);
                 else
                 {
-                    FileHelper.writeBytesToFile(a.Result, path);
+                    FileHelper.WriteBytesToFile(a.Result, path);
                     MainThreader.Call(callback, path);
                 }
             });
@@ -144,6 +195,20 @@ namespace Thry
             });
         }
 
+        public static void DownloadBytesASync(string url, Action<byte[]> callback)
+        {
+            DownloadAsBytesASync(url, delegate (object o, DownloadDataCompletedEventArgs e)
+            {
+                if (e.Cancelled || e.Error != null)
+                {
+                    Debug.LogWarning(e.Error);
+                    MainThreader.Call(callback, null);
+                }
+                else
+                    MainThreader.Call(callback, e.Result);
+            });
+        }
+
         private static void SetCertificate()
         {
             ServicePointManager.ServerCertificateValidationCallback =
@@ -156,8 +221,14 @@ namespace Thry
         {
             SetCertificate();
             string contents = null;
-            using (var wc = new System.Net.WebClient())
-                contents = wc.DownloadString(url);
+            try
+            {
+                using (var wc = new System.Net.WebClient())
+                    contents = wc.DownloadString(url);
+            }catch(WebException e)
+            {
+                Debug.LogError(e);
+            }
             return contents;
         }
 
@@ -207,152 +278,6 @@ namespace Thry
                 url = FixUrl(url);
                 wc.DownloadDataAsync(new Uri(url));
             }
-        }
-    }
-
-    public class WebHelper2
-    {
-
-        public static void DownloadStringASync(string url, Action<string> callback)
-        {
-            Downloader downloader = new Downloader();
-            downloader.url = url;
-            downloader.callback = callback;
-            Coroutines.AddRoutine(downloader.DownloadStringCorroutine());
-        }
-
-        public static void DownloadFileASync(string url, string path, Action<string> callback)
-        {
-            Downloader downloader = new Downloader();
-            downloader.url = url;
-            downloader.path = path;
-            downloader.callback = callback;
-            Coroutines.AddRoutine(downloader.DownloadFileCorroutine());
-        }
-
-        public class Downloader{
-
-            public Action<string> callback;
-            public string path;
-            public string url;
-
-            public IEnumerator<float> DownloadStringCorroutine()
-            {
-                UnityWebRequest request = new UnityWebRequest(url);
-                request.method = UnityWebRequest.kHttpVerbGET;
-                DownloadHandlerBuffer response = new DownloadHandlerBuffer();
-                request.downloadHandler = response;
-                request.SendWebRequest();
-                bool fetching = true;
-                while (fetching)
-                {
-                    yield return 0.3f;
-                    if (request.isHttpError || request.isNetworkError)
-                    {
-                        fetching = false;
-                        Debug.Log(request.error);
-                    }
-                    if (request.isDone)
-                    {
-                        fetching = false;
-                        callback(response.text);
-                    }
-                }
-            }
-
-            public IEnumerator<float> DownloadFileCorroutine()
-            {
-                UnityWebRequest request = new UnityWebRequest(url);
-                request.method = UnityWebRequest.kHttpVerbGET;
-                DownloadHandlerBuffer response = new DownloadHandlerBuffer();
-                request.downloadHandler = response;
-                request.SendWebRequest();
-                bool fetching = true;
-                while (fetching)
-                {
-                    yield return 0.3f;
-                    if (request.isHttpError || request.isNetworkError)
-                    {
-                        fetching = false;
-                        Debug.Log(request.error);
-                    }
-                    if (request.isDone)
-                    {
-                        fetching = false;
-                        FileHelper.writeBytesToFile(response.data, path);
-                        if(callback!=null)
-                            callback(null);
-                    }
-                }
-            }
-        }
-
-        
-
-    }
-
-    public class Coroutines
-    {
-        private static List<TimedCoroutine> active_routines = new List<TimedCoroutine>();
-        private static DateTime previousTime;
-
-        public static void AddRoutine(IEnumerator<float> coroutine)
-        {
-            active_routines.Add(new TimedCoroutine(coroutine));
-            if(active_routines.Count==1)
-                EditorApplication.update += Update;
-        }
-
-        private static void Update()
-        {
-            float deltaTime = (float)(DateTime.Now.Subtract(previousTime).TotalMilliseconds / 1000.0f);
-            previousTime = DateTime.Now;
-
-            if (active_routines.Count > 0)
-            {
-                for(int i=0;i<active_routines.Count;i++)
-                {
-                    if(active_routines[i].IsDoneWaiting(deltaTime)){
-                        if (active_routines[i].Continue())
-                            active_routines[i].ResetTimeLeft();
-                        else
-                            active_routines.Remove(active_routines[i]);
-                    }
-                }
-            }
-            else
-            {
-                EditorApplication.update -= Update;
-            }
-        }
-
-        private class TimedCoroutine
-        {
-            private IEnumerator<float> coroutine;
-            private float wait_time_left;
-
-            public TimedCoroutine(IEnumerator<float> coroutine)
-            {
-                this.coroutine = coroutine;
-                wait_time_left = this.coroutine.Current;
-            }
-
-            public bool Continue()
-            {
-                return coroutine.MoveNext();
-            }
-
-            public void ResetTimeLeft()
-            {
-                wait_time_left = coroutine.Current;
-            }
-
-            public bool IsDoneWaiting(float deltaTime)
-            {
-                wait_time_left -= deltaTime;
-                return wait_time_left < 0;
-            }
-
         }
     }
 }

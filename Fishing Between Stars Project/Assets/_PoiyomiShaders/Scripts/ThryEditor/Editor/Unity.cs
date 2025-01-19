@@ -2,9 +2,9 @@
 // Copyright (C) 2019 Thryrallo
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
@@ -13,34 +13,17 @@ namespace Thry
 {
     public class UnityHelper
     {
-        /// <summary>
-        /// return null if not found
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <returns></returns>
-        public static string FindPathOfAssetWithExtension(string filename)
+        [MenuItem("Assets/Thry/Copy GUID")]
+        public static void CopyGUID()
         {
-            string[] guids = AssetDatabase.FindAssets(Path.GetFileNameWithoutExtension(filename));
-            foreach (string s in guids)
-            {
-                string path = AssetDatabase.GUIDToAssetPath(s);
-                if (path.EndsWith(filename))
-                    return path;
-            }
-            return null;
+            string guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(Selection.activeObject));
+            EditorGUIUtility.systemCopyBuffer = guid;
         }
 
-        public static List<string> FindAssetOfFilesWithExtension(string filename)
+        public static List<string> FindAssetsWithFilename(string filename)
         {
-            List<string> ret = new List<string>();
             string[] guids = AssetDatabase.FindAssets(Path.GetFileNameWithoutExtension(filename));
-            foreach (string s in guids)
-            {
-                string path = AssetDatabase.GUIDToAssetPath(s);
-                if (path.EndsWith(filename))
-                    ret.Add(path);
-            }
-            return ret;
+            return guids.Select(g => AssetDatabase.GUIDToAssetPath(g)).Where(p => p.EndsWith(filename)).ToList();
         }
 
         public static void SetDefineSymbol(string symbol, bool active)
@@ -80,36 +63,10 @@ namespace Thry
             UnityHelper.SetDefineSymbol(DEFINE_SYMBOLS.IMAGING_EXISTS, false);
         }
 
-        public static void RepaintInspector(System.Type t)
+        public static void RepaintEditorWindow<T>() where T : EditorWindow
         {
-            Editor[] ed = (Editor[])Resources.FindObjectsOfTypeAll<Editor>();
-            for (int i = 0; i < ed.Length; i++)
-            {
-                if (ed[i].GetType() == t)
-                {
-                    ed[i].Repaint();
-                    return;
-                }
-            }
-        }
-
-        public static void RepaintEditorWindow(Type t)
-        {
-            EditorWindow window = FindEditorWindow(t);
+            EditorWindow window = (EditorWindow)Resources.FindObjectsOfTypeAll<T>().FirstOrDefault();
             if (window != null) window.Repaint();
-        }
-
-        public static EditorWindow FindEditorWindow(System.Type t)
-        {
-            EditorWindow[] ed = (EditorWindow[])Resources.FindObjectsOfTypeAll<EditorWindow>();
-            for (int i = 0; i < ed.Length; i++)
-            {
-                if (ed[i].GetType() == t)
-                {
-                    return ed[i];
-                }
-            }
-            return null;
         }
 
         public static string GetGUID(UnityEngine.Object o)
@@ -117,23 +74,87 @@ namespace Thry
             return AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(o));
         }
 
-        public static int CalculateLengthOfText(string message, Font font= null)
+        public static WindowType FindOpenEditorWindow<WindowType>() where WindowType : EditorWindow
         {
-            if (font == null)
-                font = GUI.skin.font;
-            float totalLength = 0;
-
-            CharacterInfo characterInfo = new CharacterInfo();
-
-            char[] arr = message.ToCharArray();
-
-            foreach (char c in arr)
+            WindowType[] windows = Resources.FindObjectsOfTypeAll<WindowType>();
+            if (windows != null && windows.Length > 0)
             {
-                font.GetCharacterInfo(c, out characterInfo, font.fontSize);
-                totalLength += characterInfo.advance;
+                return windows[0];
             }
+            return null;
+        }
 
-            return (int)totalLength;
+        public static EditorWindow FindOpenEditorWindow(Type type)
+        {
+            UnityEngine.Object[] windows = Resources.FindObjectsOfTypeAll(type);
+            if (windows != null && windows.Length > 0)
+            {
+                return windows[0] as EditorWindow;
+            }
+            return null;
+        }
+
+        public static string GetCurrentAssetExplorerFolder()
+        {
+            if (Selection.activeObject) return "Assets";
+            string path = AssetDatabase.GetAssetPath(Selection.activeObject);
+            if (Directory.Exists(path)) return path;
+            else return Path.GetDirectoryName(path);
+        }
+        
+        public static void AddShaderPropertyToSourceCode(string path, string property, string value)
+        {
+            string shaderCode = FileHelper.ReadFileIntoString(path);
+            string pattern = @"Properties.*\n?\s*{";
+            RegexOptions options = RegexOptions.Multiline;
+            shaderCode = Regex.Replace(shaderCode, pattern, "Properties \r\n  {" + " \r\n      " + property + "=" + value, options);
+
+            FileHelper.WriteStringToFile(shaderCode, path);
+        }
+    }
+
+    public static class UnityExtensions
+    {
+        // MaterialProperty extension for setting floats / ints
+        public static void SetNumber(this MaterialProperty prop, float value)
+        {
+#if UNITY_2022_1_OR_NEWER
+            if(prop.type == MaterialProperty.PropType.Int)
+                prop.intValue = (int)value;
+            else
+#endif
+                prop.floatValue = value;
+        }
+
+        public static float GetNumber(this MaterialProperty prop)
+        {
+#if UNITY_2022_1_OR_NEWER
+            if(prop.type == MaterialProperty.PropType.Int)
+                return prop.intValue;
+            else
+#endif  
+                return prop.floatValue;
+        }
+
+        public static void SetNumber(this Material mat, string name, float value)
+        {
+#if UNITY_2022_1_OR_NEWER
+            MaterialProperty prop = MaterialEditor.GetMaterialProperty(new UnityEngine.Object[] { mat }, name);
+            if(prop.type == MaterialProperty.PropType.Int)
+                mat.SetInteger(name, (int)value);
+            else
+#endif
+                mat.SetFloat(name, value);
+        }
+        
+        public static float GetNumber(this Material mat, MaterialProperty prop)
+        {
+#if UNITY_2022_1_OR_NEWER
+            if(prop.type == MaterialProperty.PropType.Int)
+                return mat.GetInt(prop.name);
+            else
+#endif
+                return mat.GetFloat(prop.name);
         }
     }
 
@@ -144,11 +165,18 @@ namespace Thry
         public const string RSP_DRAWING_DLL_REGEX = @"-r:\s*System\.Drawing\.dll";
         public const string RSP_DRAWING_DLL_DEFINE_REGEX = @"-define:\s*SYSTEM_DRAWING";
 
+
+#if UNITY_2019_1_OR_NEWER
+        public const string RSP_FILENAME = "csc";
+#else
+        public const string RSP_FILENAME = "mcs";
+#endif
+
         public static void OnAssetDeleteCheckDrawingDLL(string[] deleted_assets)
         {
             foreach (string path in deleted_assets)
             {
-                if (path == PATH.RSP_NEEDED_PATH + GetRSPFilename() + ".rsp" || path.EndsWith("/System.Drawing.dll"))
+                if (path == PATH.RSP_NEEDED_PATH + RSP_FILENAME + ".rsp" || path.EndsWith("/System.Drawing.dll"))
                     UnityHelper.SetDefineSymbol(DEFINE_SYMBOLS.IMAGING_EXISTS, false, true);
             }
         }
@@ -160,17 +188,9 @@ namespace Thry
                 PlayerSettings.SetApiCompatibilityLevel(BuildTargetGroup.Standalone, ApiCompatibilityLevel.NET_2_0);
         }
 
-        private static string GetRSPFilename()
-        {
-            if (Helper.compareVersions("2018", Application.unityVersion) == 1)
-                return "csc";
-            return "mcs";
-        }
-
         public static void CheckDrawingDll()
         {
-            string filename = GetRSPFilename();
-            string path = PATH.RSP_NEEDED_PATH + filename + ".rsp";
+            string path = PATH.RSP_NEEDED_PATH + RSP_FILENAME + ".rsp";
             bool refresh = true;
             bool containsDLL = DoesRSPContainDrawingDLL(path);
             bool containsDefine = DoesRSPContainDrawingDLLDefine(path);
@@ -229,7 +249,6 @@ namespace Thry
             ShaderEditor.GetShaderEditorDirectoryPath();
 
             Config.OnCompile();
-            ModuleHandler.OnCompile();
             TrashHandler.EmptyThryTrash();
 
             UnityFixer.CheckAPICompatibility(); //check that Net_2.0 is ApiLevel
@@ -241,34 +260,18 @@ namespace Thry
     {
         static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
         {
-            if (importedAssets.Length > 0)
-                AssetsImported(importedAssets);
             if (deletedAssets.Length > 0)
                 AssetsDeleted(deletedAssets);
-            if (movedAssets.Length > 0)
-                AssetsMoved(movedAssets, movedFromAssetPaths);
-        }
-
-        private static void AssetsImported(string[] assets)
-        {
-            ShaderHelper.AssetsImported(assets);
-        }
-
-        private static void AssetsMoved(string[] movedAssets, string[] movedFromAssetPaths)
-        {
-            ShaderHelper.AssetsMoved(movedFromAssetPaths, movedAssets);
         }
 
         private static void AssetsDeleted(string[] assets)
         {
-            ShaderHelper.AssetsDeleted(assets);
             UnityFixer.OnAssetDeleteCheckDrawingDLL(assets);
             if (CheckForEditorRemove(assets))
             {
-                Debug.Log("ShaderEditor is being deleted.");
-                Config.Get().verion = "0";
-                Config.Get().save();
-                ModuleHandler.OnEditorRemove();
+                Debug.Log("[Thry] ShaderEditor is being deleted.");
+                Config.Singleton.verion = "0";
+                Config.Singleton.Save();
             }
         }
 

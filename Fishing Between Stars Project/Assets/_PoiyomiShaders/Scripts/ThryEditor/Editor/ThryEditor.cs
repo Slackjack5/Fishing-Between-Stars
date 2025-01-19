@@ -1,4 +1,4 @@
-// Material/Shader Inspector for Unity 2017/2018
+﻿﻿// Material/Shader Inspector for Unity 2017/2018
 // Copyright (C) 2019 Thryrallo
 
 using System.Collections.Generic;
@@ -6,10 +6,9 @@ using System.IO;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
-using Thry;
 using System;
-using System.Reflection;
 using System.Linq;
+using Thry.ThryEditor;
 
 namespace Thry
 {
@@ -19,46 +18,109 @@ namespace Thry
         public const float MATERIAL_NOT_RESET = 69.12f;
 
         public const string PROPERTY_NAME_MASTER_LABEL = "shader_master_label";
-        public const string PROPERTY_NAME_PRESETS_FILE = "shader_presets";
         public const string PROPERTY_NAME_LABEL_FILE = "shader_properties_label_file";
-        public const string PROPERTY_NAME_LOCALE = "shader_properties_locale";
+        public const string PROPERTY_NAME_LOCALE = "shader_locale";
         public const string PROPERTY_NAME_ON_SWAP_TO_ACTIONS = "shader_on_swap_to";
+        public const string PROPERTY_NAME_SHADER_VERSION = "shader_version";
+        public const string PROPERTY_NAME_EDITOR_DETECT = "shader_is_using_thry_editor";
+
+        //Static
+        private static string s_edtiorDirectoryPath;
+
+        public static InputEvent Input = new InputEvent();
+        public static ShaderEditor Active;
 
         // Stores the different shader properties
-        private ShaderHeader shaderparts;
+        public ShaderGroup MainGroup;
+        private RenderQueueProperty _renderQueueProperty;
+        private VRCFallbackProperty _vRCFallbackProperty;
 
         // UI Instance Variables
-        private int customRenderQueueFieldInput = -1;
 
-        private bool show_search_bar;
-        private string header_search_term = "";
-        private bool show_eyeIcon_tutorial = false;
+        public bool DoShowSearchBar;
+        private string _enteredSearchTerm = "";
+        private string _appliedSearchTerm = "";
 
         // shader specified values
-        private string masterLabelText = null;
-        private List<ButtonData> footer;
+        private ShaderHeaderProperty _shaderHeader = null;
+        private List<FooterButton> _footers;
 
         // sates
-        private static bool reloadNextDraw = false;
-        private bool firstOnGUICall = true;
-        private bool wasUsed = false;
+        private bool _isFirstOnGUICall = true;
+        private bool _wasUsed = false;
+        private bool _doReloadNextDraw = false;
+        private bool _didSwapToShader = false;
 
-        public static InputEvent input = new InputEvent();
-        // Contains Editor Data
-        public EditorData editorData;
-        public static EditorData currentlyDrawing;
-        public static ShaderEditor active;
+        //EditorData
+        public MaterialEditor Editor;
+        public MaterialProperty[] Properties;
+        public Material[] Materials;
+        public Shader Shader;
+        public ShaderPart CurrentProperty;
+        public Dictionary<string, ShaderProperty> PropertyDictionary;
+        public List<ShaderPart> ShaderParts;
+        public List<ShaderProperty> TextureArrayProperties;
+        public bool IsFirstCall;
+        public bool DoUseShaderOptimizer;
+        public bool IsLockedMaterial;
+        public bool IsInAnimationMode;
+        public Renderer ActiveRenderer;
+        public string RenamedPropertySuffix;
+        public bool HasCustomRenameSuffix;
+        public Localization Locale;
+        public ShaderTranslator SuggestedTranslationDefinition;
+        private string _duplicatePropertyNamesString = null;
 
-        private DefineableAction[] on_swap_to_actions = null;
-        private bool swapped_to_shader = false;
+        //Shader Versioning
+        private Version _shaderVersionLocal;
+        private Version _shaderVersionRemote;
+        private bool _hasShaderUpdateUrl = false;
+        private bool _isShaderUpToDate = true;
+        private string _shaderUpdateUrl = null;
+
+        //other
+        ShaderProperty ShaderOptimizerProperty { get; set; }
+
+        private DefineableAction[] _onSwapToActions = null;
+
+        public bool IsDrawing { get; private set; } = false;
+        public bool IsPresetEditor { get; private set; } = false;
+        public bool IsSectionedPresetEditor
+        {
+            get
+            {
+                return IsPresetEditor && Presets.IsMaterialSectionedPreset(Materials[0]);
+            }
+        }
+
+        public bool HasMixedCustomPropertySuffix
+        {
+            get
+            {
+                if (Materials.Length == 1) return false;
+                string suffix = ShaderOptimizer.GetRenamedPropertySuffix(Materials[0]);
+                for (int i = 1; i < Materials.Length; i++)
+                {
+                    if (suffix != ShaderOptimizer.GetRenamedPropertySuffix(Materials[i])) return true;
+                }
+                return false;
+            }
+        }
+
+        public bool DidSwapToNewShader
+        {
+            get
+            {
+                return _didSwapToShader;
+            }
+        }
 
         //-------------Init functions--------------------
 
         private Dictionary<string, string> LoadDisplayNamesFromFile()
         {
             //load display names from file if it exists
-            MaterialProperty label_file_property = null;
-            foreach (MaterialProperty m in editorData.properties) if (m.name == PROPERTY_NAME_LABEL_FILE) label_file_property = m;
+            MaterialProperty label_file_property = GetMaterialProperty(PROPERTY_NAME_LABEL_FILE);
             Dictionary<string, string> labels = new Dictionary<string, string>();
             if (label_file_property != null)
             {
@@ -79,678 +141,819 @@ namespace Thry
             return labels;
         }
 
-        private PropertyOptions ExtractExtraOptionsFromDisplayName(ref string displayName)
+        public static string SplitOptionsFromDisplayName(ref string displayName)
         {
             if (displayName.Contains(EXTRA_OPTIONS_PREFIX))
             {
                 string[] parts = displayName.Split(new string[] { EXTRA_OPTIONS_PREFIX }, 2, System.StringSplitOptions.None);
                 displayName = parts[0];
-                PropertyOptions options = Parser.ParseToObject<PropertyOptions>(parts[1]);
-                if (options != null)
-                {
-                    if (options.condition_showS != null)
-                    {
-                        options.condition_show = DefineableCondition.Parse(options.condition_showS);
-                        //Debug.Log(options.condition_show.ToString());
-                    }
-                    if(options.on_value != null)
-                    {
-                        options.on_value_actions = PropertyValueAction.ParseToArray(options.on_value);
-                        //Debug.Log(Parser.Serialize(options.on_value_actions));
-                    }
-                    return options;
-                }
+                return parts[1];
             }
-            return new PropertyOptions();
+            return null;
         }
 
         private enum ThryPropertyType
         {
-            none, property, master_label, footer, header, header_end, header_start, group_start, group_end, instancing, dsgi, lightmap_flags, locale, on_swap_to, space, shader_optimizer
+            none, property, master_label, footer, header, header_end, header_start, group_start, group_end, section_start, section_end, instancing, dsgi, lightmap_flags, locale, on_swap_to, space, shader_version
         }
 
-        private ThryPropertyType GetPropertyType(MaterialProperty p, PropertyOptions options)
+        private ThryPropertyType GetPropertyType(MaterialProperty p)
         {
             string name = p.name;
             MaterialProperty.PropFlags flags = p.flags;
-            if (name.StartsWith("footer_") && flags == MaterialProperty.PropFlags.HideInInspector)
-                return ThryPropertyType.footer;
-            if (name.StartsWith("m_end") && flags == MaterialProperty.PropFlags.HideInInspector)
-                return ThryPropertyType.header_end;
-            if (name.StartsWith("m_start") && flags == MaterialProperty.PropFlags.HideInInspector)
-                return ThryPropertyType.header_start;
-            if (name.StartsWith("m_") && flags == MaterialProperty.PropFlags.HideInInspector)
-                return ThryPropertyType.header;
-            if (name.StartsWith("g_start") && flags == MaterialProperty.PropFlags.HideInInspector)
-                return ThryPropertyType.group_start;
-            if (name.StartsWith("g_end") && flags == MaterialProperty.PropFlags.HideInInspector)
-                return ThryPropertyType.group_end;
-            if (Regex.Match(name.ToLower(), @"^space\d*$").Success)
-                return ThryPropertyType.space;
-            if (name == PROPERTY_NAME_MASTER_LABEL)
-                return ThryPropertyType.master_label;
-            if (name == PROPERTY_NAME_ON_SWAP_TO_ACTIONS)
-                return ThryPropertyType.on_swap_to;
-            if (name.Replace(" ", "") == "Instancing" && flags == MaterialProperty.PropFlags.HideInInspector)
-                return ThryPropertyType.instancing;
-            if (name.Replace(" ", "") == "DSGI" && flags == MaterialProperty.PropFlags.HideInInspector)
-                return ThryPropertyType.dsgi;
-            if (name.Replace(" ", "") == "LightmapFlags" && flags == MaterialProperty.PropFlags.HideInInspector)
-                return ThryPropertyType.lightmap_flags;
-            if (name.Replace(" ", "") == PROPERTY_NAME_LOCALE)
-                return ThryPropertyType.locale;
-            if (name == "_ShaderOptimizerEnabled")
-                return ThryPropertyType.shader_optimizer;
-            if (flags != MaterialProperty.PropFlags.HideInInspector && !options.hide_in_inspector)
+
+            if (flags == MaterialProperty.PropFlags.HideInInspector)
+            {
+                if (name == PROPERTY_NAME_MASTER_LABEL)
+                    return ThryPropertyType.master_label;
+                if (name == PROPERTY_NAME_ON_SWAP_TO_ACTIONS)
+                    return ThryPropertyType.on_swap_to;
+                if (name == PROPERTY_NAME_SHADER_VERSION)
+                    return ThryPropertyType.shader_version;
+
+                if (name.StartsWith("m_start", StringComparison.Ordinal))
+                    return ThryPropertyType.header_start;
+                if (name.StartsWith("m_end", StringComparison.Ordinal))
+                    return ThryPropertyType.header_end;
+                if (name.StartsWith("m_", StringComparison.Ordinal))
+                    return ThryPropertyType.header;
+                if (name.StartsWith("g_start", StringComparison.Ordinal))
+                    return ThryPropertyType.group_start;
+                if (name.StartsWith("g_end", StringComparison.Ordinal))
+                    return ThryPropertyType.group_end;
+                if (name.StartsWith("s_start", StringComparison.Ordinal))
+                    return ThryPropertyType.section_start;
+                if (name.StartsWith("s_end", StringComparison.Ordinal))
+                    return ThryPropertyType.section_end;
+                if (name.StartsWith("footer_", StringComparison.Ordinal))
+                    return ThryPropertyType.footer;
+                if (name == "Instancing")
+                    return ThryPropertyType.instancing;
+                if (name == "DSGI")
+                    return ThryPropertyType.dsgi;
+                if (name == "LightmapFlags")
+                    return ThryPropertyType.lightmap_flags;
+                if (name == PROPERTY_NAME_LOCALE)
+                    return ThryPropertyType.locale;
+                if (name.StartsWith("space"))
+                    return ThryPropertyType.space;
+            }
+            else if(flags.HasFlag(MaterialProperty.PropFlags.HideInInspector) == false)
+            {
                 return ThryPropertyType.property;
+            }
             return ThryPropertyType.none;
         }
 
-        public Locale locale;
-
         private void LoadLocales()
         {
-            MaterialProperty locales_property = null;
-            locale = null;
-            foreach (MaterialProperty m in editorData.properties) if (m.name == PROPERTY_NAME_LOCALE) locales_property = m;
+            MaterialProperty locales_property = GetMaterialProperty(PROPERTY_NAME_LOCALE);
+            Locale = null;
             if (locales_property != null)
             {
-                string displayName = locales_property.displayName;
-                PropertyOptions options = ExtractExtraOptionsFromDisplayName(ref displayName);
-                locale = new Locale(options.file_name);
-                locale.selected_locale_index = (int)locales_property.floatValue;
+                string guid = locales_property.displayName;
+                Locale = Localization.Load(guid);
+            }else
+            {
+                Locale = Localization.Create();
             }
+        }
+
+        public void FakePartialInitilizationForLocaleGathering(Shader s)
+        {
+            Material material = new Material(s);
+            Materials = new Material[] { material };
+            Editor = MaterialEditor.CreateEditor(new UnityEngine.Object[] { material }) as MaterialEditor;
+            Properties = MaterialEditor.GetMaterialProperties(Materials);
+            RenamedPropertySuffix = ShaderOptimizer.GetRenamedPropertySuffix(Materials[0]);
+            HasCustomRenameSuffix = ShaderOptimizer.HasCustomRenameSuffix(Materials[0]);
+            ShaderEditor.Active = this;
+            CollectAllProperties();
+            UnityEngine.Object.DestroyImmediate(Editor);
+            UnityEngine.Object.DestroyImmediate(material);
         }
 
         //finds all properties and headers and stores them in correct order
         private void CollectAllProperties()
         {
             //load display names from file if it exists
-            MaterialProperty[] props = editorData.properties;
+            MaterialProperty[] props = Properties;
             Dictionary<string, string> labels = LoadDisplayNamesFromFile();
             LoadLocales();
 
-            editorData.propertyDictionary = new Dictionary<string, ShaderProperty>();
-            editorData.shaderParts = new List<ShaderPart>();
-            shaderparts = new ShaderHeader(); //init top object that all Shader Objects are childs of
-            Stack<ShaderGroup> headerStack = new Stack<ShaderGroup>(); //header stack. used to keep track if editorData header to parent new objects to
-            headerStack.Push(shaderparts); //add top object as top object to stack
-            headerStack.Push(shaderparts); //add top object a second time, because it get's popped with first actual header item
-            footer = new List<ButtonData>(); //init footer list
-            int headerCount = 0;
+            PropertyDictionary = new Dictionary<string, ShaderProperty>();
+            ShaderParts = new List<ShaderPart>();
+            MainGroup = new ShaderGroup(this); //init top object that all Shader Objects are childs of
+            Stack<ShaderGroup> groupStack = new Stack<ShaderGroup>(); //header stack. used to keep track if editorData header to parent new objects to
+            groupStack.Push(MainGroup); //add top object as top object to stack
+            groupStack.Push(MainGroup); //add top object a second time, because it get's popped with first actual header item
+            _footers = new List<FooterButton>(); //init footer list
+            int offsetDepthCount = 0;
+            DrawingData.IsCollectingProperties = true;
 
-            Type materialPropertyDrawerType = typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.MaterialPropertyHandler");
-            MethodInfo getPropertyHandlerMethod = materialPropertyDrawerType.GetMethod("GetShaderPropertyHandler", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-            PropertyInfo drawerProperty = materialPropertyDrawerType.GetProperty("propertyDrawer");
-
-            Type materialToggleDrawerType = typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.MaterialToggleDrawer");
-            FieldInfo keyWordField = materialToggleDrawerType.GetField("keyword", BindingFlags.Instance | BindingFlags.NonPublic);
+            HashSet<string> duplicatePropertiesSearch = new HashSet<string>(); // for debugging
+            List<string> duplicateProperties = new List<string>(); // for debugging
 
             for (int i = 0; i < props.Length; i++)
             {
                 string displayName = props[i].displayName;
-                if (locale != null)
-                    foreach (string key in locale.GetAllKeys())
-                        if (displayName.Contains("locale::" + key))
-                            displayName = displayName.Replace("locale::" + key, locale.Get(key));
-                displayName = Regex.Replace(displayName, @"''", "\"");
 
+                //Load from label file
                 if (labels.ContainsKey(props[i].name)) displayName = labels[props[i].name];
-                PropertyOptions options = ExtractExtraOptionsFromDisplayName(ref displayName);
 
-                int offset = options.offset + headerCount;
+                //extract json data from display name
+                string optionsRaw = SplitOptionsFromDisplayName(ref displayName);
 
-                //Handle keywords
-                object propertyHandler = getPropertyHandlerMethod.Invoke(null, new object[] { editorData.shader, props[i].name });
-                //if has custom drawer
-                if (propertyHandler != null)
-                {
-                    object propertyDrawer = drawerProperty.GetValue(propertyHandler, null);
-                    //if custom drawer exists
-                    if (propertyDrawer != null)
-                    {
-                        if (propertyDrawer.GetType().ToString() == "UnityEditor.MaterialToggleDrawer")
-                        {
-                            object keyword = keyWordField.GetValue(propertyDrawer);
-                            if (keyword != null)
-                            {
-                                foreach (Material m in editorData.materials)
-                                {
-                                    if (m.GetFloat(props[i].name) == 1)
-                                        m.EnableKeyword((string)keyword);
-                                    else
-                                        m.DisableKeyword((string)keyword);
-                                }
-                            }
-                        }
-                    }
-                }
+                displayName = Locale.Get(props[i], displayName);
 
+                int offset = offsetDepthCount;
+                
+                // Duplicate property name check
+                if (duplicatePropertiesSearch.Contains(props[i].name))
+                    duplicateProperties.Add(props[i].name);
+                else
+                    duplicatePropertiesSearch.Add(props[i].name);
 
-                ThryPropertyType type = GetPropertyType(props[i], options);
-                switch (type)
-                {
-                    case ThryPropertyType.header:
-                        headerStack.Pop();
-                        break;
-                    case ThryPropertyType.header_start:
-                        offset = options.offset + ++headerCount;
-                        break;
-                    case ThryPropertyType.header_end:
-                        headerStack.Pop();
-                        headerCount--;
-                        break;
-                    case ThryPropertyType.on_swap_to:
-                        on_swap_to_actions = options.actions;
-                        break;
-                }
-                ShaderProperty newPorperty = null;
+                DrawingData.ResetLastDrawerData();
+
+                ThryPropertyType type = GetPropertyType(props[i]);
+                ShaderProperty NewProperty = null;
                 ShaderPart newPart = null;
+                // -- Group logic --
+                // Change offset if needed
+                if(type == ThryPropertyType.header_start)
+                    offset = ++offsetDepthCount;
+                if(type == ThryPropertyType.header_end)
+                    offsetDepthCount--;
+                // Create new group if needed
+                switch(type)
+                {
+                    case ThryPropertyType.group_start:
+                        newPart = new ShaderGroup(this, props[i], Editor, displayName, offset, optionsRaw, i);
+                        break;
+                    case ThryPropertyType.section_start:
+                        newPart = new ShaderSection(this, props[i], Editor, displayName, offset, optionsRaw, i);
+                        break;
+                    case ThryPropertyType.header:
+                    case ThryPropertyType.header_start:
+                        newPart = new ShaderHeader(this, props[i], Editor, displayName, offset, optionsRaw, i);
+                        break;
+                }
+                // pop if needed
+                if(type == ThryPropertyType.header || type == ThryPropertyType.header_end || type == ThryPropertyType.group_end || type == ThryPropertyType.section_end)
+                {
+                    groupStack.Pop();
+                }
+                // push if needed
+                if(newPart != null)
+                {
+                    groupStack.Peek().addPart(newPart);
+                    groupStack.Push(newPart as ShaderGroup);
+                }
+                
                 switch (type)
                 {
+                    case ThryPropertyType.on_swap_to:
+                        _onSwapToActions = PropertyOptions.Deserialize(optionsRaw).actions;
+                        break;
                     case ThryPropertyType.master_label:
-                        masterLabelText = displayName;
+                        _shaderHeader = new ShaderHeaderProperty(this, props[i], displayName, 0, optionsRaw, false, i);
                         break;
                     case ThryPropertyType.footer:
-                        footer.Add(Parser.ParseToObject<ButtonData>(displayName));
-                        break;
-                    case ThryPropertyType.header:
-                    case ThryPropertyType.header_start:
-                        if (options.is_hideable) editorData.show_HeaderHider = true;
-                        ShaderHeader newHeader = new ShaderHeader(props[i], editorData.editor, displayName, offset, options);
-                        headerStack.Peek().addPart(newHeader);
-                        headerStack.Push(newHeader);
-                        HeaderHider.InitHidden(newHeader);
-                        newPart = newHeader;
-                        break;
-                    case ThryPropertyType.group_start:
-                        ShaderGroup new_group = new ShaderGroup(options);
-                        headerStack.Peek().addPart(new_group);
-                        headerStack.Push(new_group);
-                        newPart = new_group;
-                        break;
-                    case ThryPropertyType.group_end:
-                        headerStack.Pop();
+                        _footers.Add(new FooterButton(Parser.Deserialize<ButtonData>(displayName)));
                         break;
                     case ThryPropertyType.none:
                     case ThryPropertyType.property:
-                        DrawingData.lastPropertyUsedCustomDrawer = false;
-                        editorData.editor.GetPropertyHeight(props[i]);
-                        bool forceOneLine = props[i].type == MaterialProperty.PropType.Vector && !DrawingData.lastPropertyUsedCustomDrawer;
                         if (props[i].type == MaterialProperty.PropType.Texture)
-                            newPorperty = new TextureProperty(props[i], displayName, offset, options, props[i].flags.HasFlag(MaterialProperty.PropFlags.NoScaleOffset) == false, !DrawingData.lastPropertyUsedCustomDrawer);
+                            NewProperty = new TextureProperty(this, props[i], displayName, offset, optionsRaw, props[i].flags.HasFlag(MaterialProperty.PropFlags.NoScaleOffset) == false, false, i);
                         else
-                            newPorperty = new ShaderProperty(props[i], displayName, offset, options, forceOneLine);
+                            NewProperty = new ShaderProperty(this, props[i], displayName, offset, optionsRaw, false, i);
                         break;
                     case ThryPropertyType.lightmap_flags:
-                        newPorperty = new GIProperty(props[i], displayName, offset, options, false);
+                        NewProperty = new GIProperty(this, props[i], displayName, offset, optionsRaw, false, i);
                         break;
                     case ThryPropertyType.dsgi:
-                        newPorperty = new DSGIProperty(props[i], displayName, offset, options, false);
+                        NewProperty = new DSGIProperty(this, props[i], displayName, offset, optionsRaw, false, i);
                         break;
                     case ThryPropertyType.instancing:
-                        newPorperty = new InstancingProperty(props[i], displayName, offset, options, false);
+                        NewProperty = new InstancingProperty(this, props[i], displayName, offset, optionsRaw, false, i);
                         break;
                     case ThryPropertyType.locale:
-                        newPorperty = new LocaleProperty(props[i], displayName, offset, options, false);
+                        NewProperty = new LocaleProperty(this, props[i], displayName, offset, optionsRaw, false, i);
                         break;
-                    case ThryPropertyType.shader_optimizer:
-                        editorData.use_ShaderOptimizer = true;
-                        newPorperty = new ShaderProperty(props[i], displayName, offset, options, false);
+                    case ThryPropertyType.shader_version:
+                        PropertyOptions options = PropertyOptions.Deserialize(optionsRaw);
+                        _shaderVersionRemote = new Version(WebHelper.GetCachedString(options.remote_version_url));
+                        _shaderVersionLocal = new Version(displayName);
+                        _isShaderUpToDate = _shaderVersionLocal >= _shaderVersionRemote;
+                        _shaderUpdateUrl = options.generic_string;
+                        _hasShaderUpdateUrl = _shaderUpdateUrl != null;
                         break;
                 }
-                if (newPorperty != null)
+                if (NewProperty != null)
                 {
-                    newPart = newPorperty;
-                    if (editorData.propertyDictionary.ContainsKey(props[i].name))
-                        continue;
-                    editorData.propertyDictionary.Add(props[i].name, newPorperty);
-                    if (type != ThryPropertyType.none && type != ThryPropertyType.shader_optimizer)
-                        headerStack.Peek().addPart(newPorperty);
+                    newPart = NewProperty;
+                    if (type != ThryPropertyType.none)
+                        groupStack.Peek().addPart(NewProperty);
                 }
                 if (newPart != null)
-                    editorData.shaderParts.Add(newPart);
+                {
+                    if (!PropertyDictionary.ContainsKey(props[i].name))
+                        PropertyDictionary.Add(props[i].name, NewProperty);
+                    ShaderParts.Add(newPart);
+                }
             }
-        }
 
-        private MaterialProperty FindProperty(string name)
-        {
-            return System.Array.Find(editorData.properties,
-                           element => element.name == name);
+            if(duplicateProperties.Count > 0 && Config.Singleton.enableDeveloperMode)
+                _duplicatePropertyNamesString = string.Join("\n ", duplicateProperties.ToArray());
+
+            DrawingData.IsCollectingProperties = false;
         }
 
         //-------------Draw Functions----------------
 
-        public void OnOpen()
+        public void InitlizeThryUI()
         {
-            Config config = Config.Get();
-
-            show_eyeIcon_tutorial = !EditorPrefs.GetBool("thry_openeEyeIcon", false);
-
-            currentlyDrawing = editorData;
-            active = this;
+            Config config = Config.Singleton;
+            Active = this;
+            Helper.RegisterEditorUse();
 
             //get material targets
-            UnityEngine.Object[] targets = editorData.editor.targets;
-            editorData.materials = new Material[targets.Length];
-            for (int i = 0; i < targets.Length; i++) editorData.materials[i] = targets[i] as Material;
+            Materials = Editor.targets.Select(o => o as Material).ToArray();
 
-            editorData.shader = editorData.materials[0].shader;
-            string defaultShaderName = editorData.materials[0].shader.name.Split(new string[] { "-queue" }, System.StringSplitOptions.None)[0].Replace(".differentQueues/", "");
-            editorData.defaultShader = Shader.Find(defaultShaderName);
-            
-            editorData.animPropertySuffix = new string(editorData.materials[0].name.Trim().ToLower().Where(char.IsLetter).ToArray());
+            Shader = Materials[0].shader;
 
-            currentlyDrawing = editorData;
+            RenamedPropertySuffix = ShaderOptimizer.GetRenamedPropertySuffix(Materials[0]);
+            HasCustomRenameSuffix = ShaderOptimizer.HasCustomRenameSuffix(Materials[0]);
+
+            IsPresetEditor = Materials.Length == 1 && Presets.ArePreset(Materials);
 
             //collect shader properties
             CollectAllProperties();
 
+            if (ShaderOptimizer.IsShaderUsingThryOptimizer(Shader))
+            {
+                ShaderOptimizerProperty = PropertyDictionary[ShaderOptimizer.GetOptimizerPropertyName(Shader)];
+                if(ShaderOptimizerProperty != null) ShaderOptimizerProperty.ExemptFromLockedDisabling = true;
+            }
+
+            _renderQueueProperty = new RenderQueueProperty(this);
+            _vRCFallbackProperty = new VRCFallbackProperty(this);
+            ShaderParts.Add(_renderQueueProperty);
+            ShaderParts.Add(_vRCFallbackProperty);
+
             AddResetProperty();
 
-            firstOnGUICall = false;
+            if(Config.Singleton.forceAsyncCompilationPreview)
+            {
+                ShaderUtil.allowAsyncCompilation = true;
+            }
+
+            _isFirstOnGUICall = false;
+        }
+
+        private Dictionary<string, MaterialProperty> materialPropertyDictionary;
+        public MaterialProperty GetMaterialProperty(string name)
+        {
+            if (materialPropertyDictionary == null)
+            {
+                materialPropertyDictionary = new Dictionary<string, MaterialProperty>();
+                foreach (MaterialProperty p in Properties)
+                    if (materialPropertyDictionary.ContainsKey(p.name) == false) materialPropertyDictionary.Add(p.name, p);
+            }
+            if (materialPropertyDictionary.ContainsKey(name))
+                return materialPropertyDictionary[name];
+            return null;
         }
 
         private void AddResetProperty()
         {
-            if (editorData.materials[0].HasProperty("shader_is_using_thry_editor") == false)
+            if (Materials[0].HasProperty(PROPERTY_NAME_EDITOR_DETECT) == false)
             {
-                EditorChanger.AddThryProperty(editorData.materials[0].shader);
+                string path = AssetDatabase.GetAssetPath(Materials[0].shader);
+                UnityHelper.AddShaderPropertyToSourceCode(path, "[HideInInspector] shader_is_using_thry_editor(\"\", Float)", "0");
             }
-            editorData.materials[0].SetFloat("shader_is_using_thry_editor", 69);
+            Materials[0].SetFloat(PROPERTY_NAME_EDITOR_DETECT, 69);
         }
+
+        
 
         public override void OnClosed(Material material)
         {
             base.OnClosed(material);
-            firstOnGUICall = true;
+            _isFirstOnGUICall = true;
         }
 
         public override void AssignNewShaderToMaterial(Material material, Shader oldShader, Shader newShader)
         {
+            //Unity sets the render queue to the shader defult when changing shader
+            //This seems to be some deeper process that cant be disabled so i just set it again after the swap
+            //Even material.shader = newShader resets the queue. (this is actually the only thing the base function does)
+            int previousQueue = material.renderQueue;
             base.AssignNewShaderToMaterial(material, oldShader, newShader);
-            firstOnGUICall = true;
-            swapped_to_shader = true;
+            material.renderQueue = previousQueue;
+            SuggestedTranslationDefinition = ShaderTranslator.CheckForExistingTranslationFile(oldShader, newShader);
+            FixKeywords(new Material[] { material });
+            _doReloadNextDraw = true;
+            _didSwapToShader = true;
         }
 
-        private void UpdateEvents()
+        void InitEditorData(MaterialEditor materialEditor)
         {
-            Event e = Event.current;
-            input.MouseClick = e.type == EventType.MouseDown;
-            input.MouseLeftClick = e.type == EventType.MouseDown && e.button == 0;
-            if (input.MouseClick) input.HadMouseDown = true;
-            if (input.HadMouseDown && e.type == EventType.Repaint) input.HadMouseDownRepaint = true;
-            input.is_alt_down = e.alt;
-            input.mouse_position = e.mousePosition;
-            input.is_drop_event = e.type == EventType.DragPerform;
-            input.is_drag_drop_event = input.is_drop_event || e.type == EventType.DragUpdated;
+            Editor = materialEditor;
+            TextureArrayProperties = new List<ShaderProperty>();
+            IsFirstCall = true;
         }
 
-        //-------------Main Function--------------
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] props)
         {
-            if (firstOnGUICall || (reloadNextDraw && Event.current.type == EventType.Layout))
+            IsDrawing = true;
+            //Init
+            bool reloadUI = _isFirstOnGUICall || (_doReloadNextDraw && Event.current.type == EventType.Layout) || (materialEditor.target as Material).shader != Shader;
+            if (reloadUI) 
             {
-                editorData = new EditorData();
-                editorData.editor = materialEditor;
-                editorData.gui = this;
-                editorData.textureArrayProperties = new List<ShaderProperty>();
-                editorData.firstCall = true;
-            }
-            editorData.properties = props;
-
-            CheckInAnimationRecordMode();
-            m_RenderersForAnimationMode = MaterialEditor.PrepareMaterialPropertiesForAnimationMode(props, GUI.enabled);
-            UpdateEvents();
-
-            //first time call inits
-            if (firstOnGUICall || (reloadNextDraw && Event.current.type == EventType.Layout)) OnOpen();
-            editorData.shader = editorData.materials[0].shader;
-
-            currentlyDrawing = editorData;
-            active = this;
-
-            //sync shader and get preset handler
-            Config config = Config.Get();
-            if (editorData.materials != null)
-                Mediator.SetActiveShader(editorData.materials[0].shader);
-
-
-            //TOP Bar
-            Rect mainHeaderRect = EditorGUILayout.BeginHorizontal();
-            //draw editor settings button
-            if (GUILayout.Button(new GUIContent("", Styles.settings_icon), EditorStyles.largeLabel, GUILayout.MaxHeight(20), GUILayout.MaxWidth(20)))
-            {
-                Thry.Settings window = Thry.Settings.getInstance();
-                window.Show();
-                window.Focus();
-            }
-            EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
-            if (GUILayout.Button(Styles.search_icon, EditorStyles.largeLabel, GUILayout.MaxHeight(20)))
-                show_search_bar = !show_search_bar;
-
-            //draw master label if exists
-            if (masterLabelText != null) GuiHelper.DrawMasterLabel(masterLabelText, mainHeaderRect);
-
-            //GUILayout.Label("Thryrallo",GUILayout.ExpandWidth(true));
-            GUILayout.Label("@UI by Thryrallo", Styles.made_by_style,GUILayout.Height(25), GUILayout.MaxWidth(100));
-            EditorGUILayout.EndHorizontal();
-
-            if (show_search_bar)
-                header_search_term = EditorGUILayout.TextField(header_search_term);
-
-            //Visibility menu
-            if (editorData.show_HeaderHider)
-            {
-                HeaderHider.HeaderHiderGUI(editorData);
+                InitEditorData(materialEditor);
+                Properties = props;
+                InitlizeThryUI();
             }
 
-            bool isMaterialLocked = editorData.use_ShaderOptimizer && editorData.propertyDictionary["_ShaderOptimizerEnabled"].materialProperty.floatValue == 1;
-            if (editorData.use_ShaderOptimizer)
-            {
-                editorData.propertyDictionary["_ShaderOptimizerEnabled"].Draw();
-            }
+            //Update Data
+            Properties = props;
+            Shader = Materials[0].shader;
+            Input.Update(IsLockedMaterial);
+            ActiveRenderer = Selection.activeTransform?.GetComponent<Renderer>();
+            IsInAnimationMode = AnimationMode.InAnimationMode();
+
+            Active = this;
+
+            DoVariantWarning();
+            GUIManualReloadButton();
+            GUIDevloperMode();
+            GUIShaderVersioning();
+
+            GUITopBar();
+            GUISearchBar();
+            Presets.PresetEditorGUI(this);
+            ShaderTranslator.SuggestedTranslationButtonGUI(this);
 
             //PROPERTIES
-            if (header_search_term == "" || show_search_bar == false)
+            foreach (ShaderPart part in MainGroup.parts)
             {
-                foreach (ShaderPart part in shaderparts.parts)
-                    part.Draw();
-            }
-            else
-            {
-                foreach (ShaderPart part in editorData.propertyDictionary.Values)
-                    if (IsSearchedFor(part, header_search_term))
-                        part.Draw();
+                part.Draw();
             }
 
             //Render Queue selection
-            if (config.showRenderQueue)
-                    materialEditor.RenderQueueField();
+            if(VRCInterface.IsVRCSDKInstalled()) _vRCFallbackProperty.Draw();
+            if (Config.Singleton.showRenderQueue) _renderQueueProperty.Draw();
 
-            //footer
-            GuiHelper.drawFooters(footer);
+            BetterTooltips.DrawActive();
 
+            GUIFooters();
+
+            HandleEvents();
+
+            IsDrawing = false;
+            _didSwapToShader = false;
+        }
+
+        private void GUIManualReloadButton()
+        {
+            if (Config.Singleton.showManualReloadButton)
+            {
+                if(GUILayout.Button("Manual Reload"))
+                {
+                    this.Reload();
+                }
+            }
+        }
+
+        private void GUIDevloperMode()
+        {
+            if (Config.Singleton.enableDeveloperMode)
+            {
+                // Show duplicate property names
+                if(_duplicatePropertyNamesString != null)
+                {
+                    EditorGUILayout.HelpBox("Duplicate Property Names:\n" + _duplicatePropertyNamesString, MessageType.Warning);
+                }
+            }
+        }
+
+        private void GUIShaderVersioning()
+        {
+            if (!_isShaderUpToDate)
+            {
+                Rect r = EditorGUILayout.GetControlRect(false, _hasShaderUpdateUrl ? 30 : 15);
+                EditorGUI.LabelField(r, $"[New Shader Version available] {_shaderVersionLocal} -> {_shaderVersionRemote}" + (_hasShaderUpdateUrl ? "\n    Click here to download." : ""), Styles.redStyle);
+                if(Input.HadMouseDownRepaint && _hasShaderUpdateUrl && GUILayoutUtility.GetLastRect().Contains(Input.mouse_position)) Application.OpenURL(_shaderUpdateUrl);
+            }
+        }
+
+        private void GUITopBar()
+        {
+            //if header is texture, draw it first so other ui elements can be positions below
+            if (_shaderHeader != null && _shaderHeader.Options.texture != null) _shaderHeader.Draw();
+
+            bool drawAboveToolbar = EditorGUIUtility.wideMode == false;
+            if(_shaderHeader != null && drawAboveToolbar) _shaderHeader.Draw(new CRect(EditorGUILayout.GetControlRect()));
+
+            Rect mainHeaderRect = EditorGUILayout.BeginHorizontal();
+            //draw editor settings button
+            if (GuiHelper.ButtonWithCursor(Styles.icon_style_settings, "Settings", 25, 25))
+            {
+                EditorWindow.GetWindow<Settings>(false, "Thry Settings", true);
+            }
+            if (GuiHelper.ButtonWithCursor(Styles.icon_style_search, "Search", 25, 25))
+            {
+                DoShowSearchBar = !DoShowSearchBar;
+                if(!DoShowSearchBar) ClearSearch();
+            }
+            if (GuiHelper.ButtonWithCursor(Styles.icon_style_presets, "Presets" , 25, 25))
+            {
+                Input.PowerUse();
+                Presets.OpenPresetsMenu(Rect.zero, this, false);
+            }
+
+            //draw master label text after ui elements, so it can be positioned between
+            if (_shaderHeader != null && !drawAboveToolbar) _shaderHeader.Draw(new CRect(mainHeaderRect));
+
+            GUILayout.FlexibleSpace();
+            Rect popupPosition;
+            if (GuiHelper.ButtonWithCursor(Styles.icon_style_tools, "Tools", 25, 25, out popupPosition))
+            {
+                PopupTools(popupPosition);
+            }
+            ShaderTranslator.TranslationSelectionGUI(this);
+            if (GuiHelper.ButtonWithCursor(Styles.icon_style_thryIcon, "Thryrallo", 25, 25))
+                Application.OpenURL("https://www.twitter.com/thryrallo");
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void GUISearchBar()
+        {
+            if (DoShowSearchBar)
+            {
+                EditorGUI.BeginChangeCheck();
+                _enteredSearchTerm = EditorGUILayout.TextField(_enteredSearchTerm);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    _appliedSearchTerm = _enteredSearchTerm.ToLower();
+                    UpdateSearch(MainGroup);
+                }
+            }
+        }
+
+        private void GUIFooters()
+        {
+            try
+            {
+                FooterButton.DrawList(_footers);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning(ex);
+            }
             if (GUILayout.Button("@UI Made by Thryrallo", Styles.made_by_style))
                 Application.OpenURL("https://www.twitter.com/thryrallo");
             EditorGUIUtility.AddCursorRect(GUILayoutUtility.GetLastRect(), MouseCursor.Link);
+        }
 
+        private void DoVariantWarning()
+        {
+#if UNITY_2022_1_OR_NEWER
+            if(Materials[0].isVariant)
+            {
+                EditorGUILayout.HelpBox("This material is a variant. It cannot be locked or uploaded to VRChat.", MessageType.Warning);
+            }
+#endif
+        }
+
+        private void PopupTools(Rect position)
+        {
+            var menu = new GenericMenu();
+
+            menu.AddItem(new GUIContent("Fix Keywords"), false, delegate ()
+            {
+                FixKeywords(Materials);
+            });
+            menu.AddSeparator("");
+
+            int unboundTextures = MaterialCleaner.CountUnusedProperties(MaterialCleaner.CleanPropertyType.Texture, Materials);
+            int unboundProperties = MaterialCleaner.CountAllUnusedProperties(Materials);
+            List<string> unusedTextures = new List<string>();
+            MainGroup.FindUnusedTextures(unusedTextures, true);
+            if (unboundTextures > 0 && !IsLockedMaterial)
+            {
+                menu.AddItem(new GUIContent($"Unbound Textures: {unboundTextures}/List in console"), false, delegate ()
+                {
+                    MaterialCleaner.ListUnusedProperties(MaterialCleaner.CleanPropertyType.Texture, Materials);
+                });
+                menu.AddItem(new GUIContent($"Unbound Textures: {unboundTextures}/Remove"), false, delegate ()
+                {
+                    MaterialCleaner.RemoveUnusedProperties(MaterialCleaner.CleanPropertyType.Texture, Materials);
+                });
+            }
+            else
+            {
+                menu.AddDisabledItem(new GUIContent($"Unbound textures: 0"));
+            }
+            if (unusedTextures.Count > 0 && !IsLockedMaterial)
+            {
+                menu.AddItem(new GUIContent($"Unused Textures: {unusedTextures.Count}/List in console"), false, delegate ()
+                {
+                    Out("Unused textures", unusedTextures.Select(s => $"↳{s}"));
+                });
+                menu.AddItem(new GUIContent($"Unused Textures: {unusedTextures.Count}/Remove"), false, delegate ()
+                {
+                    foreach (string t in unusedTextures) if (PropertyDictionary.ContainsKey(t)) PropertyDictionary[t].MaterialProperty.textureValue = null;
+                });
+            }
+            else
+            {
+                menu.AddDisabledItem(new GUIContent($"Unused textures: 0"));
+            }
+            if (unboundProperties > 0 && !IsLockedMaterial)
+            {
+                menu.AddItem(new GUIContent($"Unbound properties: {unboundProperties}/List in console"), false, delegate ()
+                {
+                    MaterialCleaner.ListUnusedProperties(MaterialCleaner.CleanPropertyType.Texture, Materials);
+                    MaterialCleaner.ListUnusedProperties(MaterialCleaner.CleanPropertyType.Float, Materials);
+                    MaterialCleaner.ListUnusedProperties(MaterialCleaner.CleanPropertyType.Color, Materials);
+                });
+                menu.AddItem(new GUIContent($"Unbound properties: {unboundProperties}/Remove"), false, delegate ()
+                {
+                    MaterialCleaner.RemoveAllUnusedProperties(MaterialCleaner.CleanPropertyType.Texture, Materials);
+                });
+            }
+            else
+            {
+                menu.AddDisabledItem(new GUIContent($"Unbound properties: 0"));
+            }
+            menu.DropDown(position);
+        }
+
+        public static void Out(string s)
+        {
+            Debug.Log($"<color=#ff80ff>[Thry]</color> {s}");
+        }
+        public static void Out(string header, params string[] lines)
+        {
+            Debug.Log($"<color=#ff80ff>[Thry]</color> <b>{header}</b>\n{lines.Aggregate((s1, s2) => s1 + "\n" + s2)}");
+        }
+        public static void Out(string header, IEnumerable<string> lines)
+        {
+            if (lines.Count() == 0) Out(header);
+            else Debug.Log($"<color=#ff80ff>[Thry]</color> <b>{header}</b>\n{lines.Aggregate((s1, s2) => s1 + "\n" + s2)}");
+        }
+        public static void Out(string header, Color c, IEnumerable<string> lines)
+        {
+            if (lines.Count() == 0) Out(header);
+            else Debug.Log($"<color=#ff80ff>[Thry]</color> <b><color={ColorUtility.ToHtmlStringRGB(c)}>{header}</b></color> \n{lines.Aggregate((s1, s2) => s1 + "\n" + s2)}");
+        }
+
+        private void HandleEvents()
+        {
             Event e = Event.current;
+            //if reloaded, set reload to false
+            if (_doReloadNextDraw && Event.current.type == EventType.Layout) _doReloadNextDraw = false;
+
+            //if was undo, reload
             bool isUndo = (e.type == EventType.ExecuteCommand || e.type == EventType.ValidateCommand) && e.commandName == "UndoRedoPerformed";
-            if (reloadNextDraw && Event.current.type == EventType.Layout) reloadNextDraw = false;
-            if (isUndo) reloadNextDraw = true;
+            if (isUndo) _doReloadNextDraw = true;
+
 
             //on swap
-            if (on_swap_to_actions != null && swapped_to_shader)
+            if (_onSwapToActions != null && _didSwapToShader)
             {
-                foreach (DefineableAction a in on_swap_to_actions)
-                    a.Perform();
-                on_swap_to_actions = null;
-                swapped_to_shader = false;
+                foreach (DefineableAction a in _onSwapToActions)
+                    a.Perform(Materials);
+                _onSwapToActions = null;
             }
 
             //test if material has been reset
-            if (wasUsed && e.type == EventType.Repaint)
+            if (_wasUsed && e.type == EventType.Repaint)
             {
-                if (editorData.materials[0].HasProperty("shader_is_using_thry_editor") && editorData.materials[0].GetFloat("shader_is_using_thry_editor") != 69)
+                if (Materials[0].HasProperty("shader_is_using_thry_editor") && Materials[0].GetFloat("shader_is_using_thry_editor") != 69)
                 {
-                    reloadNextDraw = true;
+                    _doReloadNextDraw = true;
                     HandleReset();
-                    wasUsed = true;
+                    _wasUsed = true;
                 }
             }
 
-            if (e.type == EventType.Used) wasUsed = true;
-            if (input.HadMouseDownRepaint) input.HadMouseDown = false;
-            input.HadMouseDownRepaint = false;
-            editorData.firstCall = false;
+            if (e.type == EventType.Used) _wasUsed = true;
+            if (Input.HadMouseDownRepaint) Input.HadMouseDown = false;
+            Input.HadMouseDownRepaint = false;
+            IsFirstCall = false;
+            materialPropertyDictionary = null;
         }
 
-        private bool IsSearchedFor(ShaderPart part, string term)
+        //iterate the same way drawing would iterate
+        //if display part, display all parents parts
+        private void UpdateSearch(ShaderPart part)
         {
+            part.has_not_searchedFor = part.Content.text.ToLower().Contains(_appliedSearchTerm) == false;
+            if (part is ShaderGroup)
+            {
+                foreach (ShaderPart p in (part as ShaderGroup).parts)
+                {
+                    UpdateSearch(p);
+                    part.has_not_searchedFor &= p.has_not_searchedFor;
+                }
+            }
+        }
 
-            string lowercaseTerm = header_search_term.ToLower();
-            return part.content.text.ToLower().Contains(lowercaseTerm);
+        private void ClearSearch()
+        {
+            _appliedSearchTerm = "";
+            UpdateSearch(MainGroup);
         }
 
         private void HandleReset()
         {
-            MaterialLinker.UnlinkAll(editorData.materials[0]);
+            MaterialLinker.UnlinkAll(Materials[0]);
+            ShaderOptimizer.DeleteTags(Materials);
         }
 
-        public static void reload()
+        public void Repaint()
         {
-            reloadNextDraw = true;
+            if (Materials.Length > 0)
+                EditorUtility.SetDirty(Materials[0]);
         }
 
-        public static void loadValuesFromMaterial()
+        public static void RepaintActive()
         {
-            if (currentlyDrawing.editor != null)
-            {
-                try
-                {
-                    Material m = ((Material)currentlyDrawing.editor.target);
-                    foreach (MaterialProperty property in currentlyDrawing.properties)
-                    {
-                        switch (property.type)
-                        {
-                            case MaterialProperty.PropType.Float:
-                            case MaterialProperty.PropType.Range:
-                                property.floatValue = m.GetFloat(property.name);
-                                break;
-                            case MaterialProperty.PropType.Texture:
-                                property.textureValue = m.GetTexture(property.name);
-                                break;
-                            case MaterialProperty.PropType.Color:
-                                property.colorValue = m.GetColor(property.name);
-                                break;
-                            case MaterialProperty.PropType.Vector:
-                                property.vectorValue = m.GetVector(property.name);
-                                break;
-                        }
-
-                    }
-                }
-                catch (System.Exception e)
-                {
-                    Debug.Log(e.ToString());
-                }
-            }
+            if (ShaderEditor.Active != null)
+                Active.Repaint();
         }
 
-        public static void propertiesChanged()
+        public void Reload()
         {
-            if (currentlyDrawing.editor != null)
-            {
-                try
-                {
-                    currentlyDrawing.editor.PropertiesChanged();
-                }
-                catch (System.Exception e)
-                {
-                    Debug.Log(e.ToString());
-                }
-            }
+            this._isFirstOnGUICall = true;
+            this._doReloadNextDraw = true;
+            // this.Repaint();
+            ThryWideEnumDrawer.Reload();
+            ThryRGBAPackerDrawer.Reload();
         }
 
-        public static void addUndo(string label)
+        public static void ReloadActive()
         {
-            if (currentlyDrawing.editor != null)
-            {
-                try
-                {
-                    currentlyDrawing.editor.RegisterPropertyChangeUndo(label);
-                }
-                catch (System.Exception e)
-                {
-                    Debug.Log(e.ToString());
-                }
-            }
+            if (ShaderEditor.Active != null)
+                Active.Reload();
         }
 
-        public static void repaint()
+        public void ApplyDrawers()
         {
-            if (currentlyDrawing.editor != null)
-            {
-                try
-                {
-                    currentlyDrawing.editor.Repaint();
-                }
-                catch (System.Exception e)
-                {
-                    Debug.Log(e.ToString());
-                }
-            }
+            foreach (Material target in Materials)
+                MaterialEditor.ApplyMaterialPropertyDrawers(target);
         }
 
-        private static string edtior_directory_path;
         public static string GetShaderEditorDirectoryPath()
         {
-            if (edtior_directory_path == null)
+            if (s_edtiorDirectoryPath == null)
             {
-                string[] guids = AssetDatabase.FindAssets("ShaderEditor");
-                foreach (string g in guids)
+                IEnumerable<string> paths = AssetDatabase.FindAssets("ThryEditor").Select(g => AssetDatabase.GUIDToAssetPath(g));
+                foreach (string p in paths)
                 {
-                    string p = AssetDatabase.GUIDToAssetPath(g);
-                    if (p.EndsWith("/ShaderEditor.cs"))
-                    {
-                        edtior_directory_path = Directory.GetParent(Path.GetDirectoryName(p)).FullName;
-                        break;
-                    }
+                    if (p.EndsWith("/ThryEditor.cs"))
+                        s_edtiorDirectoryPath = Directory.GetParent(Path.GetDirectoryName(p)).FullName;
                 }
             }
-            return edtior_directory_path;
+            return s_edtiorDirectoryPath;
         }
 
-        //----------Static Helper Functions
+        // Cache property->keyword lookup for performance
+        static Dictionary<Shader, List<(string prop, List<string> keywords)>> PropertyKeywordsByShader = new Dictionary<Shader, List<(string prop, List<string> keywords)>>();
 
-        //finds a property in props by name, if it doesnt exist return null
-        public static MaterialProperty FindProperty(MaterialProperty[] props, string name)
+        /// <summary> Iterate through all materials to ensure keywords list matches properties. </summary>
+        public static void FixKeywords(IEnumerable<Material> materialsToFix)
         {
-            MaterialProperty ret = null;
-            foreach (MaterialProperty p in props)
+            // Process Shaders
+            IEnumerable<Material> uniqueShadersMaterials = materialsToFix.GroupBy(m => m.shader).Select(g => g.First());
+            IEnumerable<Shader> shadersWithThryEditor = uniqueShadersMaterials.Where(m => ShaderHelper.IsShaderUsingThryEditor(m)).Select(m => m.shader);
+
+            // Clear cache every time if in developer mode, so that changes aren't missed
+            if(Config.Singleton.enableDeveloperMode)
+                PropertyKeywordsByShader.Clear();
+
+            float f = 0;
+            int count = shadersWithThryEditor.Count();
+
+            if(count > 1) EditorUtility.DisplayProgressBar("Validating Keywords", "Processing Shaders", 0);
+
+            foreach (Shader s in shadersWithThryEditor)
             {
-                if (p.name == name) { ret = p; }
+                if(count > 1) EditorUtility.DisplayProgressBar("Validating Keywords", $"Processing Shader: {s.name}", f++ / count);
+                if(!PropertyKeywordsByShader.ContainsKey(s))
+                    PropertyKeywordsByShader[s] = ShaderHelper.GetPropertyKeywordsForShader(s);
             }
-            return ret;
+            // Find Materials
+            IEnumerable<Material> materials = materialsToFix.Where(m => PropertyKeywordsByShader.ContainsKey(m.shader));
+            f = 0;
+            count = materials.Count();
+
+            // Set Keywords
+            foreach(Material m in materials)
+            {
+                if(count > 1) EditorUtility.DisplayProgressBar("Validating Keywords", $"Validating Material: {m.name}", f++ / count);
+
+                List<string> keywordsInMaterial = m.shaderKeywords.ToList();
+
+                foreach((string prop, List<string> keywords) in PropertyKeywordsByShader[m.shader])
+                {
+                    switch(keywords.Count)
+                    {
+                        case 0:
+                            break;
+                        case 1:
+                            string keyword = keywords[0];
+                            keywordsInMaterial.Remove(keyword);
+
+                            if(m.GetFloat(prop) == 1)
+                                m.EnableKeyword(keyword);
+                            else
+                                m.DisableKeyword(keyword);
+                            break;
+                        default: // KeywordEnum
+                            for (int i = 0; i < keywords.Count; i++)
+                            {
+                                keywordsInMaterial.Remove(keywords[i]);
+                                if (m.GetFloat(prop) == i)
+                                    m.EnableKeyword(keywords[i]);
+                                else
+                                    m.DisableKeyword(keywords[i]);
+                            }
+                            break;
+                    }
+                }
+
+                // Disable any remaining keywords
+                foreach(string keyword in keywordsInMaterial)
+                    m.DisableKeyword(keyword);
+            }
+            if(count > 1) EditorUtility.ClearProgressBar();
         }
 
-        //=============Animation Handling============
-
-        private Renderer m_RenderersForAnimationMode;
-        private Renderer rendererForAnimationMode
+        /// <summary> Iterate through all materials with FixKeywords. </summary>
+        [MenuItem("Thry/Shader Tools/Fix Keywords for All Materials (Slow)", priority = -20)]
+        static void FixAllKeywords()
         {
-            get
-            {
-                if (m_RenderersForAnimationMode == null)
-                    return null;
-                return m_RenderersForAnimationMode;
-            }
+            IEnumerable<Material> materialsToFix = AssetDatabase.FindAssets("t:material")
+                .Select(g => AssetDatabase.GUIDToAssetPath(g))
+                .Where(p => string.IsNullOrEmpty(p) == false)
+                .Select(p => AssetDatabase.LoadAssetAtPath<Material>(p))
+                .Where(m => m != null && m.shader != null)
+                .Where(m => ShaderOptimizer.IsMaterialLocked(m) == false);
+
+            FixKeywords(materialsToFix);
         }
 
-        private struct AnimatedCheckData
-        {
-            public MaterialProperty property;
-            public Rect totalPosition;
-            public Color color;
-            public AnimatedCheckData(MaterialProperty property, Rect totalPosition, Color color)
-            {
-                this.property = property;
-                this.totalPosition = totalPosition;
-                this.color = color;
-            }
-        }
-
-        private static Stack<AnimatedCheckData> s_AnimatedCheckStack = new Stack<AnimatedCheckData>();
-
-        public void BeginAnimatedCheck(MaterialProperty prop)
-        {
-            if (rendererForAnimationMode == null)
-                return;
-
-            s_AnimatedCheckStack.Push(new AnimatedCheckData(prop, Rect.zero, GUI.backgroundColor));
-
-            Color overrideColor;
-            if (OverridePropertyColor(prop, rendererForAnimationMode, out overrideColor))
-                GUI.backgroundColor = overrideColor;
-        }
-
-        public void EndAnimatedCheck()
-        {
-            if (rendererForAnimationMode == null)
-                return;
-
-            AnimatedCheckData data = s_AnimatedCheckStack.Pop();
-            if (Event.current.type == EventType.ContextClick && data.totalPosition.Contains(Event.current.mousePosition))
-            {
-                //DoPropertyContextMenu(data.property);
-            }
-
-            GUI.backgroundColor = data.color;
-        }
-
-        private static FieldInfo _field_s_InAnimationRecordMode;
-        public static bool AnimationIsRecording { get; private set; }
-
-        private static void CheckInAnimationRecordMode()
-        {
-            if (_field_s_InAnimationRecordMode == null)
-                _field_s_InAnimationRecordMode = (typeof(AnimationMode)).GetField("s_InAnimationRecordMode", BindingFlags.NonPublic | BindingFlags.Static);
-            AnimationIsRecording = (bool)_field_s_InAnimationRecordMode.GetValue(null);
-        }
-
-
-        const string kMaterialPrefix = "material.";
-        static public bool OverridePropertyColor(MaterialProperty materialProp, Renderer target, out Color color)
-        {
-            var propertyPaths = new List<string>();
-            string basePropertyPath = kMaterialPrefix + materialProp.name;
-
-            if (materialProp.type == MaterialProperty.PropType.Texture)
-            {
-                propertyPaths.Add(basePropertyPath + "_ST.x");
-                propertyPaths.Add(basePropertyPath + "_ST.y");
-                propertyPaths.Add(basePropertyPath + "_ST.z");
-                propertyPaths.Add(basePropertyPath + "_ST.w");
-            }
-            else if (materialProp.type == MaterialProperty.PropType.Color)
-            {
-                propertyPaths.Add(basePropertyPath + ".r");
-                propertyPaths.Add(basePropertyPath + ".g");
-                propertyPaths.Add(basePropertyPath + ".b");
-                propertyPaths.Add(basePropertyPath + ".a");
-            }
-            else if (materialProp.type == MaterialProperty.PropType.Vector)
-            {
-                propertyPaths.Add(basePropertyPath + ".x");
-                propertyPaths.Add(basePropertyPath + ".y");
-                propertyPaths.Add(basePropertyPath + ".z");
-                propertyPaths.Add(basePropertyPath + ".w");
-            }
-            else
-            {
-                propertyPaths.Add(basePropertyPath);
-            }
-
-            if (propertyPaths.Exists(path => AnimationMode.IsPropertyAnimated(target, path)))
-            {
-                color = AnimationMode.animatedPropertyColor;
-                if (AnimationIsRecording)
-                    color = AnimationMode.recordedPropertyColor;
-                //else if (propertyPaths.Exists(path => IsPropertyCandidate(target, path)))
-                //    color = AnimationMode.candidatePropertyColor;
-
-                return true;
-            }
-
-            color = Color.white;
-            return false;
-        }
-
-        [MenuItem("Thry/Twitter")]
-        static void Init()
+        [MenuItem("Thry/Twitter", priority = -100)]
+        static void MenuThryTwitter()
         {
             Application.OpenURL("https://www.twitter.com/thryrallo");
+        }
+
+        [MenuItem("Thry/ShaderUI/Settings",priority = -20)]
+        static void MenuShaderUISettings()
+        {
+            EditorWindow.GetWindow<Settings>(false, "Thry Settings", true);
+        }
+
+        [MenuItem("Thry/Shader Optimizer/Upgraded Animated Properties", priority = -20)]
+        static void MenuUpgradeAnimatedPropertiesToTagsOnAllMaterials()
+        {
+            ShaderOptimizer.UpgradeAnimatedPropertiesToTagsOnAllMaterials();
+        }
+
+        [MenuItem("Thry/Shader Optimizer/Materials List", priority = 0)]
+        static void MenuShaderOptUnlockedMaterials()
+        {
+            EditorWindow.GetWindow<UnlockedMaterialsList>(false, "Materials", true);
+        }
+
+        [MenuItem("Assets/Thry/Materials/Cleaner/List Unbound Properties", priority = 303)]
+        static void AssetsCleanMaterials_ListUnboundProperties()
+        {
+            IEnumerable<Material> materials = Selection.objects.Where(o => o is Material).Select(o => o as Material);
+            foreach (Material m in materials)
+            {
+                Debug.Log("_______Unbound Properties for " + m.name + "_______");
+                MaterialCleaner.ListUnusedProperties(MaterialCleaner.CleanPropertyType.Texture, m);
+                MaterialCleaner.ListUnusedProperties(MaterialCleaner.CleanPropertyType.Color, m);
+                MaterialCleaner.ListUnusedProperties(MaterialCleaner.CleanPropertyType.Float, m);
+            }
+        }
+
+        [MenuItem("Assets/Thry/Materials/Cleaner/Remove Unbound Textures", priority = 303)]
+        static void AssetsCleanMaterials_CleanUnboundTextures()
+        {
+            IEnumerable<Material> materials = Selection.objects.Where(o => o is Material).Select(o => o as Material);
+            foreach (Material m in materials)
+            {
+                Debug.Log("_______Removing Unbound Textures for " + m.name + "_______");
+                MaterialCleaner.RemoveAllUnusedProperties(MaterialCleaner.CleanPropertyType.Texture, m);
+            }
         }
     }
 }
