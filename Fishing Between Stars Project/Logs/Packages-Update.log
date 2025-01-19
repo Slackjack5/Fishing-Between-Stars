@@ -1,17 +1,12 @@
 
-=== Thu Oct 15 04:02:24 2020
+=== Sun Jan 19 02:05:29 2025
 
 Packages were changed.
-Update Mode: mergeDefaultDependencies
+Update Mode: resetToDefaultDependencies
 
 The following packages were added:
-  com.unity.analytics@3.2.3
-  com.unity.purchasing@2.0.3
-  com.unity.ads@2.0.8
-  com.unity.textmeshpro@1.4.1
-  com.unity.package-manager-ui@2.0.8
-  com.unity.collab-proxy@1.2.15
   com.unity.modules.ai@1.0.0
+  com.unity.modules.androidjni@1.0.0
   com.unity.modules.animation@1.0.0
   com.unity.modules.assetbundle@1.0.0
   com.unity.modules.audio@1.0.0

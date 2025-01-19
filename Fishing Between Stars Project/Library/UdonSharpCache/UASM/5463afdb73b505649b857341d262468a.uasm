@@ -1,104 +1,60 @@
 .data_start
-
     .export trackingTarget
-
-    __refl_const_intnl_udonTypeID: %SystemInt64, null
-    __refl_const_intnl_udonTypeName: %SystemString, null
+    __refl_typeid: %SystemInt64, null
+    __refl_typename: %SystemString, null
+    __intnl_returnJump_SystemUInt32_0: %SystemUInt32, null
     trackingTarget: %VRCSDKBaseVRCPlayerApiTrackingDataType, null
-    isInEditor: %SystemBoolean, null
     playerApi: %VRCSDKBaseVRCPlayerApi, null
-    __0_this_intnl_UnityEngineTransform: %UnityEngineTransform, this
-    __0_trackingData_TrackingData: %VRCSDKBaseVRCPlayerApiTrackingData, null
-    __0_const_intnl_SystemObject: %SystemObject, null
-    __0_const_intnl_SystemString: %SystemString, null
-    __0_const_intnl_SystemUInt32: %SystemUInt32, null
-    __0_const_intnl_VRCSDKBaseVRCPlayerApi: %VRCSDKBaseVRCPlayerApi, null
-    __0_intnl_UnityEngineQuaternion: %UnityEngineQuaternion, null
-    __0_intnl_returnTarget_UInt32: %SystemUInt32, null
-    __0_intnl_UnityEngineVector3: %UnityEngineVector3, null
-
+    isInEditor: %SystemBoolean, null
+    __const_SystemUInt32_0: %SystemUInt32, null
+    __const_SystemObject_0: %SystemObject, null
+    __this_UnityEngineTransform_0: %UnityEngineTransform, this
+    __lcl_trackingData_VRCSDKBaseVRCPlayerApiTrackingData_0: %VRCSDKBaseVRCPlayerApiTrackingData, null
+    __intnl_UnityEngineVector3_0: %UnityEngineVector3, null
+    __intnl_UnityEngineQuaternion_0: %UnityEngineQuaternion, null
 .data_end
-
-        
-         #  using UnityEngine;
-        
-         #  using VRC.SDKBase;
-        
-         #  namespace UdonSharp.Examples.Utilities
-        
-         #  [AddComponentMenu("Udon Sharp/Utilities/Tracking Data Follower")]
-        
-         #  [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
-        
-         #  public class TrackingDataFollower : UdonSharpBehaviour
 .code_start
-        
-         #  public VRCPlayerApi.TrackingDataType trackingTarget;
-        
-         #  VRCPlayerApi playerApi;
-        
-         #  bool isInEditor;
-        
-         #  private void Start()
     .export _start
-        
     _start:
-        
-        PUSH, __0_const_intnl_SystemUInt32
-        
-         #  {
-        
-         #  playerApi = Networking.LocalPlayer;
+        PUSH, __const_SystemUInt32_0
+# 
+# UdonSharp.Examples.Utilities.TrackingDataFollower.Start()
+# 
         PUSH, playerApi
         EXTERN, "VRCSDKBaseNetworking.__get_LocalPlayer__VRCSDKBaseVRCPlayerApi"
-        
-         #  isInEditor = playerApi == null; // PlayerApi will be null in editor
         PUSH, playerApi
-        PUSH, __0_const_intnl_VRCSDKBaseVRCPlayerApi
+        PUSH, __const_SystemObject_0
         PUSH, isInEditor
         EXTERN, "SystemObject.__op_Equality__SystemObject_SystemObject__SystemBoolean"
-        PUSH, __0_intnl_returnTarget_UInt32 # Function epilogue
+        PUSH, __intnl_returnJump_SystemUInt32_0
         COPY
-        JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
-        
-        
-         #  private void LateUpdate()
+        JUMP_INDIRECT, __intnl_returnJump_SystemUInt32_0
     .export _lateUpdate
-        
     _lateUpdate:
-        
-        PUSH, __0_const_intnl_SystemUInt32
-        
-         #  {
-        
-         #  if (isInEditor)
+        PUSH, __const_SystemUInt32_0
+# 
+# UdonSharp.Examples.Utilities.TrackingDataFollower.LateUpdate()
+# 
         PUSH, isInEditor
         JUMP_IF_FALSE, 0x00000078
-        
-         #  return;
-        PUSH, __0_intnl_returnTarget_UInt32 # Explicit return sequence
+        PUSH, __intnl_returnJump_SystemUInt32_0
         COPY
-        JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
-        
-         #  VRCPlayerApi.TrackingData trackingData = playerApi.GetTrackingData(trackingTarget);
+        JUMP_INDIRECT, __intnl_returnJump_SystemUInt32_0
         PUSH, playerApi
         PUSH, trackingTarget
-        PUSH, __0_trackingData_TrackingData
+        PUSH, __lcl_trackingData_VRCSDKBaseVRCPlayerApiTrackingData_0
         EXTERN, "VRCSDKBaseVRCPlayerApi.__GetTrackingData__VRCSDKBaseVRCPlayerApiTrackingDataType__VRCSDKBaseVRCPlayerApiTrackingData"
-        
-         #  transform.SetPositionAndRotation(trackingData.position, trackingData.rotation);
-        PUSH, __0_trackingData_TrackingData
-        PUSH, __0_intnl_UnityEngineVector3
+        PUSH, __lcl_trackingData_VRCSDKBaseVRCPlayerApiTrackingData_0
+        PUSH, __intnl_UnityEngineVector3_0
         EXTERN, "VRCSDKBaseVRCPlayerApiTrackingData.__get_position__UnityEngineVector3"
-        PUSH, __0_trackingData_TrackingData
-        PUSH, __0_intnl_UnityEngineQuaternion
+        PUSH, __lcl_trackingData_VRCSDKBaseVRCPlayerApiTrackingData_0
+        PUSH, __intnl_UnityEngineQuaternion_0
         EXTERN, "VRCSDKBaseVRCPlayerApiTrackingData.__get_rotation__UnityEngineQuaternion"
-        PUSH, __0_this_intnl_UnityEngineTransform
-        PUSH, __0_intnl_UnityEngineVector3
-        PUSH, __0_intnl_UnityEngineQuaternion
+        PUSH, __this_UnityEngineTransform_0
+        PUSH, __intnl_UnityEngineVector3_0
+        PUSH, __intnl_UnityEngineQuaternion_0
         EXTERN, "UnityEngineTransform.__SetPositionAndRotation__UnityEngineVector3_UnityEngineQuaternion__SystemVoid"
-        PUSH, __0_intnl_returnTarget_UInt32 # Function epilogue
+        PUSH, __intnl_returnJump_SystemUInt32_0
         COPY
-        JUMP_INDIRECT, __0_intnl_returnTarget_UInt32
-        
+        JUMP_INDIRECT, __intnl_returnJump_SystemUInt32_0
 .code_end
